@@ -3,8 +3,19 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 
-app.get('/api/hello', (req, res) => {
-    res.send({ express: 'Hello From Express' });
+let reports = {
+    1: {
+        id: '1',
+        title: '2019 report primary',
+        statue: 'Completed',
+        editable: 'false',
+        hash: '#123asd'
+    }
+
+};
+
+app.get('/reports', (req, res) => {
+    res.send({express: Object.values(reports)});
 });
 
 app.post('/api/world', (req, res) => {
@@ -14,10 +25,7 @@ app.post('/api/world', (req, res) => {
     );
 });
 
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
-app.get('/express_backend', (req, res) => {
-    res.send({ express: 'Connected to express backend' });
-});
