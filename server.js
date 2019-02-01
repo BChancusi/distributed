@@ -1,9 +1,26 @@
 const express = require('express');
+const config = require('./database.js');
+const mysql = require('mysql');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
-import './database.js';
 
+
+const connection = mysql.createConnection({
+    host     : config.host,
+    user     : config.user,
+    password : config.password,
+    database : config.database,
+});
+
+connection.connect(function(err) {
+    if (err) {
+        console.error('error connecting: ' + err.stack);
+        return;
+    }
+    console.log('connected as id ' + connection.threadId);
+});
 
 let reports = {
     1: {
@@ -33,6 +50,27 @@ let reports = {
     }
 
 };
+
+connection.query(`INSERT INTO files (title) VALUES ('Test report name')`, function (error) {
+    if (error) throw error;
+    console.log('Inserted into table');
+});
+
+connection.query('SELECT * FROM files', function (error, results) {
+    if (error) throw error;
+
+    results.forEach(function(element){
+        console.log('Results: ', element);
+    });
+});
+
+connection.query(`DELETE FROM files WHERE title = 'Test report name'`, function (error, results) {
+    if (error) throw error;
+    console.log("Number of records deleted: " + results.affectedRows);
+});
+
+connection.end();
+
 
 app.get('/reports', (req, res) => {
     res.send({express: Object.values(reports)});
