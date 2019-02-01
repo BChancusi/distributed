@@ -8,7 +8,7 @@ class App extends Component {
 
     componentDidMount() {
         this.getReports()
-            .then(res => this.setState({data: res.express[0]}))
+            .then(res => this.setState({data: res.express}))
             .catch(err => console.log(err));
     }
 
@@ -28,13 +28,21 @@ class App extends Component {
     render() {
         return (
             <div>
-                <p>{this.state.data.title }</p>
-                <p>{this.state.data.id }</p>
-                <p>{this.state.data.statue }</p>
-                <p>{this.state.data.editable }</p>
-                <p>{this.state.data.hash }</p>
+                <>
+                    {/*{[this.state.data].map(report => (*/}
+                        {/*<div>*/}
+                            {/*<p>{report[0].title}</p>*/}
+                            {/*<p>{report.id }</p>*/}
+                            {/*<p>{report.status }</p>*/}
+                            {/*<p>{report.editable }</p>*/}
+                            {/*<p>{report.hash }</p>*/}
+                        {/*</div>*/}
+                    {/*))}*/}
+                </>
 
             </div>
+
+
         );
     }
 }
