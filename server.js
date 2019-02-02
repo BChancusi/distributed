@@ -1,11 +1,14 @@
 const express = require('express');
 const config = require('./config.js');
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 const connection = mysql.createConnection({
     host     : config.host,
@@ -22,47 +25,6 @@ connection.connect(function(err) {
     console.log('connected as id ' + connection.threadId);
 });
 
-let reports = {
-    1: {
-        id: '1',
-        title: '2019 report primary',
-        status: 'Completed',
-        editable: 'true',
-        hash: '#123asd',
-        lastEdited: "30/01/2019"
-    },
-    2: {
-        id: '2',
-        title: '2018 report primary',
-        status: 'Completed',
-        editable: 'false',
-        hash: '#123asd',
-        lastEdited: "30/01/2019"
-    },
-
-    3:{
-        id: '1',
-        title: '2017 report primary',
-        status: 'Completed',
-        editable: 'false',
-        hash: '#123asd',
-        lastEdited: "30/01/2019"
-    }
-
-};
-
-
-//
-//
-//
-// connection.query(`DELETE FROM files WHERE title = 'Test report name'`, function (error, results) {
-//     if (error) throw error;
-//     console.log("Number of records deleted: " + results.affectedRows);
-// });
-
-// connection.end();
-
-
 app.get('/reports', (req, res) => {
 
     connection.query('SELECT * FROM files', function (error, results) {
@@ -73,12 +35,18 @@ app.get('/reports', (req, res) => {
 
 });
 
-app.get('/files', (req, res) => {
-    res.send({express: Object.values(reports)});
+app.post('/reports', (req) => {
+
+    connection.query(`INSERT INTO files SET ?`, req.body , function (error) {
+        if (error) throw error;
+    });
 });
 
-app.get('/file:id', (req, res) => {
-    res.send({express: Object.values(reports)});
+app.delete('/reports', (req) => {
+
+    connection.query(`DELETE FROM files WHERE title = ?`, [req.body.title], function (error) {
+        if (error) throw error;
+    });
 });
 
 app.get('/users', (req, res) => {
@@ -102,10 +70,18 @@ app.get('/user:id', (req, res) => {
     });
 });
 
-app.post('/api/world', (req, res) => {
-    res.send(
-        `I received your POST request. This is what you sent me: ${req.body.post}`,
-    );
+app.post('/user', (req) => {
+
+    connection.query(`INSERT INTO users SET ?`, req.body , function (error) {
+        if (error) throw error;
+    });
+});
+
+app.delete('/user', (req) => {
+
+    connection.query(`DELETE FROM users WHERE username = ?`, [req.body.username], function (error) {
+        if (error) throw error;
+    });
 });
 
 
@@ -113,7 +89,10 @@ app.post('/api/world', (req, res) => {
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
-// connection.query(`INSERT INTO files (title) VALUES ('Test report name')`, function (error) {
-//     if (error) throw error;
-//     console.log('Inserted into table');
+// app.get('/files', (req, res) => {
+//     res.send({express: Object.values(reports)});
+// });
+//
+// app.get('/file:id', (req, res) => {
+//     res.send({express: Object.values(reports)});
 // });

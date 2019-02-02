@@ -3,7 +3,7 @@ import './App.css';
 
 class App extends Component {
     state = {
-        data: "" , users: ""
+        data: "", users: "", name: "Test Post 23", username: "username4", password: "password2"
     };
 
     componentDidMount() {
@@ -15,6 +15,15 @@ class App extends Component {
         this.getUsers()
             .then(res => this.setState({users: res.express}))
             .catch(err => console.log(err));
+
+        this.postReport().then(() => this.setState({name: ""}));
+
+        this.deleteReport().then(() => this.setState({name: "DELETED", password: ""}));
+
+        this.postUser().then(() => this.setState({username: "", password: ""}));
+
+        this.deleteUser().then(() => this.setState({username: "DELETED", password: ""}));
+
     }
 
     getReports = async () => {
@@ -41,19 +50,55 @@ class App extends Component {
         return body;
     };
 
+    postReport = async () => {
+
+        await fetch('/reports', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": this.state.name})
+        });
+    };
+
+    deleteReport = async () => {
+
+        await fetch('/reports', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": this.state.name})
+        });
+    };
+
+    postUser = async () => {
+
+        await fetch('/user', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"username": this.state.username, "password": this.state.password})
+        });
+    };
+
+    deleteUser = async () => {
+
+        await fetch('/user', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"username": this.state.username})
+        });
+    };
+
 
     render() {
         return (
             <div>
                 <>
                     {/*{[this.state.data].map(report => (*/}
-                        {/*<div>*/}
-                            {/*<p>{report[0].title}</p>*/}
-                            {/*<p>{report.id }</p>*/}
-                            {/*<p>{report.status }</p>*/}
-                            {/*<p>{report.editable }</p>*/}
-                            {/*<p>{report.hash }</p>*/}
-                        {/*</div>*/}
+                    {/*<div>*/}
+                    {/*<p>{report[0].title}</p>*/}
+                    {/*<p>{report.id }</p>*/}
+                    {/*<p>{report.status }</p>*/}
+                    {/*<p>{report.editable }</p>*/}
+                    {/*<p>{report.hash }</p>*/}
+                    {/*</div>*/}
                     {/*))}*/}
                 </>
 
