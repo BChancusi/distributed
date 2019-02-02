@@ -3,18 +3,35 @@ import './App.css';
 
 class App extends Component {
     state = {
-        data: ""
+        data: "" , users: ""
     };
 
     componentDidMount() {
+
         this.getReports()
             .then(res => this.setState({data: res.express}))
+            .catch(err => console.log(err));
+
+        this.getUsers()
+            .then(res => this.setState({users: res.express}))
             .catch(err => console.log(err));
     }
 
     getReports = async () => {
 
         const response = await fetch('/reports');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
+    };
+
+    getUsers = async () => {
+
+        const response = await fetch('/users');
         const body = await response.json();
 
         if (response.status !== 200) {

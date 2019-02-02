@@ -1,5 +1,5 @@
 const express = require('express');
-const config = require('./database.js');
+const config = require('./config.js');
 const mysql = require('mysql');
 
 const app = express();
@@ -51,29 +51,26 @@ let reports = {
 
 };
 
-connection.query(`INSERT INTO files (title) VALUES ('Test report name')`, function (error) {
-    if (error) throw error;
-    console.log('Inserted into table');
-});
 
-connection.query('SELECT * FROM files', function (error, results) {
-    if (error) throw error;
+//
+//
+//
+// connection.query(`DELETE FROM files WHERE title = 'Test report name'`, function (error, results) {
+//     if (error) throw error;
+//     console.log("Number of records deleted: " + results.affectedRows);
+// });
 
-    results.forEach(function(element){
-        console.log('Results: ', element);
-    });
-});
-
-connection.query(`DELETE FROM files WHERE title = 'Test report name'`, function (error, results) {
-    if (error) throw error;
-    console.log("Number of records deleted: " + results.affectedRows);
-});
-
-connection.end();
+// connection.end();
 
 
 app.get('/reports', (req, res) => {
-    res.send({express: Object.values(reports)});
+
+    connection.query('SELECT * FROM files', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
+
 });
 
 app.get('/files', (req, res) => {
@@ -85,11 +82,24 @@ app.get('/file:id', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-    res.send({express: Object.values(reports)});
+
+    connection.query('SELECT * FROM users', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
 });
 
 app.get('/user:id', (req, res) => {
-    res.send({express: Object.values(reports)});
+
+    console.log(req);
+    console.log($(req.body.get));
+
+    connection.query('SELECT * FROM users', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
 });
 
 app.post('/api/world', (req, res) => {
@@ -102,3 +112,8 @@ app.post('/api/world', (req, res) => {
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+
+// connection.query(`INSERT INTO files (title) VALUES ('Test report name')`, function (error) {
+//     if (error) throw error;
+//     console.log('Inserted into table');
+// });
