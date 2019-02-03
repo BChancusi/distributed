@@ -2,7 +2,7 @@ const express = require('express');
 const config = require('./config.js');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -25,7 +25,7 @@ connection.connect(function(err) {
     console.log('connected as id ' + connection.threadId);
 });
 
-app.get('/reports', (req, res) => {
+app.get('/files', (req, res) => {
 
     connection.query('SELECT * FROM files', function (error, results) {
         if (error) throw error;
@@ -35,16 +35,41 @@ app.get('/reports', (req, res) => {
 
 });
 
-app.post('/reports', (req) => {
+app.post('/files', (req) => {
 
     connection.query(`INSERT INTO files SET ?`, req.body , function (error) {
         if (error) throw error;
     });
 });
 
-app.delete('/reports', (req) => {
+app.delete('/files', (req) => {
 
     connection.query(`DELETE FROM files WHERE title = ?`, [req.body.title], function (error) {
+        if (error) throw error;
+    });
+});
+
+
+app.get('/reports', (req, res) => {
+
+    connection.query('SELECT * FROM reports', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
+
+});
+
+app.post('/reports', (req) => {
+
+    connection.query(`INSERT INTO reports SET ?`, req.body , function (error) {
+        if (error) throw error;
+    });
+});
+
+app.delete('/reports', (req) => {
+
+    connection.query(`DELETE FROM reports WHERE title = ?`, [req.body.title], function (error) {
         if (error) throw error;
     });
 });
@@ -72,8 +97,18 @@ app.get('/user:id', (req, res) => {
 
 app.post('/user', (req) => {
 
-    connection.query(`INSERT INTO users SET ?`, req.body , function (error) {
-        if (error) throw error;
+    bcrypt.hash(req.body.password, 8, function(error, hash) {
+        if(error) throw error;
+
+        req.body.password = hash;
+
+        connection.query(`INSERT INTO users SET ?`, req.body , function (error) {
+            if (error) throw error;
+        });
+
+        // bcrypt.compare(oldPass, hash).then((res) => {
+        //     console.debug(res);
+        // });
     });
 });
 

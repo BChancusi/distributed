@@ -3,32 +3,44 @@ import './App.css';
 
 class App extends Component {
     state = {
-        data: "", users: "", name: "Test Post 23", username: "username4", password: "password2"
+        data: "", users: "", name: "Test Post 23", username: "usernameHash3", password: "password2"
     };
 
     componentDidMount() {
 
-        this.getReports()
-            .then(res => this.setState({data: res.express}))
-            .catch(err => console.log(err));
+       // this.getReports()
+        //    .then(res => this.setState({data: res.express}))
+       //     .catch(err => console.log(err));
 
         this.getUsers()
             .then(res => this.setState({users: res.express}))
             .catch(err => console.log(err));
 
-        this.postReport().then(() => this.setState({name: ""}));
+        //this.postReport().then(() => this.setState({name: ""}));
 
-        this.deleteReport().then(() => this.setState({name: "DELETED", password: ""}));
+        //this.deleteReport().then(() => this.setState({name: "DELETED", password: ""}));
 
-        this.postUser().then(() => this.setState({username: "", password: ""}));
+       // this.postUser().then(() => this.setState({username: "", password: ""}));
 
-        this.deleteUser().then(() => this.setState({username: "DELETED", password: ""}));
+       // this.deleteUser().then(() => this.setState({username: "DELETED", password: ""}));
 
     }
 
     getReports = async () => {
 
         const response = await fetch('/reports');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
+    };
+
+    getFiles = async () => {
+
+        const response = await fetch('/files');
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -73,7 +85,7 @@ class App extends Component {
         await fetch('/user', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"username": this.state.username, "password": this.state.password})
+            body: JSON.stringify({"username": this.state.username, "password": this.state.password, "permissions" : 5})
         });
     };
 
@@ -89,21 +101,9 @@ class App extends Component {
 
     render() {
         return (
+
             <div>
-                <>
-                    {/*{[this.state.data].map(report => (*/}
-                    {/*<div>*/}
-                    {/*<p>{report[0].title}</p>*/}
-                    {/*<p>{report.id }</p>*/}
-                    {/*<p>{report.status }</p>*/}
-                    {/*<p>{report.editable }</p>*/}
-                    {/*<p>{report.hash }</p>*/}
-                    {/*</div>*/}
-                    {/*))}*/}
-                </>
-
             </div>
-
 
         );
     }
