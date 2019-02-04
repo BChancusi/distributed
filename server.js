@@ -3,6 +3,8 @@ const config = require('./config.js');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const dateFns = require('date-fns/format');
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -10,19 +12,16 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
+    connectionLimit : 10,
     host     : config.host,
     user     : config.user,
     password : config.password,
     database : config.database,
 });
 
-connection.connect(function(err) {
-    if (err) {
-        console.error('error connecting: ' + err.stack);
-        return;
-    }
-    console.log('connected as id ' + connection.threadId);
+connection.on('acquire', function (connection) {
+    console.log('Connection %d acquired', connection.threadId);
 });
 
 app.get('/files', (req, res) => {
@@ -61,6 +60,11 @@ app.get('/reports', (req, res) => {
 });
 
 app.post('/reports', (req) => {
+
+    req.body.timestamp = dateFns(
+        new Date(),
+        'YYYY-MM-DD HH:mm:ss',
+    );
 
     connection.query(`INSERT INTO reports SET ?`, req.body , function (error) {
         if (error) throw error;
@@ -121,7 +125,20 @@ app.delete('/user', (req) => {
 
 
 // console.log that your server is up and running
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+
+process.on('SIGINT', () => {
+    server.close(() => {
+        console.log('Http server closed.');
+
+        connection.end(function (error) {
+            // all connections in the pool have ended
+            if (error) throw error;
+            console.log('MYSQL connection closed.');
+        });
+    });
+});
+
 
 
 // app.get('/files', (req, res) => {

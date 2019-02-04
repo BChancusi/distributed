@@ -3,7 +3,7 @@ import './App.css';
 
 class App extends Component {
     state = {
-        data: "", users: "", name: "Test Post 23", username: "usernameHash3", password: "password2"
+        data: "", users: "", name: "Test Post 13", username: "usernameHash3", password: "password2"
     };
 
     componentDidMount() {
@@ -16,7 +16,7 @@ class App extends Component {
             .then(res => this.setState({users: res.express}))
             .catch(err => console.log(err));
 
-        //this.postReport().then(() => this.setState({name: ""}));
+      //  this.postReport().then(() => this.setState({name: ""}));
 
         //this.deleteReport().then(() => this.setState({name: "DELETED", password: ""}));
 
