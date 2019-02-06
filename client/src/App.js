@@ -82,7 +82,7 @@ class App extends Component {
 
     postUser = async () => {
 
-        await fetch('/user', {
+        await fetch('/users', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"username": this.state.username, "password": this.state.password, "permissions" : 5})
@@ -91,7 +91,7 @@ class App extends Component {
 
     deleteUser = async () => {
 
-        await fetch('/user', {
+        await fetch('/users', {
             method: 'DELETE',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"username": this.state.username})
