@@ -49,6 +49,8 @@ app.delete('/files', (req) => {
 
 app.get('/reports', (req, res) => {
 
+    console.debug(req);
+
     connection.query('SELECT * FROM reports', function (error, results) {
         if (error) throw error;
 
@@ -58,6 +60,7 @@ app.get('/reports', (req, res) => {
 });
 
 app.post('/reports', (req) => {
+    console.debug(req);
 
     req.body.timestamp = dateFns(
         new Date(),
