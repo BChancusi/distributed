@@ -6,12 +6,40 @@ function App() {
     const [reports, setReports] = useState("");
     const [newReportTitle, setNewReportTitle] = useState("");
 
-
     useEffect(() => {
         getReports()
             .then(res => setReports(res.express))
             .catch(err => console.log(err));
     }, []);
+
+    const getReports = async () => {
+
+        const response = await fetch('/reports');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
+    };
+
+    const postReport = async (title) => {
+
+        await fetch('/reports', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": title})
+        });
+    };
+
+    const deleteReport = async (reportTitle) => {
+
+        await fetch(`/reports/${reportTitle}`, {
+            method: 'DELETE',
+        });
+    };
+
 
     function refreshReports() {
         getReports()
@@ -32,6 +60,13 @@ function App() {
         deleteReport(newReportTitle).then(() => setNewReportTitle(""));
     }
 
+    function openReportBtn(reportId) {
+        console.debug("clicked");
+        console.debug(reportId)
+
+
+    }
+
     return (
         <div id={"reports"}>
             {
@@ -39,11 +74,12 @@ function App() {
                     return <Fragment key={reports[key].id}>
                         <li> {reports[key].title}</li>
                         <button onClick={deleteReportBtn}>Delete</button>
+                        <button onClick={openReportBtn(reports[key].id)}>Open Report</button>
                     </Fragment>
                 })
             }
 
-            <input onChange={reportTitleChange}/>
+            {/*<input onChange={reportTitleChange}/>*/}
             <button onClick={refreshReports}>Refresh reports</button>
             <button onClick={newReport}>New report</button>
 
@@ -52,126 +88,49 @@ function App() {
 
 }
 
-const getUsers = async () => {
+function Files (reportId) {
 
-    const response = await fetch('/users');
-    const body = await response.json();
-
-    if (response.status !== 200) {
-        throw Error(body.message)
-    }
-
-    return body;
-};
-
-const postReport = async (title) => {
-
-    await fetch('/reports', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({"title": title})
-    });
-};
-
-const getReports = async () => {
-
-    const response = await fetch('/reports');
-    const body = await response.json();
-
-    if (response.status !== 200) {
-        throw Error(body.message)
-    }
-
-    return body;
-};
-
-const deleteReport = async (reportTitle) => {
-
-    await fetch(`/reports/${reportTitle}`, {
-        method: 'DELETE',
-    });
-};
+    const [files, setFiles] = useState("");
 
 
-//
-// class App extends Component {
-//     state = {
-//         data: "", users: "", name: "Test Post 13", username: "usernameHash3", password: "password2"
-//     };
-//
-//     componentDidMount() {
+    const getFiles = async (reportId) => {
 
-//
-//         this.getUsers()
-//             .then(res => this.setState({users: res.express}))
-//             .catch(err => console.log(err));
-//
-//
+        const response = await fetch(`/files/${reportId}`);
+        const body = await response.json();
 
-//
-//        // this.postUser().then(() => this.setState({username: "", password: ""}));
-//
-//        // this.deleteUser().then(() => this.setState({username: "DELETED", password: ""}));
-//
-//     }
-//
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
 
-//
-//     getFiles = async () => {
-//
-//         const response = await fetch('/files');
-//         const body = await response.json();
-//
-//         if (response.status !== 200) {
-//             throw Error(body.message)
-//         }
-//
-//         return body;
-//     };
-//
-//     getUsers = async () => {
-//
-//         const response = await fetch('/users');
-//         const body = await response.json();
-//
-//         if (response.status !== 200) {
-//             throw Error(body.message)
-//         }
-//
-//         return body;
-//     };
-//
+        return body;
 
-//
+    };
 
-//
-//     postUser = async () => {
-//
-//         await fetch('/users', {
-//             method: 'POST',
-//             headers: {'Content-Type': 'application/json'},
-//             body: JSON.stringify({"username": this.state.username, "password": this.state.password, "permissions" : 5})
-//         });
-//     };
-//
-//     deleteUser = async () => {
-//
-//         await fetch('/users', {
-//             method: 'DELETE',
-//             headers: {'Content-Type': 'application/json'},
-//             body: JSON.stringify({"username": this.state.username})
-//         });
-//     };
-//
-//
-//     render() {
-//         return (
-//
-//             <div>
-//             </div>
-//
-//         );
-//     }
-// }
+    useEffect(() => {
+        // getFiles(reportId)
+        //     .then(res => setReports(res.express))
+        //     .catch(err => console.log(err));
+    }, []);
+
+
+
+    return (
+        <div id={"files"}>
+            {
+                Object.keys(files).map((key) => {
+                    return <Fragment key={files[key].id}>
+                        <li> {files[key].title}</li>
+                        {/*<button onClick={deleteReportBtn}>Delete</button>*/}
+                        {/*<button onClick={openReportBtn(reports[key].id)}>Open Report</button>*/}
+                    </Fragment>
+                })
+            }
+
+            {/*<input onChange={reportTitleChange}/>*/}
+            {/*<button onClick={newFiles}>New report</button>*/}
+
+        </div>
+    );
+}
 
 export default App;
