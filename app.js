@@ -49,7 +49,6 @@ app.delete('/files', (req) => {
 
 app.get('/reports', (req, res) => {
 
-    console.debug(req);
 
     connection.query('SELECT * FROM reports', function (error, results) {
         if (error) throw error;
@@ -60,7 +59,6 @@ app.get('/reports', (req, res) => {
 });
 
 app.post('/reports', (req) => {
-    console.debug(req);
 
     req.body.timestamp = dateFns(
         new Date(),
@@ -72,9 +70,9 @@ app.post('/reports', (req) => {
     });
 });
 
-app.delete('/reports', (req) => {
+app.delete('/reports/:reportTitle', (req) => {
 
-    connection.query(`DELETE FROM reports WHERE title = ?`, [req.body.title], function (error) {
+    connection.query(`DELETE FROM reports WHERE title ="${req.params.reportTitle}"`, function (error) {
         if (error) throw error;
     });
 });
@@ -88,10 +86,7 @@ app.get('/users', (req, res) => {
     });
 });
 
-app.get('/users/user:id', (req, res) => {
-
-    console.log(req);
-    console.log($(req.body.get));
+app.get('/users/:userId', (req, res) => {
 
     connection.query('SELECT * FROM users', function (error, results) {
         if (error) throw error;
@@ -117,7 +112,7 @@ app.post('/users', (req) => {
     });
 });
 
-app.delete('/users/user:id', (req) => {
+app.delete('/users/:userId', (req) => {
 
     connection.query(`DELETE FROM users WHERE username = ?`, [req.body.username], function (error) {
         if (error) throw error;

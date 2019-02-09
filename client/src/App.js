@@ -28,17 +28,22 @@ function App() {
         setNewReportTitle(event.target.value);
     }
 
+    function deleteReportBtn() {
+        deleteReport(newReportTitle).then(() => setNewReportTitle(""));
+    }
+
     return (
         <div id={"reports"}>
             {
                 Object.keys(reports).map((key) => {
-                    return <li key={reports[key].id}> {reports[key].title} </li>
+                    return <li key={reports[key].id}> {reports[key].title}</li>
                 })
             }
 
             <input onChange={reportTitleChange}/>
             <button onClick={refreshReports}>Refresh reports</button>
             <button onClick={newReport}>New report</button>
+            <button onClick={deleteReportBtn}>Delete report</button>
 
         </div>
     );
@@ -78,6 +83,13 @@ const getReports = async () => {
     return body;
 };
 
+const deleteReport = async (reportTitle) => {
+
+        await fetch(`/reports/${reportTitle}`, {
+            method: 'DELETE',
+        });
+    };
+
 
 //
 // class App extends Component {
@@ -93,7 +105,7 @@ const getReports = async () => {
 //             .catch(err => console.log(err));
 //
 //
-//         //this.deleteReport().then(() => this.setState({name: "DELETED", password: ""}));
+
 //
 //        // this.postUser().then(() => this.setState({username: "", password: ""}));
 //
@@ -129,14 +141,7 @@ const getReports = async () => {
 //
 
 //
-//     deleteReport = async () => {
-//
-//         await fetch('/reports', {
-//             method: 'DELETE',
-//             headers: {'Content-Type': 'application/json'},
-//             body: JSON.stringify({"title": this.state.name})
-//         });
-//     };
+
 //
 //     postUser = async () => {
 //
