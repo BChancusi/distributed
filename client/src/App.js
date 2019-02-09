@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import './App.css';
 
 function App() {
@@ -36,14 +36,16 @@ function App() {
         <div id={"reports"}>
             {
                 Object.keys(reports).map((key) => {
-                    return <li key={reports[key].id}> {reports[key].title}</li>
+                    return <Fragment key={reports[key].id}>
+                        <li> {reports[key].title}</li>
+                        <button onClick={deleteReportBtn}>Delete</button>
+                    </Fragment>
                 })
             }
 
             <input onChange={reportTitleChange}/>
             <button onClick={refreshReports}>Refresh reports</button>
             <button onClick={newReport}>New report</button>
-            <button onClick={deleteReportBtn}>Delete report</button>
 
         </div>
     );
@@ -85,10 +87,10 @@ const getReports = async () => {
 
 const deleteReport = async (reportTitle) => {
 
-        await fetch(`/reports/${reportTitle}`, {
-            method: 'DELETE',
-        });
-    };
+    await fetch(`/reports/${reportTitle}`, {
+        method: 'DELETE',
+    });
+};
 
 
 //
