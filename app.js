@@ -22,9 +22,44 @@ connection.on('acquire', function (connection) {
     console.log('Connection %d acquired', connection.threadId);
 });
 
+app.get('/fields/:fileId', (req, res) => {
+
+    connection.query('SELECT * FROM fields', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
+
+});
+
+app.post('/fields/:fileId', (req) => {
+
+    connection.query(`INSERT INTO fields SET ?`, req.body , function (error) {
+        if (error) throw error;
+    });
+});
+
+app.delete('/fields/:fieldId', (req) => {
+
+    connection.query(`DELETE FROM fields WHERE title = ?`, [req.body.title], function (error) {
+        if (error) throw error;
+    });
+});
+
+
 app.get('/files', (req, res) => {
 
     connection.query('SELECT * FROM files', function (error, results) {
+        if (error) throw error;
+
+        res.send({express: results});
+    });
+
+});
+
+app.get('/files/:reportId', (req, res) => {
+
+    connection.query(`SELECT * FROM files WHERE report_Id=${req.params.reportId}`, function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
