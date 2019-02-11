@@ -24,7 +24,7 @@ connection.on('acquire', function (connection) {
 
 app.get('/fields/:fileId', (req, res) => {
 
-    connection.query('SELECT * FROM fields', function (error, results) {
+    connection.query(`SELECT * FROM fields WHERE fileId=${req.params.fileId}`, function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -84,7 +84,6 @@ app.delete('/files', (req) => {
 
 app.get('/reports', (req, res) => {
 
-
     connection.query('SELECT * FROM reports', function (error, results) {
         if (error) throw error;
 
@@ -105,9 +104,9 @@ app.post('/reports', (req) => {
     });
 });
 
-app.delete('/reports/:reportTitle', (req) => {
+app.delete('/reports/:reportId', (req) => {
 
-    connection.query(`DELETE FROM reports WHERE title ="${req.params.reportTitle}"`, function (error) {
+    connection.query(`DELETE FROM reports WHERE id =${req.params.reportId}`, function (error) {
         if (error) throw error;
     });
 });

@@ -37,9 +37,9 @@ function App() {
         });
     };
 
-    const deleteReport = async (reportTitle) => {
+    const deleteReport = async (reportId) => {
 
-        await fetch(`/reports/${reportTitle}`, {
+        await fetch(`/reports/${reportId}`, {
             method: 'DELETE',
         });
     };
@@ -56,27 +56,35 @@ function App() {
 
     }
 
-    function handleDeleteReport() {
-        deleteReport(newReportTitle).then(() => setNewReportTitle(""));
+    function handleDeleteReport(reportId) {
+        deleteReport(reportId).then(() => setNewReportTitle(""));
     }
 
     return filesRender === "" ? (
-        <div id={"reports"}>
-            {
-                Object.keys(reports).map((key) => {
-                    return <Fragment key={reports[key].id}>
-                        <li> {reports[key].title}</li>
-                        <button onClick={handleDeleteReport}>Delete</button>
-                        <button onClick={() => setReportId(10)}>Open Report</button>
-                    </Fragment>
-                })
-            }
+        <>
+            <header>
+                <h1 align="CENTER">Reports</h1>
+            </header>
+            <nav>
+                <button onClick={handleRefreshReports}>Refresh reports</button>
+                <button onClick={handleNewReport}>New report</button>
+            </nav>
 
-            {/*<input onChange={reportTitleChange}/>*/}
-            <button onClick={handleRefreshReports}>Refresh reports</button>
-            <button onClick={handleNewReport}>New report</button>
 
-        </div>
+            <div id={"reports"}>
+                {
+                    Object.keys(reports).map((key) => {
+                        return <Fragment key={reports[key].id}>
+                            <li> {reports[key].title}</li>
+                            <button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>
+                            <button onClick={() => setReportId(reports[key].id)}>Open Report</button>
+                        </Fragment>
+                    })
+                }
+                {/*<input onChange={reportTitleChange}/>*/}
+
+            </div>
+        </>
     ) : (
         filesRender
     );
@@ -90,7 +98,7 @@ function useFiles(reportId) {
     const fileRender = useFile(file);
 
     useEffect(() => {
-        if(reportId !== "") {
+        if (reportId !== "") {
 
             getFiles(reportId)
                 .then(res => setFiles(res.express))
@@ -111,27 +119,37 @@ function useFiles(reportId) {
 
     };
 
-    if(reportId === ""){
+    if (files === "") {
         return "";
     }
 
-    return  fileRender === "" ? (
-        <div id={"files"}>
-            {
-                Object.keys(files).map((key) => {
-                    return <Fragment key={files[key].id}>
-                        <li> {files[key].title}</li>
-                        {/*<button onClick={deleteReportBtn}>Delete</button>*/}
-                        <button onClick={() => setFileId(23)}>Open file</button>
-                    </Fragment>
-                })
-            }
 
-            {/*<input onChange={reportTitleChange}/>*/}
-            {/*<button onClick={newFiles}>New report</button>*/}
-
-        </div>
-
+    return fileRender === "" ? (
+        <>
+            <header>
+                <h1 align="CENTER">{reportId} files</h1>
+            </header>
+            <nav>
+                <button onClick={() => {
+                    setFiles("");
+                    setFileId("");
+                }}>Return
+                </button>
+            </nav>
+            <div id={"files"}>
+                <ul>
+                    {
+                        Object.keys(files).map((key) => {
+                            return <Fragment key={files[key].id}>
+                                <li> {files[key].title}</li>
+                                {/*<button onClick={deleteReportBtn}>Delete</button>*/}
+                                <button onClick={() => setFileId(files[key].id)}>Open file</button>
+                            </Fragment>
+                        })
+                    }
+                </ul>
+            </div>
+        </>
     ) : (
         fileRender
     );
@@ -142,11 +160,11 @@ function useFile(fileId) {
     const [fields, setFields] = useState("");
 
     useEffect(() => {
-        if(fileId !== ""){
+        if (fileId !== "") {
 
-        getFields(fileId)
-            .then(res => setFields(res.express))
-            .catch(err => console.log(err));
+            getFields(fileId)
+                .then(res => setFields(res.express))
+                .catch(err => console.log(err));
         }
     }, [fileId]);
 
@@ -163,32 +181,42 @@ function useFile(fileId) {
 
     };
 
-    if(fileId === ""){
+    if (fields === "") {
         return "";
     }
 
+    let total = 0;
+
     return (
-        <div id={"fields"}>
-            <table>
-                <tbody>
-                {
-                    Object.keys(fields).map((key) => {
-                        return <Fragment key={fields[key].id}>
-                            <tr>
-                                <td>{fields[key].title}</td>
-                                <td>{fields[key].value}</td>
-                            </tr>
-                            {/*<button onClick={deleteReportBtn}>Delete</button>*/}
-                            {/*<button onClick={openReportBtn(reports[key].id)}>Open Report</button>*/}
-                        </Fragment>
-                    })
-                }
-                </tbody>
-            </table>
-            {/*<input onChange={reportTitleChange}/>*/}
-            {/*<button onClick={newFiles}>New report</button>*/}
-        </div>
+        <>
+            <header>
+                <h1 align="CENTER">{fileId} fields</h1>
+            </header>
+            <nav>
+                <button onClick={() => setFields("")}>Return</button>
+            </nav>
+            <div id={"fields"}>
+                <table>
+                    <tbody>
+                    {
+                        Object.keys(fields).map((key) => {
+                            total += fields[key].value;
+                            return <Fragment key={fields[key].id}>
+                                <tr>
+                                    <td>{fields[key].title}</td>
+                                    <td>{fields[key].value}</td>
+                                </tr>
+                            </Fragment>
+                        })
+                    }
+                    </tbody>
+                </table>
+                {fields.length === 0 ? null : <label>Total = {total}</label>}
+            </div>
+        </>
     );
 }
 
 export default App;
+
+//TODO Cant select same file twice after return
