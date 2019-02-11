@@ -235,7 +235,6 @@ function useFile(fileId) {
         if (response.status !== 200) {
             throw Error(body.message)
         }
-
         return body;
     };
 
@@ -244,6 +243,8 @@ function useFile(fileId) {
         await fetch(`/fields/${fieldId}`, {
             method: 'DELETE',
         });
+
+        return null;
     };
 
 
@@ -255,9 +256,8 @@ function useFile(fileId) {
 
 
     function handleNewField() {
-        postField().then(res => setFields(res.express))
+        postField().then(res => setFields(fields.concat(res.express)))
                     .catch(err => console.log(err));
-
     }
 
     function handleDeleteFile(fieldId) {
