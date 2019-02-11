@@ -92,10 +92,10 @@ function App() {
 
 
 function useFiles(reportId) {
+
     const [files, setFiles] = useState("");
     const [file, setFileId] = useState("");
     const [newFile, setNewFile] = useState("");
-
 
     const fileRender = useFile(file);
 
@@ -225,11 +225,18 @@ function useFile(fileId) {
 
     const postField = async () => {
 
-        await fetch('/fields', {
+        const response = await fetch('/fields', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": newFieldTitle, "value": newFieldValue, "file_id": fileId})
         });
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
     };
 
     const deleteField = async (fieldId) => {
@@ -248,8 +255,8 @@ function useFile(fileId) {
 
 
     function handleNewField() {
-        postField().then(() => null);
-
+        postField().then(res => setFields(res.express))
+                    .catch(err => console.log(err));
 
     }
 
@@ -286,7 +293,9 @@ function useFile(fileId) {
                                 <tr>
                                     <td>{fields[key].title}</td>
                                     <td>{fields[key].value}</td>
-                                    <td><button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button></td>
+                                    <td>
+                                        <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
+                                    </td>
                                 </tr>
                             </Fragment>
                         })

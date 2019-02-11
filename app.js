@@ -24,7 +24,7 @@ connection.on('acquire', function (connection) {
 
 app.get('/fields/:fileId', (req, res) => {
 
-    connection.query(`SELECT * FROM fields WHERE file_Id=${req.params.fileId}`, function (error, results) {
+    connection.query('SELECT * FROM fields WHERE file_Id = ?', [req.params.fileId], function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -34,10 +34,19 @@ app.get('/fields/:fileId', (req, res) => {
 
 app.post('/fields', (req) => {
 
-    connection.query(`INSERT INTO fields SET ?`, req.body , function (error) {
+    connection.query(`INSERT INTO fields SET ?`, req.body , function (error, results) {
         if (error) throw error;
+
+        res.send({express: results.insertId});
     });
 });
+
+// app.put('/fields/:fileId', (req) => {
+//
+//     connection.query(`UPDATE fields SET id = ' [WHERE condition]`, req.body , function (error) {
+//         if (error) throw error;
+//     });
+// });
 
 app.delete('/fields/:fieldId', (req) => {
 
@@ -59,7 +68,7 @@ app.get('/files', (req, res) => {
 
 app.get('/files/:reportId', (req, res) => {
 
-    connection.query(`SELECT * FROM files WHERE report_Id=${req.params.reportId}`, function (error, results) {
+    connection.query(`SELECT * FROM files WHERE report_Id = ?`,[req.params.reportId],  function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -69,11 +78,6 @@ app.get('/files/:reportId', (req, res) => {
 
 app.post('/files', (req) => {
 
-    req.body.timestamp = dateFns(
-        new Date(),
-        'YYYY-MM-DD HH:mm:ss',
-    );
-
     connection.query(`INSERT INTO files SET ?`, req.body , function (error) {
         if (error) throw error;
     });
@@ -81,7 +85,7 @@ app.post('/files', (req) => {
 
 app.delete('/files/:fileId', (req) => {
 
-    connection.query(`DELETE FROM files WHERE id =${req.params.fileId}`, function (error) {
+    connection.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
         if (error) throw error;
     });
 });
@@ -99,11 +103,6 @@ app.get('/reports', (req, res) => {
 
 app.post('/reports', (req) => {
 
-    req.body.timestamp = dateFns(
-        new Date(),
-        'YYYY-MM-DD HH:mm:ss',
-    );
-
     connection.query(`INSERT INTO reports SET ?`, req.body , function (error) {
         if (error) throw error;
     });
@@ -111,7 +110,7 @@ app.post('/reports', (req) => {
 
 app.delete('/reports/:reportId', (req) => {
 
-    connection.query(`DELETE FROM reports WHERE id =${req.params.reportId}`, function (error) {
+    connection.query(`DELETE FROM reports WHERE id = ?`,[req.params.reportId], function (error) {
         if (error) throw error;
     });
 });
@@ -141,7 +140,7 @@ app.post('/users', (req) => {
 
         req.body.password = hash;
 
-        connection.query(`INSERT INTO users SET ?`, req.body , function (error) {
+        connection.query(`INSERT INTO users SET ?`, [req.body] , function (error) {
             if (error) throw error;
         });
 
