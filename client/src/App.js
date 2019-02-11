@@ -5,9 +5,8 @@ function App() {
 
     const [reports, setReports] = useState("");
     const [newReport, setNewReport] = useState("");
-    const [reportId, setReportId] = useState("");
-
-    const filesRender = useFiles(reportId);
+    const [reportOpen, setReportOpen] = useState("");
+    const filesRender = useFiles(reportOpen);
 
 
     useEffect(() => {
@@ -67,7 +66,7 @@ function App() {
             </header>
             <nav>
                 <button onClick={handleRefreshReports}>Refresh reports</button>
-                <input onChange={(event) => setNewReport(event.target.value)}/>
+                <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
                 <button onClick={handleNewReport}>New report</button>
             </nav>
 
@@ -78,7 +77,7 @@ function App() {
                         return <Fragment key={reports[key].id}>
                             <li> {reports[key].title}</li>
                             <button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>
-                            <button onClick={() => setReportId(reports[key].id)}>Open Report</button>
+                            <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
                         </Fragment>
                     })
                 }
@@ -91,22 +90,22 @@ function App() {
 }
 
 
-function useFiles(reportId) {
+function useFiles(report) {
 
     const [files, setFiles] = useState("");
-    const [file, setFileId] = useState("");
+    const [fileOpen, setFileOpen] = useState("");
     const [newFile, setNewFile] = useState("");
 
-    const fileRender = useFile(file);
+    const fileRender = useFile(fileOpen);
 
     useEffect(() => {
-        if (reportId !== "") {
+        if (report !== "") {
 
-            getFiles(reportId)
+            getFiles(report.id)
                 .then(res => setFiles(res.express))
                 .catch(err => console.log(err));
         }
-    }, [reportId]);
+    }, [report.id]);
 
     const getFiles = async (reportId) => {
 
@@ -126,7 +125,7 @@ function useFiles(reportId) {
         await fetch('/files', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": title, "report_id": reportId})
+            body: JSON.stringify({"title": title, "report_id": report.id})
         });
     };
 
@@ -139,7 +138,7 @@ function useFiles(reportId) {
 
 
     function handleRefreshFiles() {
-        getFiles(reportId)
+        getFiles(report.id)
             .then(res => setFiles(res.express))
             .catch(err => console.log(err));
     }
@@ -147,7 +146,6 @@ function useFiles(reportId) {
 
     function handleNewFile() {
         postFile(newFile).then(() => null);
-
     }
 
     function handleDeleteFile(fileId) {
@@ -162,17 +160,16 @@ function useFiles(reportId) {
     return fileRender === "" ? (
         <>
             <header>
-                <h1 align="CENTER">{reportId} files</h1>
+                <h1 align="CENTER">{report.title} files</h1>
             </header>
             <nav>
 
                 <button onClick={handleRefreshFiles}>Refresh Files</button>
-                <input onChange={(event) => setNewFile(event.target.value)}/>
+                <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
                 <button onClick={handleNewFile}>New File</button>
 
                 <button onClick={() => {
-                    setFiles("");
-                    setFileId("");
+                    setFiles("")
                 }}>Return
                 </button>
             </nav>
@@ -182,7 +179,7 @@ function useFiles(reportId) {
                         Object.keys(files).map((key) => {
                             return <Fragment key={files[key].id}>
                                 <li> {files[key].title}</li>
-                                <button onClick={() => setFileId(files[key].id)}>Open file</button>
+                                <button onClick={() => setFileOpen(files[key])}>Open file</button>
                                 <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
                             </Fragment>
                         })
@@ -195,20 +192,19 @@ function useFiles(reportId) {
     );
 }
 
-function useFile(fileId) {
+function useFile(file) {
 
     const [fields, setFields] = useState("");
     const [newFieldTitle, setNewFieldTitle] = useState("");
-    const [newFieldValue, setNewFieldValue] = useState("");
+    const [newFieldValue, setNewFieldValue] = useState(0);
 
     useEffect(() => {
-        if (fileId !== "") {
-
-            getFields(fileId)
+        if (file !== "") {
+            getFields(file.id)
                 .then(res => setFields(res.express))
                 .catch(err => console.log(err));
         }
-    }, [fileId]);
+    }, [file.id]);
 
     const getFields = async (fileId) => {
 
@@ -228,7 +224,7 @@ function useFile(fileId) {
         const response = await fetch('/fields', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": newFieldTitle, "value": newFieldValue, "file_id": fileId})
+            body: JSON.stringify({"title": newFieldTitle, "value": newFieldValue, "file_id": file.id})
         });
         const body = await response.json();
 
@@ -249,7 +245,7 @@ function useFile(fileId) {
 
 
     function handleRefreshFields() {
-        getFields(fileId)
+        getFields(file.id)
             .then(res => setFields(res.express))
             .catch(err => console.log(err));
     }
@@ -273,12 +269,12 @@ function useFile(fileId) {
     return (
         <>
             <header>
-                <h1 align="CENTER">{fileId} fields</h1>
+                <h1 align="CENTER">{file.title} fields</h1>
             </header>
             <nav>
                 <button onClick={handleRefreshFields}>Refresh Fields</button>
-                <input onChange={(event) => setNewFieldTitle(event.target.value)}/>
-                <input onChange={(event) => setNewFieldValue(event.target.value)}/>
+                <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+                <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
 
                 <button onClick={() => setFields("")}>Return</button>

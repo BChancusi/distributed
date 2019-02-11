@@ -3,7 +3,6 @@ const config = require('./config.js');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
-const dateFns = require('date-fns/format');
 
 const app = express();
 
@@ -34,7 +33,7 @@ app.get('/fields/:fileId', (req, res) => {
 
 app.post('/fields', (req, res) => {
 
-    connection.query(`INSERT INTO fields SET ?`, req.body , function (error, results) {
+    connection.query(`INSERT INTO fields SET ?`, [req.body] , function (error, results) {
         if (error) throw error;
 
         connection.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
