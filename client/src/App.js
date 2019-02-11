@@ -4,7 +4,7 @@ import './App.css';
 function App() {
 
     const [reports, setReports] = useState("");
-    const [newReportTitle, setNewReportTitle] = useState("");
+    const [newReport, setNewReport] = useState("");
     const [reportId, setReportId] = useState("");
 
     const filesRender = useFiles(reportId);
@@ -52,12 +52,12 @@ function App() {
     }
 
     function handleNewReport() {
-        postReport(newReportTitle).then(() => setNewReportTitle(""));
+        postReport(newReport).then(() => setNewReport(""));
 
     }
 
     function handleDeleteReport(reportId) {
-        deleteReport(reportId).then(() => setNewReportTitle(""));
+        deleteReport(reportId).then(() => setNewReport(""));
     }
 
     return filesRender === "" ? (
@@ -67,6 +67,7 @@ function App() {
             </header>
             <nav>
                 <button onClick={handleRefreshReports}>Refresh reports</button>
+                <input onChange={(event) => setNewReport(event.target.value)}/>
                 <button onClick={handleNewReport}>New report</button>
             </nav>
 
@@ -81,7 +82,6 @@ function App() {
                         </Fragment>
                     })
                 }
-                {/*<input onChange={reportTitleChange}/>*/}
 
             </div>
         </>
@@ -94,6 +94,8 @@ function App() {
 function useFiles(reportId) {
     const [files, setFiles] = useState("");
     const [file, setFileId] = useState("");
+    const [newFile, setNewFile] = useState("");
+
 
     const fileRender = useFile(file);
 
@@ -119,6 +121,39 @@ function useFiles(reportId) {
 
     };
 
+    const postFile = async (title) => {
+
+        await fetch('/files', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": title, "report_id": reportId})
+        });
+    };
+
+    const deleteFile = async (fileId) => {
+
+        await fetch(`/files/${fileId}`, {
+            method: 'DELETE',
+        });
+    };
+
+
+    function handleRefreshFiles() {
+        getFiles(reportId)
+            .then(res => setFiles(res.express))
+            .catch(err => console.log(err));
+    }
+
+
+    function handleNewFile() {
+        postFile(newFile).then(() => null);
+
+    }
+
+    function handleDeleteFile(fileId) {
+        deleteFile(fileId).then(() => null);
+    }
+
     if (files === "") {
         return "";
     }
@@ -130,6 +165,11 @@ function useFiles(reportId) {
                 <h1 align="CENTER">{reportId} files</h1>
             </header>
             <nav>
+
+                <button onClick={handleRefreshFiles}>Refresh Files</button>
+                <input onChange={(event) => setNewFile(event.target.value)}/>
+                <button onClick={handleNewFile}>New File</button>
+
                 <button onClick={() => {
                     setFiles("");
                     setFileId("");
@@ -142,8 +182,8 @@ function useFiles(reportId) {
                         Object.keys(files).map((key) => {
                             return <Fragment key={files[key].id}>
                                 <li> {files[key].title}</li>
-                                {/*<button onClick={deleteReportBtn}>Delete</button>*/}
                                 <button onClick={() => setFileId(files[key].id)}>Open file</button>
+                                <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
                             </Fragment>
                         })
                     }
@@ -158,6 +198,8 @@ function useFiles(reportId) {
 function useFile(fileId) {
 
     const [fields, setFields] = useState("");
+    const [newFieldTitle, setNewFieldTitle] = useState("");
+    const [newFieldValue, setNewFieldValue] = useState("");
 
     useEffect(() => {
         if (fileId !== "") {
@@ -181,6 +223,40 @@ function useFile(fileId) {
 
     };
 
+    const postField = async () => {
+
+        await fetch('/fields', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": newFieldTitle, "value": newFieldValue, "file_id": fileId})
+        });
+    };
+
+    const deleteField = async (fieldId) => {
+
+        await fetch(`/fields/${fieldId}`, {
+            method: 'DELETE',
+        });
+    };
+
+
+    function handleRefreshFields() {
+        getFields(fileId)
+            .then(res => setFields(res.express))
+            .catch(err => console.log(err));
+    }
+
+
+    function handleNewField() {
+        postField().then(() => null);
+
+
+    }
+
+    function handleDeleteFile(fieldId) {
+        deleteField(fieldId).then(() => null);
+    }
+
     if (fields === "") {
         return "";
     }
@@ -193,6 +269,11 @@ function useFile(fileId) {
                 <h1 align="CENTER">{fileId} fields</h1>
             </header>
             <nav>
+                <button onClick={handleRefreshFields}>Refresh Fields</button>
+                <input onChange={(event) => setNewFieldTitle(event.target.value)}/>
+                <input onChange={(event) => setNewFieldValue(event.target.value)}/>
+                <button onClick={handleNewField}>New Field</button>
+
                 <button onClick={() => setFields("")}>Return</button>
             </nav>
             <div id={"fields"}>
@@ -205,6 +286,7 @@ function useFile(fileId) {
                                 <tr>
                                     <td>{fields[key].title}</td>
                                     <td>{fields[key].value}</td>
+                                    <td><button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button></td>
                                 </tr>
                             </Fragment>
                         })

@@ -24,7 +24,7 @@ connection.on('acquire', function (connection) {
 
 app.get('/fields/:fileId', (req, res) => {
 
-    connection.query(`SELECT * FROM fields WHERE fileId=${req.params.fileId}`, function (error, results) {
+    connection.query(`SELECT * FROM fields WHERE file_Id=${req.params.fileId}`, function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -32,7 +32,7 @@ app.get('/fields/:fileId', (req, res) => {
 
 });
 
-app.post('/fields/:fileId', (req) => {
+app.post('/fields', (req) => {
 
     connection.query(`INSERT INTO fields SET ?`, req.body , function (error) {
         if (error) throw error;
@@ -69,14 +69,19 @@ app.get('/files/:reportId', (req, res) => {
 
 app.post('/files', (req) => {
 
+    req.body.timestamp = dateFns(
+        new Date(),
+        'YYYY-MM-DD HH:mm:ss',
+    );
+
     connection.query(`INSERT INTO files SET ?`, req.body , function (error) {
         if (error) throw error;
     });
 });
 
-app.delete('/files', (req) => {
+app.delete('/files/:fileId', (req) => {
 
-    connection.query(`DELETE FROM files WHERE title = ?`, [req.body.title], function (error) {
+    connection.query(`DELETE FROM files WHERE id =${req.params.fileId}`, function (error) {
         if (error) throw error;
     });
 });
