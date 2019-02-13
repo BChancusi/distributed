@@ -255,11 +255,29 @@ function useFile(file) {
         return null;
     };
 
-    function handlePutFields(field){
-        putField(field)
-            .then(res => null)
-            .catch(err => console.log(err));
+    function handlePutField(event, key){
 
+        if(event.target.name === "title"){
+
+            let cloneFields = [...fields];
+
+            cloneFields[key].title = event.target.value;
+
+            putField(cloneFields[key])
+                .then(res => setFields(cloneFields))
+                .catch(err => console.log(err));
+
+        }else if(event.target.name === "value"){
+
+
+            let cloneFields = [...fields];
+
+            cloneFields[key].value = event.target.value;
+
+            putField(cloneFields[key])
+                .then(res => setFields(cloneFields))
+                .catch(err => console.log(err));
+        }
     }
 
 
@@ -307,13 +325,7 @@ function useFile(file) {
 
                                 <input type="text" value={fields[key].title} name="title" onChange={(event) =>  {
 
-                                    let cloneFields = [...fields];
-
-                                    cloneFields[key].title = event.target.value;
-
-                                    setFields(cloneFields);
-
-                                    handlePutFields(cloneFields[key])
+                                    handlePutField(event, key)
 
                                 }}/>
                                 <input type="text" value={fields[key].value} name="value" onChange={(event) => {
