@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "client-install": "npm uninstall --prefix client",
-    "client": "cd client && npm start",
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "test": "jest",
