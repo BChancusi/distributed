@@ -1,12 +1,11 @@
 const mysql = require('mysql');
-const config = require('./config.js');
 
 const connection = mysql.createPool({
     connectionLimit : 10,
-    host     : config.host,
-    user     : config.user,
-    password : config.password,
-    database : config.database,
+    host     : process.env.DATABASE_URL,
+    user     : process.env.DATABASE_USERNAME,
+    password : process.env.DATABASE_PASSWORD,
+    database : process.env.DATABASE_DATABASE,
 });
 
 connection.on('acquire', function (connection) {
