@@ -31,6 +31,29 @@ app.get('/fields/:fileId', (req, res) => {
 
 });
 
+app.get('/fields/file/:fileIds', (req, res) => {
+
+    let promise = new Promise((resolve, reject) => {
+
+        let queryIds;
+
+        const ids = req.params.fileIds;
+        queryIds = ids.split("+");
+
+        resolve(queryIds)
+    });
+
+    promise.then(query =>{
+
+            connection.query('SELECT * FROM fields WHERE file_Id IN (?)', [query], function (error, results) {
+                if (error) throw error;
+
+                res.send({express: results});
+            });
+
+    });
+});
+
 app.post('/fields', (req, res) => {
 
     connection.query(`INSERT INTO fields SET ?`, [req.body] , function (error, results) {

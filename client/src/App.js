@@ -117,17 +117,67 @@ function useFiles(report) {
     const [files, setFiles] = useState("");
     const [fileOpen, setFileOpen] = useState("");
     const [newFile, setNewFile] = useState("");
+    const [fileFields, setFileFields] = useState("");
 
     const fileRender = useFile(fileOpen);
 
     useEffect(() => {
         if (report !== "") {
 
+
             getFiles(report.id)
-                .then(res => setFiles(res.express))
+                .then(res => {
+
+                    setFiles(res.express);
+                    return res.express})
+
+                .then(files => {
+
+                    let keyArray = [];
+
+                    Object.keys(files).map((key) => {
+                        keyArray.push(files[key].id);
+                        return null;
+                    });
+
+                    return keyArray
+
+                })
+                .then( keyArray =>{
+
+                    getFields(keyArray)
+                    .then(res => setFileFields(res.express))
+                        .catch(err => console.log(err));
+
+                })
                 .catch(err => console.log(err));
         }
+
     }, [report.id]);
+
+    const getFields = async (keys) => {
+
+        let idsURL ="";
+
+        for(let i = 0; i < keys.length; i++){
+            if(i !== keys.length - 1){
+                idsURL += keys[i] + "+"
+            }else if(keys.length - 1 === i){
+                idsURL += keys[i]
+            }
+        }
+
+        const response = await fetch(`/fields/file/${idsURL}`);
+
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
+
+    };
 
     const getFiles = async (reportId) => {
 
@@ -200,11 +250,12 @@ function useFiles(report) {
         return "";
     }
 
+    let total = 0;
 
     return fileRender === "" ? (
         <>
             <header>
-                <h1 align="CENTER">{report.title} files</h1>
+                <h1 align="CENTER">{report.title}</h1>
             </header>
             <nav>
 
@@ -227,6 +278,21 @@ function useFiles(report) {
                             </Fragment>
                         })
                     }
+                    {
+                        Object.keys(fileFields).map((key) => {
+
+                            total += fileFields[key].value;
+
+                            return <Fragment key={fileFields[key].id}>
+                                <label>{fileFields[key].title}</label>
+                                <br></br>
+                                <label>{fileFields[key].value}</label>
+                                <br></br>
+
+                            </Fragment>
+                        })
+                    }
+                {fileFields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
         </>
     ) : (
