@@ -44,12 +44,14 @@ app.post('/fields', (req, res) => {
     });
 });
 
-// app.put('/fields/:fileId', (req) => {
-//
-//     connection.query(`UPDATE fields SET id = ' WHERE condition`, req.body , function (error) {
-//         if (error) throw error;
-//     });
-// });
+app.put('/fields/:fieldId', (req, res) => {
+
+    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fieldId] , function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
+});
 
 app.delete('/fields/:fieldId', (req, res) => {
 

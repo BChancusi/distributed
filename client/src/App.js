@@ -244,6 +244,25 @@ function useFile(file) {
     };
 
 
+    const putField = async (field) => {
+
+        await fetch(`/fields/${field.id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": field.title, "value": field.value})
+        });
+
+        return null;
+    };
+
+    function handlePutFields(field){
+        putField(field)
+            .then(res => null)
+            .catch(err => console.log(err));
+
+    }
+
+
     function handleRefreshFields() {
         getFields(file.id)
             .then(res => setFields(res.express))
@@ -280,24 +299,40 @@ function useFile(file) {
                 <button onClick={() => setFields("")}>Return</button>
             </nav>
             <div id={"fields"}>
-                <table>
-                    <tbody>
+
                     {
                         Object.keys(fields).map((key) => {
                             total += fields[key].value;
                             return <Fragment key={fields[key].id}>
-                                <tr>
-                                    <td>{fields[key].title}</td>
-                                    <td>{fields[key].value}</td>
-                                    <td>
+
+                                <input type="text" value={fields[key].title} name="title" onChange={(event) =>  {
+
+                                    let cloneFields = [...fields];
+
+                                    cloneFields[key].title = event.target.value;
+
+                                    setFields(cloneFields);
+
+                                    handlePutFields(cloneFields[key])
+
+                                }}/>
+                                <input type="text" value={fields[key].value} name="value" onChange={(event) => {
+
+                                    let cloneFields = [...fields];
+
+                                    cloneFields[key].value = event.target.value;
+
+                                    setFields(cloneFields);
+
+                                }}/>
+
+
                                         <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
-                                    </td>
-                                </tr>
+
+
                             </Fragment>
                         })
                     }
-                    </tbody>
-                </table>
                 {fields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
         </>
