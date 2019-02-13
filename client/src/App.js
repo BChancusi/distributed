@@ -59,6 +59,28 @@ function App() {
         deleteReport(reportId).then(() => setNewReport(""));
     }
 
+    const putReport = async (report) => {
+
+        await fetch(`/reports/${report.id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": report.title})
+        });
+
+        return null;
+    };
+
+    function handlePutReport(event, key){
+
+        let cloneReports = [...reports];
+
+        cloneReports[key].title = event.target.value;
+
+        putReport(cloneReports[key])
+            .then(res => setReports(cloneReports))
+            .catch(err => console.log(err));
+    }
+
     return filesRender === "" ? (
         <>
             <header>
@@ -75,7 +97,7 @@ function App() {
                 {
                     Object.keys(reports).map((key) => {
                         return <Fragment key={reports[key].id}>
-                            <li> {reports[key].title}</li>
+                            <input type="text" value={reports[key].title} onChange={(event) => handlePutReport(event, key)}/>
                             <button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>
                             <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
                         </Fragment>
@@ -199,7 +221,7 @@ function useFiles(report) {
                     {
                         Object.keys(files).map((key) => {
                             return <Fragment key={files[key].id}>
-                                <input type="text" value={files[key].title} name="title" onChange={(event) => handlePutFile(event, key)}/>
+                                <input type="text" value={files[key].title} onChange={(event) => handlePutFile(event, key)}/>
                                 <button onClick={() => setFileOpen(files[key])}>Open file</button>
                                 <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
                             </Fragment>

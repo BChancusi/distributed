@@ -141,6 +141,15 @@ app.delete('/reports/:reportId', (req, res) => {
     });
 });
 
+app.put('/reports/:reportId', (req, res) => {
+
+    connection.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId] , function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
+});
+
 app.get('/users', (req, res) => {
 
     connection.query('SELECT * FROM users', function (error, results) {
