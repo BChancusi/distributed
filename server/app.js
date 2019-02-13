@@ -14,12 +14,9 @@ const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use(express.static(__dirname));
-
-
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
-    app.use(express.static('client/build'));
+    app.use(express.static('../client/build'));
 
     // Express serve up index.html file if it doesn't recognize route
     app.get('*', (req, res) => {
