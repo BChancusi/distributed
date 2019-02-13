@@ -102,6 +102,15 @@ app.delete('/files/:fileId', (req, res) => {
     });
 });
 
+app.put('/files/:fileId', (req, res) => {
+
+    connection.query(`UPDATE files SET ?  WHERE id = ?`, [req.body, req.params.fileId] , function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
+});
+
 
 app.get('/reports', (req, res) => {
 

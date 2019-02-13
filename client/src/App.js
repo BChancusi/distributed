@@ -152,6 +152,28 @@ function useFiles(report) {
         deleteFile(fileId).then(() => null);
     }
 
+    const putFile = async (file) => {
+
+        await fetch(`/files/${file.id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": file.title})
+        });
+
+        return null;
+    };
+
+    function handlePutFile(event, key){
+
+            let cloneFiles = [...files];
+
+            cloneFiles[key].title = event.target.value;
+
+            putFile(cloneFiles[key])
+                .then(res => setFiles(cloneFiles))
+                .catch(err => console.log(err));
+    }
+
     if (files === "") {
         return "";
     }
@@ -174,17 +196,15 @@ function useFiles(report) {
                 </button>
             </nav>
             <div id={"files"}>
-                <ul>
                     {
                         Object.keys(files).map((key) => {
                             return <Fragment key={files[key].id}>
-                                <li> {files[key].title}</li>
+                                <input type="text" value={files[key].title} name="title" onChange={(event) => handlePutFile(event, key)}/>
                                 <button onClick={() => setFileOpen(files[key])}>Open file</button>
                                 <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
                             </Fragment>
                         })
                     }
-                </ul>
             </div>
         </>
     ) : (
@@ -323,24 +343,9 @@ function useFile(file) {
                             total += fields[key].value;
                             return <Fragment key={fields[key].id}>
 
-                                <input type="text" value={fields[key].title} name="title" onChange={(event) =>  {
-
-                                    handlePutField(event, key)
-
-                                }}/>
-                                <input type="text" value={fields[key].value} name="value" onChange={(event) => {
-
-                                    let cloneFields = [...fields];
-
-                                    cloneFields[key].value = event.target.value;
-
-                                    setFields(cloneFields);
-
-                                }}/>
-
-
-                                        <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
-
+                                <input type="text" value={fields[key].title} name="title" onChange={(event) => handlePutField(event, key)}/>
+                                <input type="text" value={fields[key].value} name="value" onChange={(event) => handlePutField(event, key)}/>
+                                <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
 
                             </Fragment>
                         })
