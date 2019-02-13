@@ -12,9 +12,6 @@ const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-//Static file declaration
-app.use(express.static(path.join(__dirname, 'client/build')));
-
 //production mode
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
@@ -26,7 +23,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
-
 
 app.use('/reports', reports);
 app.use('/files', files);
