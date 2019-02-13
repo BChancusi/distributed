@@ -3,42 +3,42 @@ const router = express.Router();
 const connection = require('./database');
 
 
-router.get('/', (req, res) => {
+router.route('/')
+    .get((req, res) => {
 
-    connection.query('SELECT * FROM reports', function (error, results) {
-        if (error) throw error;
+        connection.query('SELECT * FROM reports', function (error, results) {
+            if (error) throw error;
 
-        res.send({express: results});
+            res.send({express: results});
+        });
+
+    })
+    .post((req, res) => {
+
+        connection.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
+            if (error) throw error;
+
+            res.send({express: res.results});
+
+        });
     });
 
-});
+router.route('/:reportId')
+    .delete((req, res) => {
 
-router.post('/', (req, res) => {
+        connection.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error, results) {
+            if (error) throw error;
 
-    connection.query(`INSERT INTO reports SET ?`, req.body , function (error, results) {
-        if (error) throw error;
+            res.send({express: res.results});
+        });
+    })
+    .put((req, res) => {
 
-        res.send({express: res.results});
+        connection.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
+            if (error) throw error;
 
+            res.sendStatus(200)
+        });
     });
-});
-
-router.delete('/:reportId', (req, res) => {
-
-    connection.query(`DELETE FROM reports WHERE id = ?`,[req.params.reportId], function (error, results) {
-        if (error) throw error;
-
-        res.send({express: res.results});
-    });
-});
-
-router.put('/reports/:reportId', (req, res) => {
-
-    connection.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId] , function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
-    });
-});
 
 module.exports = router;

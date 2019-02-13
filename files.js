@@ -3,7 +3,8 @@ const router = express.Router();
 const connection = require('./database');
 
 
-router.get('/', (req, res) => {
+router.route('/')
+    .get( (req, res) => {
 
     connection.query('SELECT * FROM files', function (error, results) {
         if (error) throw error;
@@ -11,6 +12,31 @@ router.get('/', (req, res) => {
         res.send({express: results});
     });
 
+})
+    .post( (req, res) => {
+
+    connection.query(`INSERT INTO files SET ?`, req.body , function (error, results) {
+        if (error) throw error;
+    });
+
+    res.send({express: res.results});
+});
+router.route('/:fileId')
+    .delete( (req, res) => {
+
+    connection.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error, results) {
+        if (error) throw error;
+
+        res.send({express: res.results});
+    });
+})
+    .put( (req, res) => {
+
+    connection.query(`UPDATE files SET ?  WHERE id = ?`, [req.body, req.params.fileId] , function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
 });
 
 router.get('/:reportId', (req, res) => {
@@ -21,33 +47,6 @@ router.get('/:reportId', (req, res) => {
         res.send({express: results});
     });
 
-});
-
-router.post('/', (req, res) => {
-
-    connection.query(`INSERT INTO files SET ?`, req.body , function (error, results) {
-        if (error) throw error;
-    });
-
-    res.send({express: res.results});
-});
-
-router.delete('/:fileId', (req, res) => {
-
-    connection.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error, results) {
-        if (error) throw error;
-
-        res.send({express: res.results});
-    });
-});
-
-router.put('/:fileId', (req, res) => {
-
-    connection.query(`UPDATE files SET ?  WHERE id = ?`, [req.body, req.params.fileId] , function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
-    });
 });
 
 module.exports = router;

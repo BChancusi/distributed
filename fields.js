@@ -8,12 +8,27 @@ const connection = require('./database');
 //     next()
 // })
 
-router.get('/:fileId', (req, res) => {
+router.route('/:fileId').get( (req, res) => {
 
     connection.query('SELECT * FROM fields WHERE file_Id = ?', [req.params.fileId], function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
+    });
+
+}).put( (req, res) => {
+
+    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fieldId] , function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
+}).delete((req, res) => {
+
+    connection.query(`DELETE FROM fields WHERE id = ?`, [req.params.fieldId], function (error, results) {
+        if (error) throw error;
+
+        res.send({express: res.results});
     });
 
 });
@@ -52,25 +67,6 @@ router.post('/', (req, res) => {
             res.send({express: results});
         });
     });
-});
-
-router.put('/:fieldId', (req, res) => {
-
-    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fieldId] , function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
-    });
-});
-
-router.delete('/:fieldId', (req, res) => {
-
-    connection.query(`DELETE FROM fields WHERE id = ?`, [req.params.fieldId], function (error, results) {
-        if (error) throw error;
-
-        res.send({express: res.results});
-    });
-
 });
 
 module.exports = router;
