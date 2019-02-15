@@ -64,26 +64,38 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/branch', (req, res) => {
+router.post('/branch/:branchTitle', (req, res) => {
 
     let query = [];
 
-    for (let i = 0; i < req.body.length; i++) {
+    for (let i = 0; i < req.body.length - 1; i++) {
+
 
         delete req.body[i].timestamp;
         delete req.body[i].id;
         req.body[i].version_id = req.body[i].version_id + 1;
+        req.body[i].branch_title = req.params.branchTitle;
+
 
         query.push(Object.values(req.body[i]));
 
     }
+    const fileValue = req.body[req.body.length - 1];
+    delete fileValue.timestamp;
+    delete fileValue.id;
 
-    connection.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
-        if (error) throw error;
+    fileValue.branch_title = req.params.branchTitle;
 
-        res.sendStatus(200)
+        connection.query(`INSERT INTO files SET ?`, [fileValue] , function (error, results) {
+            if (error) throw error;
 
-    });
+            connection.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
+                if (error) throw error;
+
+                res.sendStatus(200)
+
+            });
+        });
 });
 
 module.exports = router;

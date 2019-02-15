@@ -309,6 +309,8 @@ function useFile(file) {
     const [fields, setFields] = useState("");
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldValue, setNewFieldValue] = useState(0);
+    const [newBranchTitle, setNewBranchTitle] = useState("");
+
 
     useEffect(() => {
         if (file !== "") {
@@ -417,10 +419,13 @@ function useFile(file) {
 
     const postBranch = async () => {
 
-        await fetch('/fields/branch', {
+        let cloneFields = [...fields];
+        cloneFields.push(file);
+
+        await fetch(`/fields/branch/${newBranchTitle}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(fields)
+            body: JSON.stringify(cloneFields)
         });
 
         return null;
@@ -442,6 +447,7 @@ function useFile(file) {
                 <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
+                <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
                 <button onClick={handleNewBranch}>New Branch</button>
 
 
