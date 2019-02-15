@@ -101,7 +101,7 @@ function App() {
                         return <Fragment key={reports[key].id}>
                             <input type="text" value={reports[key].title}
                                    onChange={(event) => handlePutReport(event, key)}/>
-                            <button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>
+                            {/*<button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>*/}
                             <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
                         </Fragment>
                     })
@@ -311,6 +311,8 @@ function useFile(file) {
 
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
+    const [fileTitles, setFileTitles] = useState("master");
+
 
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldValue, setNewFieldValue] = useState(0);
@@ -320,16 +322,21 @@ function useFile(file) {
     useEffect(() => {
         if (file !== "") {
             getFields(file.id)
-                .then(res => setFields(res.express))
+                .then(res => {
+                    setFields(res.fields);
+                    setFileTitles(res.fileTitles);
+                })
                 .catch(err => console.log(err));
+
         }
+
         return () => console.debug("unmounting FILE")
 
     }, [file.id, currentBranch]);
 
     const getFields = async (fileId) => {
 
-        const response = await fetch(`/fields/${fileId + "+" + currentBranch}`);
+        const response = await fetch(`/fields/${fileId + "+" + currentBranch + "+" + file.title}`);
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -345,7 +352,12 @@ function useFile(file) {
         const response = await fetch('/fields', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": newFieldTitle, "value": newFieldValue, "file_id": file.id})
+            body: JSON.stringify({
+                "title": newFieldTitle,
+                "value": newFieldValue,
+                "file_id": file.id,
+                "branch_title": currentBranch
+            })
         });
         const body = await response.json();
 
@@ -458,8 +470,13 @@ function useFile(file) {
                 <>
                     <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
 
-                        <option value="master">master</option>
-                        <option value="123 bra">123 bra</option>
+                        {
+                            Object.keys(fileTitles).map((key) => {
+
+                                return <option key={fileTitles[key].id}
+                                    value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                            })
+                        }
 
                     </select>
                 </>

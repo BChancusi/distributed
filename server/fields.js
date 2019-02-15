@@ -15,7 +15,11 @@ router.route('/:fileBranch')
     connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranch[0], queryBranch[1]], function (error, results) {
         if (error) throw error;
 
-        res.send({express: results});
+        connection.query('SELECT branch_title, id FROM files WHERE title = ?', [queryBranch[2]], function (error, resultsTitles) {
+            if (error) throw error;
+
+            res.send({fields: results, fileTitles : resultsTitles});
+        });
     });
 
 }).put((req, res) => {
