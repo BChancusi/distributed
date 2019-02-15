@@ -13,6 +13,8 @@ function App() {
         getReports()
             .then(res => setReports(res.express))
             .catch(err => console.log(err));
+
+        return () => console.debug("unmounting REPORT")
     }, []);
 
     const getReports = async () => {
@@ -152,6 +154,8 @@ function useFiles(report) {
                 })
                 .catch(err => console.log(err));
         }
+        return () => console.debug("unmounting F I L E S")
+
 
     }, [report.id]);
 
@@ -312,6 +316,8 @@ function useFile(file) {
                 .then(res => setFields(res.express))
                 .catch(err => console.log(err));
         }
+        return () => console.debug("unmounting FILE")
+
     }, [file.id]);
 
     const getFields = async (fileId) => {
@@ -405,6 +411,21 @@ function useFile(file) {
         deleteField(fieldId).then(() => null);
     }
 
+    function handleNewBranch() {
+        postBranch(fields).then(() => null);
+    }
+
+    const postBranch = async () => {
+
+        await fetch('/fields/branch', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(fields)
+        });
+
+        return null;
+    };
+
     if (fields === "") {
         return "";
     }
@@ -414,13 +435,15 @@ function useFile(file) {
     return (
         <>
             <header>
-                <h1 align="CENTER">{file.title} fields</h1>
+                <h1 align="CENTER">{file.title}</h1>
             </header>
             <nav>
                 <button onClick={handleRefreshFields}>Refresh Fields</button>
                 <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
+                <button onClick={handleNewBranch}>New Branch</button>
+
 
                 <button onClick={() => setFields("")}>Return</button>
             </nav>
