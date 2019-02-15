@@ -3,9 +3,16 @@ const router = express.Router();
 const connection = require('./database');
 
 
-router.route('/:fileId').get((req, res) => {
+router.route('/:fileBranch')
+    .get((req, res) => {
 
-    connection.query('SELECT * FROM fields WHERE file_Id = ?', [req.params.fileId], function (error, results) {
+        let queryBranch;
+
+        const fileBranch = req.params.fileBranch;
+        queryBranch = fileBranch.split("+");
+
+
+    connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranch[0], queryBranch[1]], function (error, results) {
         if (error) throw error;
 
         res.send({express: results});

@@ -72,7 +72,7 @@ function App() {
         return null;
     };
 
-    function handlePutReport(event, key){
+    function handlePutReport(event, key) {
 
         let cloneReports = [...reports];
 
@@ -99,7 +99,8 @@ function App() {
                 {
                     Object.keys(reports).map((key) => {
                         return <Fragment key={reports[key].id}>
-                            <input type="text" value={reports[key].title} onChange={(event) => handlePutReport(event, key)}/>
+                            <input type="text" value={reports[key].title}
+                                   onChange={(event) => handlePutReport(event, key)}/>
                             <button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>
                             <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
                         </Fragment>
@@ -131,7 +132,8 @@ function useFiles(report) {
                 .then(res => {
 
                     setFiles(res.express);
-                    return res.express})
+                    return res.express
+                })
 
                 .then(files => {
 
@@ -145,10 +147,10 @@ function useFiles(report) {
                     return keyArray
 
                 })
-                .then( keyArray =>{
+                .then(keyArray => {
 
                     getFields(keyArray)
-                    .then(res => setFileFields(res.express))
+                        .then(res => setFileFields(res.express))
                         .catch(err => console.log(err));
 
                 })
@@ -161,12 +163,12 @@ function useFiles(report) {
 
     const getFields = async (keys) => {
 
-        let idsURL ="";
+        let idsURL = "";
 
-        for(let i = 0; i < keys.length; i++){
-            if(i !== keys.length - 1){
+        for (let i = 0; i < keys.length; i++) {
+            if (i !== keys.length - 1) {
                 idsURL += keys[i] + "+"
-            }else if(keys.length - 1 === i){
+            } else if (keys.length - 1 === i) {
                 idsURL += keys[i]
             }
         }
@@ -239,15 +241,15 @@ function useFiles(report) {
         return null;
     };
 
-    function handlePutFile(event, key){
+    function handlePutFile(event, key) {
 
-            let cloneFiles = [...files];
+        let cloneFiles = [...files];
 
-            cloneFiles[key].title = event.target.value;
+        cloneFiles[key].title = event.target.value;
 
-            putFile(cloneFiles[key])
-                .then(res => setFiles(cloneFiles))
-                .catch(err => console.log(err));
+        putFile(cloneFiles[key])
+            .then(res => setFiles(cloneFiles))
+            .catch(err => console.log(err));
     }
 
     if (files === "") {
@@ -273,29 +275,30 @@ function useFiles(report) {
                 </button>
             </nav>
             <div id={"files"}>
-                    {
-                        Object.keys(files).map((key) => {
-                            return <Fragment key={files[key].id}>
-                                <input type="text" value={files[key].title} onChange={(event) => handlePutFile(event, key)}/>
-                                <button onClick={() => setFileOpen(files[key])}>Open file</button>
-                                <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
-                            </Fragment>
-                        })
-                    }
-                    {
-                        Object.keys(fileFields).map((key) => {
+                {
+                    Object.keys(files).map((key) => {
+                        return <Fragment key={files[key].id}>
+                            <input type="text" value={files[key].title}
+                                   onChange={(event) => handlePutFile(event, key)}/>
+                            <button onClick={() => setFileOpen(files[key])}>Open file</button>
+                            <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
+                        </Fragment>
+                    })
+                }
+                {
+                    Object.keys(fileFields).map((key) => {
 
-                            total += fileFields[key].value;
+                        total += fileFields[key].value;
 
-                            return <Fragment key={fileFields[key].id}>
-                                <label>{fileFields[key].title}</label>
-                                <br></br>
-                                <label>{fileFields[key].value}</label>
-                                <br></br>
+                        return <Fragment key={fileFields[key].id}>
+                            <label>{fileFields[key].title}</label>
+                            <br></br>
+                            <label>{fileFields[key].value}</label>
+                            <br></br>
 
-                            </Fragment>
-                        })
-                    }
+                        </Fragment>
+                    })
+                }
                 {fileFields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
         </>
@@ -307,6 +310,8 @@ function useFiles(report) {
 function useFile(file) {
 
     const [fields, setFields] = useState("");
+    const [currentBranch, setCurrentBranch] = useState("master");
+
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldValue, setNewFieldValue] = useState(0);
     const [newBranchTitle, setNewBranchTitle] = useState("");
@@ -320,11 +325,11 @@ function useFile(file) {
         }
         return () => console.debug("unmounting FILE")
 
-    }, [file.id]);
+    }, [file.id, currentBranch]);
 
     const getFields = async (fileId) => {
 
-        const response = await fetch(`/fields/${fileId}`);
+        const response = await fetch(`/fields/${fileId + "+" + currentBranch}`);
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -371,9 +376,9 @@ function useFile(file) {
         return null;
     };
 
-    function handlePutField(event, key){
+    function handlePutField(event, key) {
 
-        if(event.target.name === "title"){
+        if (event.target.name === "title") {
 
             let cloneFields = [...fields];
 
@@ -383,7 +388,7 @@ function useFile(file) {
                 .then(res => setFields(cloneFields))
                 .catch(err => console.log(err));
 
-        }else if(event.target.name === "value"){
+        } else if (event.target.name === "value") {
 
 
             let cloneFields = [...fields];
@@ -406,7 +411,7 @@ function useFile(file) {
 
     function handleNewField() {
         postField().then(res => setFields(fields.concat(res.express)))
-                    .catch(err => console.log(err));
+            .catch(err => console.log(err));
     }
 
     function handleDeleteFile(fieldId) {
@@ -450,23 +455,34 @@ function useFile(file) {
                 <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
                 <button onClick={handleNewBranch}>New Branch</button>
 
+                <>
+                    <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+
+                        <option value="master">master</option>
+                        <option value="123 bra">123 bra</option>
+
+                    </select>
+                </>
+
 
                 <button onClick={() => setFields("")}>Return</button>
             </nav>
             <div id={"fields"}>
 
-                    {
-                        Object.keys(fields).map((key) => {
-                            total += fields[key].value;
-                            return <Fragment key={fields[key].id}>
+                {
+                    Object.keys(fields).map((key) => {
+                        total += fields[key].value;
+                        return <Fragment key={fields[key].id}>
 
-                                <input type="text" value={fields[key].title} name="title" onChange={(event) => handlePutField(event, key)}/>
-                                <input type="text" value={fields[key].value} name="value" onChange={(event) => handlePutField(event, key)}/>
-                                <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
+                            <input type="text" value={fields[key].title} name="title"
+                                   onChange={(event) => handlePutField(event, key)}/>
+                            <input type="text" value={fields[key].value} name="value"
+                                   onChange={(event) => handlePutField(event, key)}/>
+                            <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
 
-                            </Fragment>
-                        })
-                    }
+                        </Fragment>
+                    })
+                }
                 {fields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
         </>

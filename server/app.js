@@ -24,8 +24,6 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(express.static(__dirname));
 
-console.debug(__dirname);
-
 app.use('/reports', reports);
 app.use('/files', files);
 app.use('/fields', fields);
