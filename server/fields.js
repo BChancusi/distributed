@@ -6,10 +6,8 @@ const connection = require('./database');
 router.route('/:fileBranch')
     .get((req, res) => {
 
-        let queryBranch;
-
         const fileBranch = req.params.fileBranch;
-        queryBranch = fileBranch.split("+");
+        let queryBranch = fileBranch.split("+");
 
 
     connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranch[0], queryBranch[1]], function (error, results) {
@@ -24,14 +22,14 @@ router.route('/:fileBranch')
 
 }).put((req, res) => {
 
-    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fieldId], function (error) {
+    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fileBranch], function (error) {
         if (error) throw error;
 
         res.sendStatus(200)
     });
 }).delete((req, res) => {
 
-    connection.query(`DELETE FROM fields WHERE id = ?`, [req.params.fieldId], function (error, results) {
+    connection.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error, results) {
         if (error) throw error;
 
         res.send({express: res.results});
@@ -43,10 +41,8 @@ router.get('/file/:fileIds', (req, res) => {
 
     let promise = new Promise((resolve, reject) => {
 
-        let queryIds;
-
         const ids = req.params.fileIds;
-        queryIds = ids.split("+");
+        let queryIds = ids.split("+");
 
         resolve(queryIds)
     });
@@ -109,4 +105,20 @@ router.post('/branch/:branchTitle', (req, res) => {
         });
 });
 
+router.get('/mergeBranch/:mergeBranches', (req, res) => {
+
+    const mergeBranches = req.params.mergeBranches;
+    let queryBranches = mergeBranches.split("+");
+
+
+    connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranches[0], queryBranches[1]], function (error, results) {
+        if (error) throw error;
+
+        connection.query('SELECT branch_title, id FROM files WHERE title = ?', [queryBranches[2]], function (error, resultsTitles) {
+            if (error) throw error;
+
+            res.send({fields: results, fileTitles: resultsTitles});
+        });
+    });
+});
 module.exports = router;

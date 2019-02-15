@@ -299,8 +299,9 @@ function useFiles(report) {
                         </Fragment>
                     })
                 }
-                {fileFields.length === 0 ? null : <label>Total = {total}</label>}
+                <label>Total = {total}</label>}
             </div>
+
         </>
     ) : (
         fileRender
@@ -311,6 +312,8 @@ function useFile(file) {
 
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
+    const [mergeBranch, setMergeBranch] = useState("master");
+
     const [fileTitles, setFileTitles] = useState("master");
 
 
@@ -467,19 +470,31 @@ function useFile(file) {
                 <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
                 <button onClick={handleNewBranch}>New Branch</button>
 
-                <>
-                    <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                    {
+                        Object.keys(fileTitles).map((key) => {
 
-                        {
-                            Object.keys(fileTitles).map((key) => {
+                            return <option key={fileTitles[key].id}
+                                           value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                        })
+                    }
 
-                                return <option key={fileTitles[key].id}
-                                    value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
-                            })
-                        }
+                </select>
 
-                    </select>
-                </>
+                <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
+                    {
+                        Object.keys(fileTitles).map((key) => {
+
+                            if(fileTitles[key].branch_title === currentBranch){
+                                return;
+                            }
+
+                            return <option key={fileTitles[key].id}
+                                           value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                        })
+                    }
+                </select>
+
 
 
                 <button onClick={() => setFields("")}>Return</button>
