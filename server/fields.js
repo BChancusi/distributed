@@ -47,9 +47,12 @@ router.get('/file/:fileIds', (req, res) => {
         resolve(queryIds)
     });
 
+
     promise.then(query => {
 
-        connection.query('SELECT * FROM fields WHERE file_Id IN (?)', [query], function (error, results) {
+        const masterBranch = query.pop();
+
+            connection.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = ?', [query, masterBranch], function (error, results) {
             if (error) throw error;
 
             res.send({express: results});

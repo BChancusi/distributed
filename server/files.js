@@ -41,7 +41,11 @@ router.route('/:fileId')
 
 router.get('/:reportId', (req, res) => {
 
-    connection.query(`SELECT * FROM files WHERE report_Id = ?`,[req.params.reportId],  function (error, results) {
+
+    const report = req.params.reportId;
+    let queryValues = report.split("+");
+
+    connection.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = ?`,[queryValues[0], queryValues[1]],  function (error, results) {
         if (error) throw error;
 
         res.send({express: results});

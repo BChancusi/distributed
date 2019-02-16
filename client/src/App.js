@@ -172,6 +172,7 @@ function useFiles(report) {
                 idsURL += keys[i]
             }
         }
+        idsURL+= "+master";
 
         const response = await fetch(`/fields/file/${idsURL}`);
 
@@ -187,7 +188,7 @@ function useFiles(report) {
 
     const getFiles = async (reportId) => {
 
-        const response = await fetch(`/files/${reportId}`);
+        const response = await fetch(`/files/${reportId + "+master"}`);
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -299,7 +300,7 @@ function useFiles(report) {
                         </Fragment>
                     })
                 }
-                <label>Total = {total}</label>}
+                <label>Total = {total}</label>
             </div>
 
         </>
@@ -463,6 +464,10 @@ function useFile(file) {
                 <h1 align="CENTER">{file.title}</h1>
             </header>
             <nav>
+                <button onClick={() => setFields("")}>Return</button>
+            </nav>
+
+            <div id={"options"}>
                 <button onClick={handleRefreshFields}>Refresh Fields</button>
                 <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
@@ -471,34 +476,34 @@ function useFile(file) {
                 <button onClick={handleNewBranch}>New Branch</button>
 
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                    <>
                     {
-                        Object.keys(fileTitles).map((key) => {
+                        Array.isArray(fileTitles) ?
+                        Object.keys(fileTitles).map(key => {
 
                             return <option key={fileTitles[key].id}
                                            value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
                         })
+                            : null
                     }
-
+                    </>
                 </select>
+                {Array.isArray(fileTitles) && fileTitles.length > 1?
+                    <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
+                        {
+                            Object.keys(fileTitles).map((key) => {
 
-                <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
-                    {
-                        Object.keys(fileTitles).map((key) => {
+                                if (fileTitles[key].branch_title === currentBranch) {
+                                    return;
+                                }
 
-                            if(fileTitles[key].branch_title === currentBranch){
-                                return;
-                            }
-
-                            return <option key={fileTitles[key].id}
-                                           value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
-                        })
-                    }
-                </select>
-
-
-
-                <button onClick={() => setFields("")}>Return</button>
-            </nav>
+                                return <option key={fileTitles[key].id}
+                                               value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                            })
+                        }
+                    </select>
+                : null}
+                    </div>
             <div id={"fields"}>
 
                 {
