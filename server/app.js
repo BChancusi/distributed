@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const reports = require('./reports');
 const files = require('./files');
 const fields = require('./fields');
@@ -9,8 +8,8 @@ const path = require('path');
 
 const app = express();
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
@@ -21,8 +20,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
-
-app.use(express.static(__dirname));
 
 app.use('/reports', reports);
 app.use('/files', files);
