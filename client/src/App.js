@@ -3,11 +3,10 @@ import './App.css';
 
 function App() {
 
-    const [reports, setReports] = useState("");
+    const [reports, setReports] = useState(null);
     const [newReport, setNewReport] = useState("");
     const [reportOpen, setReportOpen] = useState("");
     const filesRender = useFiles(reportOpen);
-
 
     useEffect(() => {
         getReports()
@@ -83,7 +82,7 @@ function App() {
             .catch(err => console.log(err));
     }
 
-    return filesRender === "" ? (
+    return filesRender === "" && reports != null ? (
         <>
             <header>
                 <h1 align="CENTER">Reports</h1>
@@ -271,7 +270,7 @@ function useFiles(report) {
                 <button onClick={handleNewFile}>New File</button>
 
                 <button onClick={() => {
-                    setFiles("")
+                    setFiles("");
                 }}>Return
                 </button>
             </nav>
