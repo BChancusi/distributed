@@ -319,7 +319,6 @@ function useFile(file) {
 
     const [fileTitles, setFileTitles] = useState("master");
 
-
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldValue, setNewFieldValue] = useState(0);
     const [newBranchTitle, setNewBranchTitle] = useState("");
@@ -459,6 +458,29 @@ function useFile(file) {
         return null;
     };
 
+    function handleMergeBranch() {
+        postMergeBranch(fields).then(res => console.debug(res))
+                            .catch(err => console.log(err));
+
+    }
+
+    const postMergeBranch = async () => {
+
+        const response = await fetch(`/fields/mergeBranch/${mergeBranch}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(fields)
+        });
+
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+        return body;
+
+    };
+
     if (fields === "") {
         return "";
     }
@@ -496,6 +518,7 @@ function useFile(file) {
                     </>
                 </select>
                 {Array.isArray(fileTitles) && fileTitles.length > 1?
+                    <>
                     <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
                         {
                             Object.keys(fileTitles).map((key) => {
@@ -503,12 +526,13 @@ function useFile(file) {
                                 if (fileTitles[key].branch_title === currentBranch) {
                                     return;
                                 }
-
                                 return <option key={fileTitles[key].id}
                                                value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
                             })
                         }
                     </select>
+                    <button onClick={handleMergeBranch}>Merge Branch target</button>
+                    </>
                 : null}
                     </div>
             <div id={"fields"}>
@@ -536,3 +560,4 @@ function useFile(file) {
 export default App;
 
 //TODO Cant select same file twice after return
+//      Merge branch initial being sent instead of target

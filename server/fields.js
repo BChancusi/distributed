@@ -107,20 +107,25 @@ router.post('/branch/:branchTitle', (req, res) => {
     });
 });
 
-router.get('/mergeBranch/:mergeBranches', (req, res) => {
+router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
-    const mergeBranches = req.params.mergeBranches;
-    let queryBranches = mergeBranches.split("+");
-
-
-    connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranches[0], queryBranches[1]], function (error, results) {
+    connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
 
-        connection.query('SELECT branch_title, id FROM files WHERE title = ?', [queryBranches[2]], function (error, resultsTitles) {
-            if (error) throw error;
+        let conflicts = [];
 
-            res.send({fields: results, fileTitles: resultsTitles});
-        });
+        for(let i = 0; i < results.length; i++){
+            for(let j = 0; j < req.body.length; j++){
+                    if(results[i].title === req.body[j].title){
+                        conflicts.push(results[i]);
+                        break;
+                    }
+            }
+        }
+
+        res.send({express: conflicts});
+
+
     });
 });
 module.exports = router;
