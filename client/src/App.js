@@ -171,7 +171,7 @@ function useFiles(report) {
                 idsURL += keys[i]
             }
         }
-        idsURL+= "+master";
+        idsURL += "+master";
 
         const response = await fetch(`/fields/file/${idsURL}`);
 
@@ -188,7 +188,7 @@ function useFiles(report) {
     const getFiles = async (reportId) => {
 
 
-        let fetchUrl =  encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`);
+        let fetchUrl = encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`);
 
         const response = await fetch(fetchUrl);
         const body = await response.json();
@@ -316,6 +316,8 @@ function useFile(file) {
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
     const [mergeBranch, setMergeBranch] = useState("master");
+    const [mergeBranchConflicts, setMergeBranchConflicts] = useState([]);
+
 
     const [fileTitles, setFileTitles] = useState("master");
 
@@ -459,8 +461,8 @@ function useFile(file) {
     };
 
     function handleMergeBranch() {
-        postMergeBranch(fields).then(res => console.debug(res))
-                            .catch(err => console.log(err));
+        postMergeBranch(fields).then(res => setMergeBranchConflicts(res.express))
+            .catch(err => console.log(err));
 
     }
 
@@ -506,37 +508,36 @@ function useFile(file) {
 
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                     <>
-                    {
-                        Array.isArray(fileTitles) ?
-                        Object.keys(fileTitles).map(key => {
+                        {
+                            Array.isArray(fileTitles) ?
+                                Object.keys(fileTitles).map(key => {
 
-                            return <option key={fileTitles[key].id}
-                                           value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
-                        })
-                            : null
-                    }
+                                    return <option key={fileTitles[key].id}
+                                                   value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                                })
+                                : null
+                        }
                     </>
                 </select>
-                {Array.isArray(fileTitles) && fileTitles.length > 1?
+                {Array.isArray(fileTitles) && fileTitles.length > 1 ?
                     <>
-                    <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
-                        {
-                            Object.keys(fileTitles).map((key) => {
+                        <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
+                            {
+                                Object.keys(fileTitles).map((key) => {
 
-                                if (fileTitles[key].branch_title === currentBranch) {
-                                    return;
-                                }
-                                return <option key={fileTitles[key].id}
-                                               value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
-                            })
-                        }
-                    </select>
-                    <button onClick={handleMergeBranch}>Merge Branch target</button>
+                                    if (fileTitles[key].branch_title === currentBranch) {
+                                        return;
+                                    }
+                                    return <option key={fileTitles[key].id}
+                                                   value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                                })
+                            }
+                        </select>
+                        <button onClick={handleMergeBranch}>Merge Branch target</button>
                     </>
-                : null}
-                    </div>
+                    : null}
+            </div>
             <div id={"fields"}>
-
                 {
                     Object.keys(fields).map((key) => {
                         total += fields[key].value;
@@ -553,6 +554,27 @@ function useFile(file) {
                 }
                 {fields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
+            {mergeBranchConflicts.length > 0 ?
+                <div id="conflicts">
+                    <>
+                    {
+                        Object.keys(mergeBranchConflicts).map(key => {
+                            return <>
+                                <label key={mergeBranchConflicts[key].id}>
+                                    {mergeBranchConflicts[key].title}
+                                </label>
+                                - value:
+                                <label key={mergeBranchConflicts[key].id}>
+                                    {mergeBranchConflicts[key].value}
+                                </label>
+                                <input type="checkbox" id={mergeBranchConflicts[key].id}/>
+                            </>
+                        })
+                    }
+                        <button>Resolve Conflicts</button>
+                    </>
+                </div> : null
+            }
         </>
     );
 }
