@@ -316,7 +316,8 @@ function useFile(file) {
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
     const [mergeBranch, setMergeBranch] = useState("master");
-    const [mergeBranchConflicts, setMergeBranchConflicts] = useState([]);
+    const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
+    const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
 
 
     const [fileTitles, setFileTitles] = useState("master");
@@ -461,7 +462,10 @@ function useFile(file) {
     };
 
     function handleMergeBranch() {
-        postMergeBranch(fields).then(res => setMergeBranchConflicts(res.express))
+        postMergeBranch(fields).then(res => {
+            setMergeBranchConflictsSource(res.conflictsSource);
+            setMergeBranchConflictsTarget(res.conflictsTarget);
+        })
             .catch(err => console.log(err));
 
     }
@@ -482,6 +486,10 @@ function useFile(file) {
         return body;
 
     };
+
+    function handleResolveConflicts() {
+        console.debug("respo")
+    }
 
     if (fields === "") {
         return "";
@@ -554,24 +562,39 @@ function useFile(file) {
                 }
                 {fields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
-            {mergeBranchConflicts.length > 0 ?
+            {mergeBranchConflictsSource.length > 0 ?
                 <div id="conflicts">
                     <>
-                    {
-                        Object.keys(mergeBranchConflicts).map(key => {
-                            return <>
-                                <label key={mergeBranchConflicts[key].id}>
-                                    {mergeBranchConflicts[key].title}
-                                </label>
-                                - value:
-                                <label key={mergeBranchConflicts[key].id}>
-                                    {mergeBranchConflicts[key].value}
-                                </label>
-                                <input type="checkbox" id={mergeBranchConflicts[key].id}/>
-                            </>
-                        })
-                    }
-                        <button>Resolve Conflicts</button>
+                        {
+                            Object.keys(mergeBranchConflictsSource).map(key => {
+                                return <Fragment key={mergeBranchConflictsSource[key].id}>
+                                    <label>
+                                        {mergeBranchConflictsSource[key].title}
+                                    </label>
+                                    <label>
+                                        {mergeBranchConflictsSource[key].value}
+                                    </label>
+                                    <input type="checkbox" id={mergeBranchConflictsSource[key].id}/>
+                                </Fragment>
+                            })
+                        }
+                        <br></br>
+
+                        {
+                            Object.keys(mergeBranchConflictsTarget).map(key => {
+                                return <Fragment key={mergeBranchConflictsTarget[key].id}>
+                                    <label>
+                                        {mergeBranchConflictsTarget[key].title}
+                                    </label>
+                                    <label>
+                                        {mergeBranchConflictsTarget[key].value}
+                                    </label>
+                                    <input type="checkbox" id={mergeBranchConflictsTarget[key].id}/>
+                                </Fragment>
+                            })
+
+                        }
+                        <button onClick={handleResolveConflicts}>Resolve Conflicts</button>
                     </>
                 </div> : null
             }

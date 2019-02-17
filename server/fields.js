@@ -112,18 +112,21 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
     connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
 
-        let conflicts = [];
+        let conflictsSource = [];
+        let conflictsTarget = [];
+
 
         for(let i = 0; i < results.length; i++){
             for(let j = 0; j < req.body.length; j++){
                     if(results[i].title === req.body[j].title){
-                        conflicts.push(results[i]);
+                        conflictsSource.push(req.body[j]);
+                        conflictsTarget.push(results[i]);
                         break;
                     }
             }
         }
 
-        res.send({express: conflicts});
+        res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
 
     });
