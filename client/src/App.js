@@ -187,7 +187,10 @@ function useFiles(report) {
 
     const getFiles = async (reportId) => {
 
-        const response = await fetch(`/files/${reportId + "+master"}`);
+
+        let fetchUrl =  encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`);
+
+        const response = await fetch(fetchUrl);
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -339,7 +342,12 @@ function useFile(file) {
 
     const getFields = async (fileId) => {
 
-        const response = await fetch(`/fields/${fileId + "+" + currentBranch + "+" + file.title}`);
+        let fetchUrl = `/fields?file_id=${fileId}&branch_title=${currentBranch}&title=${file.title}`;
+
+        fetchUrl = encodeURI(fetchUrl);
+
+
+        const response = await fetch(fetchUrl);
         const body = await response.json();
 
         if (response.status !== 200) {

@@ -39,13 +39,9 @@ router.route('/:fileId')
     });
 });
 
-router.get('/:reportId', (req, res) => {
+router.get('/branch', (req, res) => {
 
-
-    const report = req.params.reportId;
-    let queryValues = report.split("+");
-
-    connection.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = ?`,[queryValues[0], queryValues[1]],  function (error, results) {
+    connection.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = ?`,[req.query.report_id, req.query.branch_title],  function (error, results) {
         if (error) throw error;
 
         res.send({express: results});

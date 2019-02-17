@@ -4,30 +4,14 @@ const connection = require('./database');
 
 
 router.route('/:fileBranch')
-    .get((req, res) => {
+    .put((req, res) => {
 
-        const fileBranch = req.params.fileBranch;
-        let queryBranch = fileBranch.split("+");
-
-
-    connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [queryBranch[0], queryBranch[1]], function (error, results) {
-        if (error) throw error;
-
-        connection.query('SELECT branch_title, id FROM files WHERE title = ?', [queryBranch[2]], function (error, resultsTitles) {
+        connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fileBranch], function (error) {
             if (error) throw error;
 
-            res.send({fields: results, fileTitles : resultsTitles});
+            res.sendStatus(200)
         });
-    });
-
-}).put((req, res) => {
-
-    connection.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fileBranch], function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
-    });
-}).delete((req, res) => {
+    }).delete((req, res) => {
 
     connection.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error, results) {
         if (error) throw error;
@@ -52,7 +36,7 @@ router.get('/file/:fileIds', (req, res) => {
 
         const masterBranch = query.pop();
 
-            connection.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = ?', [query, masterBranch], function (error, results) {
+        connection.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = ?', [query, masterBranch], function (error, results) {
             if (error) throw error;
 
             res.send({express: results});
@@ -61,18 +45,33 @@ router.get('/file/:fileIds', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.route('/')
+    .post((req, res) => {
 
-    connection.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
-        if (error) throw error;
-
-        connection.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+        connection.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
             if (error) throw error;
 
-            res.send({express: results});
+            connection.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+                if (error) throw error;
+
+                res.send({express: results});
+            });
+        })
+    })
+    .get((req, res) => {
+
+        connection.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.query.file_id, req.query.branch_title], function (error, results) {
+            if (error) throw error;
+
+            connection.query('SELECT branch_title, id FROM files WHERE title = ?', [req.query.title], function (error, resultsTitles) {
+                if (error) throw error;
+
+                res.send({fields: results, fileTitles : resultsTitles});
+            });
         });
+
     });
-});
+
 
 router.post('/branch/:branchTitle', (req, res) => {
 
@@ -96,16 +95,16 @@ router.post('/branch/:branchTitle', (req, res) => {
 
     fileValue.branch_title = req.params.branchTitle;
 
-        connection.query(`INSERT INTO files SET ?`, [fileValue] , function (error, results) {
+    connection.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
+        if (error) throw error;
+
+        connection.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
             if (error) throw error;
 
-            connection.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
-                if (error) throw error;
+            res.sendStatus(200)
 
-                res.sendStatus(200)
-
-            });
         });
+    });
 });
 
 router.get('/mergeBranch/:mergeBranches', (req, res) => {
