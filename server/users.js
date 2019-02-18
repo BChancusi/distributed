@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('./database');
+const pool = require('./database');
 const bcrypt = require('bcryptjs');
 
 
 router.get('/', (req, res) => {
 
-    connection.query('SELECT * FROM users', function (error, results) {
+    pool.query('SELECT * FROM users', function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 
 router.get('/:userId', (req, res) => {
 
-    connection.query('SELECT * FROM users', function (error, results) {
+    pool.query('SELECT * FROM users', function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
@@ -29,7 +29,7 @@ router.post('/', (req) => {
 
         req.body.password = hash;
 
-        connection.query(`INSERT INTO users SET ?`, [req.body] , function (error) {
+        pool.query(`INSERT INTO users SET ?`, [req.body] , function (error) {
             if (error) throw error;
         });
 
@@ -41,7 +41,7 @@ router.post('/', (req) => {
 
 router.delete('/users/:userId', (req) => {
 
-    connection.query(`DELETE FROM users WHERE username = ?`, [req.body.username], function (error) {
+    pool.query(`DELETE FROM users WHERE username = ?`, [req.body.username], function (error) {
         if (error) throw error;
     });
 });

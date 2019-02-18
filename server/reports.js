@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('./database');
+const pool = require('./database');
 
 
 router.route('/')
     .get((req, res) => {
 
-        connection.query('SELECT * FROM reports', function (error, results) {
+        pool.query('SELECT * FROM reports', function (error, results) {
             if (error) throw error;
 
             res.send({express: results});
@@ -15,7 +15,7 @@ router.route('/')
     })
     .post((req, res) => {
 
-        connection.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
+        pool.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
             if (error) throw error;
 
             res.send({express: res.results});
@@ -26,7 +26,7 @@ router.route('/')
 router.route('/:reportId')
     .delete((req, res) => {
 
-        connection.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error, results) {
+        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error, results) {
             if (error) throw error;
 
             res.send({express: res.results});
@@ -34,7 +34,7 @@ router.route('/:reportId')
     })
     .put((req, res) => {
 
-        connection.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
+        pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)

@@ -1,9 +1,7 @@
 const mysql = require('mysql');
 
 if (process.env.NODE_ENV === 'production') {
-    const connection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
-
-    module.exports = connection;
+    module.exports = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 }else{
     const config = require('./config');
 
