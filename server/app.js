@@ -11,6 +11,11 @@ const app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+app.use('/reports', reports);
+app.use('/files', files);
+app.use('/fields', fields);
+app.use('/users', users);
+
 if (process.env.NODE_ENV === 'production') {
 
     app.use(express.static('client/build'));
@@ -19,11 +24,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve('client', 'build', 'index.html'));
     });
 }
-
-app.use('/reports', reports);
-app.use('/files', files);
-app.use('/fields', fields);
-app.use('/users', users);
 
 
 module.exports = app;
