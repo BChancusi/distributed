@@ -494,21 +494,27 @@ function useFile(file) {
 
         let mergeResolved = [];
 
+        let cloneMerge = [...mergeBranchResolved];
+
         for (let i = 0; i < fields.length; i++) {
 
             let boolean = false;
 
-            for (let j = 0; j < mergeBranchResolved.length; j++) {
+            for (let j = 0; j < cloneMerge.length; j++) {
 
-                if (fields[i].title === mergeBranchResolved[j].title) {
+                if (fields[i].title === cloneMerge[j].title) {
 
-                    mergeResolved.push(mergeBranchResolved[j]);
+                    cloneMerge[j].branch_title = mergeBranch;
+
+                    mergeResolved.push(cloneMerge[j]);
                     boolean = true;
                     break;
                 }
             }
 
             if(boolean === false) {
+                cloneMerge[i].branch_title = mergeBranch;
+
                 mergeResolved.push(fields[i]);
             }
         }

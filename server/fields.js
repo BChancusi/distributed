@@ -126,8 +126,10 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             const sourceGet = sourceMap.get(results[i].title);
 
             if(sourceGet !== undefined){
-                conflictsSource.push(req.body[sourceGet]);
-                conflictsTarget.push(results[i]);
+                if(req.body[sourceGet].value !== results[i].value){
+                    conflictsSource.push(req.body[sourceGet]);
+                    conflictsTarget.push(results[i]);
+                }
             }
         }
 
@@ -139,24 +141,39 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
 router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
-    for(let i = 0; i < req.body.length; i++){
-
-       req.body[i].branch_title = req.params.mergeBranch;
-
-    }
-
-
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
 
+        let resultsMap = new Map();
+        let resolvedUpdate = [];
+        let resolvedInsert = [];
+
+
         for(let i = 0; i < results.length; i++){
-            if(results[i].title ===)
+            resultsMap.set(results.title, i)
         }
 
+        for(let i = 0; i < req.body.length; i++){
+
+            const resultsGet = resultsMap.get(req.body[i].title);
+
+            if(resultsGet !== undefined){
+                resolvedUpdate.push(req.body[i]);
+            }else{
+                resolvedInsert.push(req.body[i])
+            }
+        }
+
+        // pool.query(`INSERT INTO fields SET ?`, [resolvedInsert], function (error) {
+        //         if (error) throw error;
+
+            // pool.query(`UPDATE fields SET ?  WHERE title = ?`, [resolvedUpdate, req.params.fileBranch], function (error) {
+            //     if (error) throw error;
+            //
+                res.sendStatus(200)
+            // });
+        // })
     });
-
-    res.sendStatus(200)
-
 
 });
 module.exports = router;
