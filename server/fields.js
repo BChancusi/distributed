@@ -135,11 +135,12 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
         res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
-
     });
 });
 
 router.post('/mergeResolved/:mergeBranch', (req, res) => {
+
+    console.debug(req.params.mergeBranch)
 
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
@@ -150,7 +151,7 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
 
         for(let i = 0; i < results.length; i++){
-            resultsMap.set(results.title, i)
+            resultsMap.set(results[i].title, i)
         }
 
         for(let i = 0; i < req.body.length; i++){
@@ -158,7 +159,9 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
             const resultsGet = resultsMap.get(req.body[i].title);
 
             if(resultsGet !== undefined){
-                resolvedUpdate.push(req.body[i]);
+                if(req.body[i].value !== results[resultsGet].value) {
+                    resolvedUpdate.push(req.body[i]);
+                }
             }else{
                 resolvedInsert.push(req.body[i])
             }

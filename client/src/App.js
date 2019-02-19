@@ -505,6 +505,7 @@ function useFile(file) {
                 if (fields[i].title === cloneMerge[j].title) {
 
                     cloneMerge[j].branch_title = mergeBranch;
+                    delete cloneMerge[j].timestamp;
 
                     mergeResolved.push(cloneMerge[j]);
                     boolean = true;
@@ -513,7 +514,8 @@ function useFile(file) {
             }
 
             if(boolean === false) {
-                cloneMerge[i].branch_title = mergeBranch;
+                fields[i].branch_title = mergeBranch;
+                delete fields[i].timestamp;
 
                 mergeResolved.push(fields[i]);
             }
@@ -658,8 +660,8 @@ function useFile(file) {
                                     <label>
                                         {mergeBranchConflictsTarget[key].value}
                                     </label>
-                                    <input onChange={(event) =>
-                                        handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox"/>
+                                    {/*<input onChange={(event) =>*/}
+                                        {/*handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox"/>*/}
                                 </Fragment>
                             })
 
