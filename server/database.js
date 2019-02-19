@@ -6,7 +6,6 @@ if (process.env.NODE_ENV === 'production') {
     const config = require('./config');
 
     const connection = mysql.createPool({
-        connectionLimit : 10,
         host     : config.host,
         user     : config.user,
         password : config.password,
