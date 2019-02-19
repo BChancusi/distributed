@@ -85,7 +85,6 @@ router.post('/branch/:branchTitle', (req, res) => {
         req.body[i].version_id = req.body[i].version_id + 1;
         req.body[i].branch_title = req.params.branchTitle;
 
-
         query.push(Object.values(req.body[i]));
 
     }
@@ -163,12 +162,12 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
                     resolvedUpdate.push(req.body[i]);
                 }
             }else{
-                resolvedInsert.push(req.body[i])
+                resolvedInsert.push(Object.values(req.body[i]))
             }
         }
 
-        // pool.query(`INSERT INTO fields SET ?`, [resolvedInsert], function (error) {
-        //         if (error) throw error;
+        // pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), resolvedInsert], function (error, results) {
+        //          if (error) throw error;
 
             // pool.query(`UPDATE fields SET ?  WHERE title = ?`, [resolvedUpdate, req.params.fileBranch], function (error) {
             //     if (error) throw error;
