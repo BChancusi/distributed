@@ -136,4 +136,34 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
     });
 });
+
+router.post('/mergeResolved/:mergeBranch', (req, res) => {
+
+    for(let i = 0; i < req.body.length; i++){
+
+       req.body[i].branch_title = req.params.mergeBranch;
+
+    }
+
+
+    pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
+        if (error) throw error;
+
+        for(let i = 0; i < results.length; i++){
+            if(results[i].title ===)
+        }
+
+    });
+
+    res.sendStatus(200)
+
+
+});
 module.exports = router;
+
+// TODO serveal choices of resolving inserts - post resolved conflicts and use two selects and construct new fields
+//      using body.
+//      - branch titles will still need to be changed which can be done O(n)
+//      - construct resolved fields client side and use single select followed by iterating checks for insert
+//      - Old values will need to be deleted from target branch
+//      - mergeBranchResolved[j].branch_title = mergeBranch doesnt work client side since constant value on useState

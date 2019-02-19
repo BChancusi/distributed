@@ -316,11 +316,11 @@ function useFile(file) {
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
     const [mergeBranch, setMergeBranch] = useState("master");
+
     const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
     const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
 
     const [mergeBranchResolved, setMergeBranchResolved] = useState([]);
-
 
 
     const [fileTitles, setFileTitles] = useState("master");
@@ -490,30 +490,61 @@ function useFile(file) {
 
     };
 
-    function handleResolveConflicts(event) {
+    function handleResolveConflicts() {
 
-        console.debug(event);
-    }
+        let mergeResolved = [];
 
-    function handleCheckbox(event, item) {
+        for (let i = 0; i < fields.length; i++) {
 
-        let inArray = false;
+            let boolean = false;
 
-        for(let i = 0; i < mergeBranchResolved; i++){
+            for (let j = 0; j < mergeBranchResolved.length; j++) {
 
-            if(mergeBranchResolved[i] === item){
-                inArray = true;
+                if (fields[i].title === mergeBranchResolved[j].title) {
+
+                    mergeResolved.push(mergeBranchResolved[j]);
+                    boolean = true;
+                    break;
+                }
+            }
+
+            if(boolean === false) {
+                mergeResolved.push(fields[i]);
             }
         }
 
-        let cloneResolved = [...mergeBranchResolved];
+        postMergeResolved(mergeResolved)
 
-        if(event.target.checked === true && inArray === false){
+    }
+
+    const postMergeResolved = async (mergeResolved) => {
+
+        const response = await fetch(`/fields/mergeResolved/${mergeBranch}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(mergeResolved)
+        });
+
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+        return body;
+
+    };
+
+    function handleCheckbox(event, item) {
+
+
+        if (event.target.checked === true) {
+
+            let cloneResolved = [...mergeBranchResolved];
 
             cloneResolved.push(item);
             setMergeBranchResolved(cloneResolved)
 
-        }else{
+        } else {
 
             setMergeBranchResolved(mergeBranchResolved.filter(filterItem => {
                 return filterItem !== item
@@ -622,7 +653,7 @@ function useFile(file) {
                                         {mergeBranchConflictsTarget[key].value}
                                     </label>
                                     <input onChange={(event) =>
-                                        handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox" />
+                                        handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox"/>
                                 </Fragment>
                             })
 
@@ -639,3 +670,4 @@ export default App;
 
 //TODO Cant select same file twice after return
 //      Merge branch initial being sent instead of target
+//      Prevent counter part check box being ticked
