@@ -319,6 +319,9 @@ function useFile(file) {
     const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
     const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
 
+    const [mergeBranchResolved, setMergeBranchResolved] = useState([]);
+
+
 
     const [fileTitles, setFileTitles] = useState("master");
 
@@ -487,8 +490,36 @@ function useFile(file) {
 
     };
 
-    function handleResolveConflicts() {
-        console.debug("respo")
+    function handleResolveConflicts(event) {
+
+        console.debug(event);
+    }
+
+    function handleCheckbox(event, item) {
+
+        let inArray = false;
+
+        for(let i = 0; i < mergeBranchResolved; i++){
+
+            if(mergeBranchResolved[i] === item){
+                inArray = true;
+            }
+        }
+
+        let cloneResolved = [...mergeBranchResolved];
+
+        if(event.target.checked === true && inArray === false){
+
+            cloneResolved.push(item);
+            setMergeBranchResolved(cloneResolved)
+
+        }else{
+
+            setMergeBranchResolved(mergeBranchResolved.filter(filterItem => {
+                return filterItem !== item
+
+            }))
+        }
     }
 
     if (fields === "") {
@@ -574,7 +605,8 @@ function useFile(file) {
                                     <label>
                                         {mergeBranchConflictsSource[key].value}
                                     </label>
-                                    <input type="checkbox" id={mergeBranchConflictsSource[key].id}/>
+                                    <input type="checkbox" onChange={(event) =>
+                                        handleCheckbox(event, mergeBranchConflictsSource[key])}/>
                                 </Fragment>
                             })
                         }
@@ -589,7 +621,8 @@ function useFile(file) {
                                     <label>
                                         {mergeBranchConflictsTarget[key].value}
                                     </label>
-                                    <input type="checkbox" id={mergeBranchConflictsTarget[key].id}/>
+                                    <input onChange={(event) =>
+                                        handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox" />
                                 </Fragment>
                             })
 
