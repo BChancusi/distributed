@@ -139,8 +139,6 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
 router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
-    console.debug(req.params.mergeBranch)
-
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
 
@@ -166,16 +164,21 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
             }
         }
 
-        // pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), resolvedInsert], function (error, results) {
-        //          if (error) throw error;
+        pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), resolvedInsert], function (error) {
+                 if (error) throw error;
 
-            // pool.query(`UPDATE fields SET ?  WHERE title = ?`, [resolvedUpdate, req.params.fileBranch], function (error) {
-            //     if (error) throw error;
-            //
-                res.sendStatus(200)
-            // });
-        // })
+                 resolvedUpdate.forEach(value => {
+                     pool.query(`UPDATE fields SET ?  WHERE title = ? AND branch_title = ?`,
+                         [value, value.title, value.branch_title], function (error) {
+                         if (error) throw error;
+
+                     });
+                 });
+        })
     });
+
+
+    res.sendStatus(200)
 
 });
 module.exports = router;

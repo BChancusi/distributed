@@ -506,6 +506,7 @@ function useFile(file) {
 
                     cloneMerge[j].branch_title = mergeBranch;
                     delete cloneMerge[j].timestamp;
+                    delete cloneMerge[j].id;
 
                     mergeResolved.push(cloneMerge[j]);
                     boolean = true;
@@ -516,6 +517,8 @@ function useFile(file) {
             if(boolean === false) {
                 fields[i].branch_title = mergeBranch;
                 delete fields[i].timestamp;
+                delete fields[i].id;
+
 
                 mergeResolved.push(fields[i]);
             }
