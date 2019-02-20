@@ -66,7 +66,7 @@ function useReports() {
         }).then(response => {
 
             if (response.status !== 200) {
-                throw Error("Server error")
+                throw Error(response.status.toString())
             }
 
             setReports(reports.filter((value, index) => {
@@ -77,11 +77,11 @@ function useReports() {
     };
 
 
-    const handlePutReport = async (event, key) => {
+    const handlePutReport = async (value, key) => {
 
         let cloneReports = [...reports];
 
-        cloneReports[key].title = event.target.value;
+        cloneReports[key].title = value;
 
         await fetch(`/reports/${cloneReports[key].id}`, {
             method: 'PUT',
@@ -90,7 +90,7 @@ function useReports() {
         }).then(response => {
 
             if (response.status !== 200) {
-                throw Error("Server error")
+                throw Error(response.status.toString())
             }
 
             setReports(cloneReports)
@@ -113,8 +113,8 @@ function useReports() {
                 {
                     reports.map((value, index) => {
                         return <Fragment key={value.id}>
-                            <input type="text" value={value.title}
-                                   onChange={(event) => handlePutReport(event, index)}/>
+                            <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
+                            <button onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update field</button>
                             <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
                             <button onClick={() => setReportOpen(value)}>Open Report</button>
                         </Fragment>
