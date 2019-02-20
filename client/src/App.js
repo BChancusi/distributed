@@ -13,7 +13,6 @@ function App() {
             .then(res => setReports(res.express))
             .catch(err => console.log(err));
 
-        return () => console.debug("unmounting REPORT")
     }, []);
 
     const getReports = async () => {
@@ -155,9 +154,6 @@ function useFiles(report) {
                 })
                 .catch(err => console.log(err));
         }
-        return () => console.debug("unmounting F I L E S")
-
-
     }, [report.id]);
 
     const getFields = async (keys) => {
@@ -341,7 +337,7 @@ function useFile(file) {
 
         }
 
-        return () => console.debug("unmounting FILE")
+        return setFields("")
 
     }, [file.id, currentBranch]);
 
@@ -507,7 +503,6 @@ function useFile(file) {
                     cloneMerge[j].branch_title = mergeBranch;
                     delete cloneMerge[j].timestamp;
                     delete cloneMerge[j].id;
-                    console.debug("pushed")
                     mergeResolved.push(cloneMerge[j]);
                     boolean = true;
                     break;
@@ -518,26 +513,25 @@ function useFile(file) {
 
                 if(mergeBranchConflictsTarget[k].title === fields[i].title){
 
-                    console.debug("pushed nothing");
-
                     boolean = true;
                     break;
                 }
             }
 
             if(boolean === false) {
-                fields[i].branch_title = mergeBranch;
-                delete fields[i].timestamp;
-                delete fields[i].id;
-                console.debug("pushed fields")
+                let cloneFields = JSON.parse(JSON.stringify(fields));
 
-                mergeResolved.push(fields[i]);
+                cloneFields[i].branch_title = mergeBranch;
+                delete cloneFields[i].timestamp;
+                delete cloneFields[i].id;
+
+                mergeResolved.push(cloneFields[i]);
             }
         }
         postMergeResolved(mergeResolved).then(()=> {
-            setMergeBranchResolved([]);
             setMergeBranchConflictsTarget([]);
             setMergeBranchConflictsSource([]);
+            setMergeBranchResolved([]);
         })
     }
 
@@ -613,7 +607,7 @@ function useFile(file) {
                                 Object.keys(fileTitles).map((key) => {
 
                                     if (fileTitles[key].branch_title === currentBranch) {
-                                        return;
+                                        return null;
                                     }
                                     return <option key={fileTitles[key].id}
                                                    value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
@@ -626,7 +620,7 @@ function useFile(file) {
             </div>
             <div id={"fields"}>
                 {
-                    Object.keys(fields).map((key) => {
+                    Object.keys(fields).map(key => {
                         total += fields[key].value;
                         return <Fragment key={fields[key].id}>
 
@@ -641,7 +635,7 @@ function useFile(file) {
                 }
                 {fields.length === 0 ? null : <label>Total = {total}</label>}
             </div>
-            {mergeBranchConflictsSource.length > 0 ?
+            {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 ?
                 <div id="conflicts">
                     <>
                         {
@@ -658,7 +652,7 @@ function useFile(file) {
                                 </Fragment>
                             })
                         }
-                        <br></br>
+                        <br/>
 
                         {
                             Object.keys(mergeBranchConflictsTarget).map(key => {
