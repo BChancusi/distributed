@@ -462,8 +462,11 @@ function useFile(file) {
 
     function handleMergeBranch() {
         postMergeBranch(fields).then(res => {
-            setMergeBranchConflictsSource(res.conflictsSource);
-            setMergeBranchConflictsTarget(res.conflictsTarget);
+
+            if(res.express !== "no conflicts"){
+                setMergeBranchConflictsSource(res.conflictsSource);
+                setMergeBranchConflictsTarget(res.conflictsTarget);
+            }
         })
             .catch(err => console.log(err));
 

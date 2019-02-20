@@ -132,7 +132,28 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             }
         }
 
-        res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
+        if(conflictsTarget.length > 0 && conflictsSource.length > 0){
+            res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
+
+        }else{
+            let query = [];
+
+            req.body.forEach(value => {
+
+                delete value.id;
+                delete value.timestamp;
+
+                value.branch_title = req.params.mergeBranch;
+
+                query.push(Object.values(value))
+            });
+
+            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
+                if (error) throw error;
+
+                res.send({express: "no conflicts"});
+            });
+        }
 
     });
 });
