@@ -36,6 +36,11 @@ function useReports() {
 
     const handleNewReport = async () => {
 
+        if(newReport.trim() === ""){
+            setNewReport("");
+            return;
+        }
+
         const response = await fetch('/reports', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -104,7 +109,6 @@ function useReports() {
                 <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
                 <button onClick={handleNewReport}>New report</button>
             </nav>
-
 
             <div id={"reports"}>
                 {
