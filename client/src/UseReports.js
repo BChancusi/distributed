@@ -3,8 +3,7 @@ import useFiles from "./UseFiles";
 
 function useReports() {
 
-
-    const [reports, setReports] = useState(null);
+    const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
     const [reportOpen, setReportOpen] = useState("");
 
@@ -57,8 +56,8 @@ function useReports() {
 
     }
 
-    function handleDeleteReport(reportId) {
-        deleteReport(reportId).then(() => setNewReport(""));
+    function handleDeleteReport(reportId, key) {
+        deleteReport(reportId).then(() => setReports(reports.splice(key, 1)));
     }
 
     const putReport = async (report) => {
@@ -101,7 +100,7 @@ function useReports() {
                         return <Fragment key={reports[key].id}>
                             <input type="text" value={reports[key].title}
                                    onChange={(event) => handlePutReport(event, key)}/>
-                            {/*<button onClick={() => handleDeleteReport(reports[key].id)}>Delete</button>*/}
+                            <button onClick={() => handleDeleteReport(reports[key].id, key)}>Delete</button>
                             <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
                         </Fragment>
                     })
