@@ -98,7 +98,7 @@ function useReports() {
     };
 
 
-    return filesRender === "" && reports != null ? (
+    return filesRender === true ? (
         <>
             <header>
                 <h1 align="CENTER">Reports</h1>

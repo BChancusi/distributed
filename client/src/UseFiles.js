@@ -1,19 +1,21 @@
 import React, {useState, useEffect, Fragment} from 'react';
-
 import useFile from './UseFile';
 
 function useFiles(report) {
 
-    const [files, setFiles] = useState("");
-    const [fileOpen, setFileOpen] = useState("");
+    const [files, setFiles] = useState([]);
     const [newFile, setNewFile] = useState("");
-    const [fileFields, setFileFields] = useState("");
+    const [fileFields, setFileFields] = useState([]);
+
+    const [reportClose, setReportClose] = useState(true);
+    const [fileOpen, setFileOpen] = useState("");
 
     const fileRender = useFile(fileOpen);
 
     useEffect(() => {
         if (report !== "") {
 
+            setReportClose(false);
 
             getFiles(report.id)
                 .then(res => {
@@ -42,6 +44,13 @@ function useFiles(report) {
 
                 })
                 .catch(err => console.log(err));
+        }
+
+        return ()=>{
+            setFiles([]);
+            setFileFields([]);
+            setNewFile("");
+            setFileOpen("");
         }
     }, [report.id]);
 
@@ -85,6 +94,10 @@ function useFiles(report) {
         return body;
 
     };
+
+    if (reportClose) {
+        return true;
+    }
 
     const postFile = async (title) => {
 
@@ -140,10 +153,6 @@ function useFiles(report) {
             .catch(err => console.log(err));
     }
 
-    if (files === "") {
-        return "";
-    }
-
     let total = 0;
 
     return fileRender === "" ? (
@@ -158,7 +167,7 @@ function useFiles(report) {
                 <button onClick={handleNewFile}>New File</button>
 
                 <button onClick={() => {
-                    setFiles("");
+                    setReportClose(true);
                 }}>Return
                 </button>
             </nav>
