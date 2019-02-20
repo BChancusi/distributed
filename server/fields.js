@@ -66,7 +66,7 @@ router.route('/')
             pool.query('SELECT branch_title, id FROM files WHERE title = ?', [req.query.title], function (error, resultsTitles) {
                 if (error) throw error;
 
-                res.send({fields: results, fileTitles : resultsTitles});
+                res.send({fields: results, fileTitles: resultsTitles});
             });
         });
 
@@ -116,16 +116,16 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         let conflictsSource = [];
         let conflictsTarget = [];
 
-        for(let i = 0; i < req.body.length; i++){
+        for (let i = 0; i < req.body.length; i++) {
             sourceMap.set(req.body[i].title, i)
         }
 
-        for(let i = 0; i < results.length; i++){
+        for (let i = 0; i < results.length; i++) {
 
             const sourceGet = sourceMap.get(results[i].title);
 
-            if(sourceGet !== undefined){
-                if(req.body[sourceGet].value !== results[i].value){
+            if (sourceGet !== undefined) {
+                if (req.body[sourceGet].value !== results[i].value) {
                     conflictsSource.push(req.body[sourceGet]);
                     conflictsTarget.push(results[i]);
                 }
@@ -146,35 +146,41 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
         let resolvedUpdate = [];
         let resolvedInsert = [];
 
-
-        for(let i = 0; i < results.length; i++){
+        for (let i = 0; i < results.length; i++) {
             resultsMap.set(results[i].title, i)
         }
 
-        for(let i = 0; i < req.body.length; i++){
+        for (let i = 0; i < req.body.length; i++) {
 
             const resultsGet = resultsMap.get(req.body[i].title);
 
-            if(resultsGet !== undefined){
-                if(req.body[i].value !== results[resultsGet].value) {
+            if (resultsGet !== undefined) {
+                if (req.body[i].value !== results[resultsGet].value) {
                     resolvedUpdate.push(req.body[i]);
                 }
-            }else{
+            } else {
                 resolvedInsert.push(Object.values(req.body[i]))
             }
         }
 
-        pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), resolvedInsert], function (error) {
-                 if (error) throw error;
+        if (resolvedInsert.length > 0) {
 
-                 resolvedUpdate.forEach(value => {
-                     pool.query(`UPDATE fields SET ?  WHERE title = ? AND branch_title = ?`,
-                         [value, value.title, value.branch_title], function (error) {
-                         if (error) throw error;
+            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), resolvedInsert], function (error) {
+                if (error) throw error;
 
-                     });
-                 });
-        })
+            });
+        }
+
+        if (resolvedUpdate.length > 0) {
+
+            resolvedUpdate.forEach(value => {
+                pool.query(`UPDATE fields SET ?  WHERE title = ? AND branch_title = ?`,
+                    [value, value.title, value.branch_title], function (error) {
+                        if (error) throw error;
+
+                    });
+            });
+        }
     });
 
 
@@ -182,10 +188,3 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
 });
 module.exports = router;
-
-// TODO serveal choices of resolving inserts - post resolved conflicts and use two selects and construct new fields
-//      using body.
-//      - branch titles will still need to be changed which can be done O(n)
-//      - construct resolved fields client side and use single select followed by iterating checks for insert
-//      - Old values will need to be deleted from target branch
-//      - mergeBranchResolved[j].branch_title = mergeBranch doesnt work client side since constant value on useState
