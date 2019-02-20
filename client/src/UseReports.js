@@ -28,13 +28,29 @@ function useReports() {
         return body;
     };
 
+    function handleNewReport() {
+        postReport(newReport).then(res =>{
+
+            setReports(reports.concat(res.express));
+            setNewReport("")
+        });
+    }
+
     const postReport = async (title) => {
 
-        await fetch('/reports', {
+        const response = await fetch('/reports', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": title})
         });
+
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
     };
 
     const deleteReport = async (reportId) => {
@@ -51,13 +67,17 @@ function useReports() {
             .catch(err => console.log(err));
     }
 
-    function handleNewReport() {
-        postReport(newReport).then(() => setNewReport(""));
 
-    }
 
     function handleDeleteReport(reportId, key) {
-        deleteReport(reportId).then(() => setReports(reports.splice(key, 1)));
+
+        deleteReport(reportId).then(() => {
+
+           setReports(reports.filter((value, index) =>{
+
+                  return key !== index.toString();
+            }));
+        });
     }
 
     const putReport = async (report) => {

@@ -18,8 +18,11 @@ router.route('/')
         pool.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
             if (error) throw error;
 
-            res.send({express: res.results});
+            pool.query('SELECT * FROM reports WHERE id = ?', [results.insertId], function (error, results) {
+                if (error) throw error;
 
+                res.send({express: results});
+            });
         });
     });
 
@@ -34,8 +37,10 @@ router.route('/:reportId')
     })
     .put((req, res) => {
 
-        pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
+        pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error, results, fields) {
             if (error) throw error;
+
+
 
             res.sendStatus(200)
         });
