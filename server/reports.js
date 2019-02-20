@@ -29,10 +29,10 @@ router.route('/')
 router.route('/:reportId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error, results) {
+        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error) {
             if (error) throw error;
 
-            res.send({express: res.results});
+            res.sendStatus(200)
         });
     })
     .put((req, res) => {

@@ -34,29 +34,23 @@ function useReports() {
             .catch(err => console.log(err));
     }
 
-    function handleNewReport() {
-        postReport(newReport).then(res =>{
-
-            setReports(reports.concat(res.express));
-            setNewReport("")
-        });
-    }
-
-    const postReport = async (title) => {
+    const handleNewReport = async () => {
 
         const response = await fetch('/reports', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": title})
+            body: JSON.stringify({"title": newReport})
         });
 
-        const body = await response.json();
+        await response.json().then(body =>{
 
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
 
-        return body;
+            setReports(reports.concat(body.express));
+            setNewReport("")
+        });
     };
 
 
@@ -70,7 +64,7 @@ function useReports() {
                 throw Error("Server error")
             }
 
-            setReports(reports.filter((value, index) =>{
+            setReports(reports.filter((value, index) => {
 
                 return key !== index.toString();
             }));
@@ -78,7 +72,7 @@ function useReports() {
     };
 
 
-   const handlePutReport = async (event, key) => {
+    const handlePutReport = async (event, key) => {
 
         let cloneReports = [...reports];
 
@@ -104,6 +98,7 @@ function useReports() {
             <header>
                 <h1 align="CENTER">Reports</h1>
             </header>
+
             <nav>
                 <button onClick={handleRefreshReports}>Refresh reports</button>
                 <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
@@ -130,4 +125,4 @@ function useReports() {
     );
 }
 
-export default useReports ;
+export default useReports;
