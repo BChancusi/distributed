@@ -28,6 +28,12 @@ function useReports() {
         return body;
     };
 
+    function handleRefreshReports() {
+        getReports()
+            .then(res => setReports(res.express))
+            .catch(err => console.log(err));
+    }
+
     function handleNewReport() {
         postReport(newReport).then(res =>{
 
@@ -53,54 +59,45 @@ function useReports() {
         return body;
     };
 
-    const deleteReport = async (reportId) => {
+
+    const handleDeleteReport = async (reportId, key) => {
 
         await fetch(`/reports/${reportId}`, {
             method: 'DELETE',
-        });
-    };
+        }).then(response => {
 
+            if (response.status !== 200) {
+                throw Error("Server error")
+            }
 
-    function handleRefreshReports() {
-        getReports()
-            .then(res => setReports(res.express))
-            .catch(err => console.log(err));
-    }
+            setReports(reports.filter((value, index) =>{
 
-
-
-    function handleDeleteReport(reportId, key) {
-
-        deleteReport(reportId).then(() => {
-
-           setReports(reports.filter((value, index) =>{
-
-                  return key !== index.toString();
+                return key !== index.toString();
             }));
         });
-    }
-
-    const putReport = async (report) => {
-
-        await fetch(`/reports/${report.id}`, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": report.title})
-        });
-
-        return null;
     };
 
-    function handlePutReport(event, key) {
+
+   const handlePutReport = async (event, key) => {
 
         let cloneReports = [...reports];
 
         cloneReports[key].title = event.target.value;
 
-        putReport(cloneReports[key])
-            .then(() => setReports(cloneReports))
-            .catch(err => console.log(err));
-    }
+        await fetch(`/reports/${cloneReports[key].id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": cloneReports[key].title})
+        }).then(response => {
+
+            if (response.status !== 200) {
+                throw Error("Server error")
+            }
+
+            setReports(cloneReports)
+        });
+    };
+
 
     return filesRender === "" && reports != null ? (
         <>
