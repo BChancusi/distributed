@@ -71,7 +71,7 @@ function useReports() {
 
             setReports(reports.filter((value, index) => {
 
-                return key !== index.toString();
+                return key !== index;
             }));
         });
     };
@@ -97,7 +97,6 @@ function useReports() {
         });
     };
 
-
     return filesRender === true ? (
         <>
             <header>
@@ -112,12 +111,12 @@ function useReports() {
 
             <div id={"reports"}>
                 {
-                    Object.keys(reports).map((key) => {
-                        return <Fragment key={reports[key].id}>
-                            <input type="text" value={reports[key].title}
-                                   onChange={(event) => handlePutReport(event, key)}/>
-                            <button onClick={() => handleDeleteReport(reports[key].id, key)}>Delete</button>
-                            <button onClick={() => setReportOpen(reports[key])}>Open Report</button>
+                    reports.map((value, index) => {
+                        return <Fragment key={value.id}>
+                            <input type="text" value={value.title}
+                                   onChange={(event) => handlePutReport(event, index)}/>
+                            <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                            <button onClick={() => setReportOpen(value)}>Open Report</button>
                         </Fragment>
                     })
                 }
