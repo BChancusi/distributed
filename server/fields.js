@@ -208,4 +208,5 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
     res.sendStatus(200)
 
 });
+
 module.exports = router;

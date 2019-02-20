@@ -372,4 +372,4 @@ function useFile(file) {
     );
 }
 
-export default useFile ;
+export default useFile;
