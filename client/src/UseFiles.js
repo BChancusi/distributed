@@ -99,12 +99,47 @@ function useFiles(report) {
         return true;
     }
 
-    const postFile = async (title) => {
+    const handleNewFile = async () => {
 
-        await fetch('/files', {
+        if(newFile.trim() === ""){
+            setNewFile("");
+            return;
+        }
+
+        const response = await fetch('/files', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": title, "report_id": report.id})
+            body: JSON.stringify({"title": newFile, "report_id": report.id})
+        });
+
+        await response.json().then(body =>{
+
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+
+            console.debug(body.express)
+
+            setFiles(files.concat(body.express));
+            setNewFile("")
+        });
+    };
+
+
+    const handleDeleteReport = async (reportId, key) => {
+
+        await fetch(`/reports/${reportId}`, {
+            method: 'DELETE',
+        }).then(response => {
+
+            if (response.status !== 200) {
+                throw Error(response.status.toString())
+            }
+
+            setReports(reports.filter((value, index) => {
+
+                return key !== index;
+            }));
         });
     };
 
@@ -115,43 +150,29 @@ function useFiles(report) {
         });
     };
 
-
-    function handleRefreshFiles() {
-        getFiles(report.id)
-            .then(res => setFiles(res.express))
-            .catch(err => console.log(err));
-    }
-
-
-    function handleNewFile() {
-        postFile(newFile).then(() => null);
-    }
-
     function handleDeleteFile(fileId) {
         deleteFile(fileId).then(() => null);
     }
 
-    const putFile = async (file) => {
-
-        await fetch(`/files/${file.id}`, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": file.title})
-        });
-
-        return null;
-    };
-
-    function handlePutFile(event, key) {
+    const handlePutFile = async (value, key) => {
 
         let cloneFiles = [...files];
 
-        cloneFiles[key].title = event.target.value;
+        cloneFiles[key].title = value;
 
-        putFile(cloneFiles[key])
-            .then(() => setFiles(cloneFiles))
-            .catch(err => console.log(err));
-    }
+        await fetch(`/files/${cloneFiles[key].id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": cloneFiles[key].title})
+        }).then(response => {
+
+            if (response.status !== 200) {
+                throw Error(response.status.toString())
+            }
+
+            setFiles(cloneFiles)
+        }).catch(err => console.log(err));
+    };
 
     let total = 0;
 
@@ -162,36 +183,33 @@ function useFiles(report) {
             </header>
             <nav>
 
-                <button onClick={handleRefreshFiles}>Refresh Files</button>
                 <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
                 <button onClick={handleNewFile}>New File</button>
 
-                <button onClick={() => {
-                    setReportClose(true);
-                }}>Return
+                <button onClick={() => setReportClose(true)}>Return
                 </button>
             </nav>
             <div id={"files"}>
                 {
-                    Object.keys(files).map((key) => {
-                        return <Fragment key={files[key].id}>
-                            <input type="text" value={files[key].title}
-                                   onChange={(event) => handlePutFile(event, key)}/>
-                            <button onClick={() => setFileOpen(files[key])}>Open file</button>
-                            <button onClick={() => handleDeleteFile(files[key].id)}>Delete</button>
+                    files.map((value, index) => {
+                        return <Fragment key={value.id}>
+                            <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
+                            <button onClick={() => handlePutFile(document.getElementById(`textInput${value.id}`).value, index)}>Update field</button>
+                            <button onClick={() => setFileOpen(value)}>Open file</button>
+                            <button onClick={() => handleDeleteFile(value.id)}>Delete</button>
                         </Fragment>
                     })
                 }
                 {
-                    Object.keys(fileFields).map((key) => {
+                    fileFields.map(value => {
 
-                        total += fileFields[key].value;
+                        total += value.value;
 
-                        return <Fragment key={fileFields[key].id}>
+                        return <Fragment key={value.id}>
                             <br/>
-                            <label>{fileFields[key].title}</label>
+                            <label>{value.title}</label>
                             <br/>
-                            <label>{fileFields[key].value}</label>
+                            <label>{value.value}</label>
                             <br/>
 
                         </Fragment>
