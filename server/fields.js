@@ -60,10 +60,10 @@ router.route('/')
     })
     .get((req, res) => {
 
-        pool.query('SELECT * FROM fields WHERE branch_title = ?', [req.query.branch_title], function (error, results) {
+        pool.query('SELECT * FROM fields WHERE branch_title = ? AND file_id =?', [req.query.branch_title, req.query.file_id], function (error, results) {
             if (error) throw error;
 
-            pool.query('SELECT * FROM files WHERE title = ? AND report_id=?', [req.query.title, req.query.report_id], function (error, resultsTitles) {
+            pool.query('SELECT * FROM files WHERE title = ? AND report_id= ?', [req.query.title, req.query.report_id], function (error, resultsTitles) {
                 if (error) throw error;
 
                 res.send({fields: results, fileTitles: resultsTitles});
@@ -229,3 +229,4 @@ router.delete('/deleteBranch/query', (req, res) => {
 
 module.exports = router;
 
+//TODO Branch names being identical will cause double fetch on each branch

@@ -35,13 +35,10 @@ function useFile(file) {
 
     const getFields = async () => {
 
+        let fetchUrl =
+            `/fields?report_id=${file.report_id}&branch_title=${currentBranch}&title=${file.title}&file_id=${file.id}`;
 
-        let fetchUrl = `/fields?report_id=${file.report_id}&branch_title=${currentBranch}&title=${file.title}`;
-
-        fetchUrl = encodeURI(fetchUrl);
-
-
-        const response = await fetch(fetchUrl);
+        const response = await fetch(encodeURI(fetchUrl));
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -52,14 +49,19 @@ function useFile(file) {
 
     };
 
+    function handleNewField() {
+        postField().then(res => setFields(fields.concat(res.express)))
+            .catch(err => console.log(err));
+    }
+
     const postField = async () => {
 
         const response = await fetch('/fields', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                "title": newFieldTitle,
-                "value": newFieldValue,
+                "title": newFieldTitle.trim(),
+                "value": newFieldValue.trim(),
                 "file_id": file.id,
                 "branch_title": currentBranch
             })
@@ -115,11 +117,6 @@ function useFile(file) {
             .catch(err => console.log(err));
     }
 
-
-    function handleNewField() {
-        postField().then(res => setFields(fields.concat(res.express)))
-            .catch(err => console.log(err));
-    }
 
 
     const handleDeleteFile = async (fieldId, key) => {
