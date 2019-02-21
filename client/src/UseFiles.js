@@ -126,9 +126,9 @@ function useFiles(report) {
     };
 
 
-    const handleDeleteReport = async (reportId, key) => {
+    const handleDeleteFile = async (fileId, key) => {
 
-        await fetch(`/reports/${reportId}`, {
+        await fetch(`/files/${fileId}`, {
             method: 'DELETE',
         }).then(response => {
 
@@ -136,23 +136,12 @@ function useFiles(report) {
                 throw Error(response.status.toString())
             }
 
-            setReports(reports.filter((value, index) => {
+            setFiles(files.filter((value, index) => {
 
                 return key !== index;
             }));
         });
     };
-
-    const deleteFile = async (fileId) => {
-
-        await fetch(`/files/${fileId}`, {
-            method: 'DELETE',
-        });
-    };
-
-    function handleDeleteFile(fileId) {
-        deleteFile(fileId).then(() => null);
-    }
 
     const handlePutFile = async (value, key) => {
 
@@ -196,7 +185,7 @@ function useFiles(report) {
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
                             <button onClick={() => handlePutFile(document.getElementById(`textInput${value.id}`).value, index)}>Update field</button>
                             <button onClick={() => setFileOpen(value)}>Open file</button>
-                            <button onClick={() => handleDeleteFile(value.id)}>Delete</button>
+                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
                         </Fragment>
                     })
                 }
