@@ -4,7 +4,6 @@ function useFile(file) {
 
     const [fields, setFields] = useState("");
     const [currentBranch, setCurrentBranch] = useState("master");
-    const [mergeBranch, setMergeBranch] = useState("master");
 
     const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
     const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
@@ -28,8 +27,6 @@ function useFile(file) {
                 .catch(err => console.log(err));
 
         }
-
-        return setFields("")
 
     }, [file.id, currentBranch]);
 
@@ -110,15 +107,6 @@ function useFile(file) {
         }
     }
 
-
-    function handleRefreshFields() {
-        getFields()
-            .then(res => setFields(res.express))
-            .catch(err => console.log(err));
-    }
-
-
-
     const handleDeleteFile = async (fieldId, key) => {
 
         await fetch(`/fields/${fieldId}`, {
@@ -173,7 +161,8 @@ function useFile(file) {
     };
 
     function handleMergeBranch() {
-        postMergeBranch(fields).then(res => {
+
+        postMergeBranch().then(res => {
 
             if(res.express !== "no conflicts"){
                 setMergeBranchConflictsSource(res.conflictsSource);
@@ -186,7 +175,7 @@ function useFile(file) {
 
     const postMergeBranch = async () => {
 
-        const response = await fetch(`/fields/mergeBranch/${mergeBranch}`, {
+        const response = await fetch(`/fields/mergeBranch/${(document.getElementById("selectMerge").value)}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(fields)
@@ -215,7 +204,7 @@ function useFile(file) {
 
                 if (fields[i].title === cloneMerge[j].title) {
 
-                    cloneMerge[j].branch_title = mergeBranch;
+                    cloneMerge[j].branch_title = (document.getElementById("selectMerge").value);
                     delete cloneMerge[j].timestamp;
                     delete cloneMerge[j].id;
                     mergeResolved.push(cloneMerge[j]);
@@ -236,7 +225,7 @@ function useFile(file) {
             if(boolean === false) {
                 let cloneFields = JSON.parse(JSON.stringify(fields));
 
-                cloneFields[i].branch_title = mergeBranch;
+                cloneFields[i].branch_title = (document.getElementById("selectMerge").value);
                 delete cloneFields[i].timestamp;
                 delete cloneFields[i].id;
 
@@ -252,7 +241,7 @@ function useFile(file) {
 
     const postMergeResolved = async (mergeResolved) => {
 
-        await fetch(`/fields/mergeResolved/${mergeBranch}`, {
+        await fetch(`/fields/mergeResolved/${(document.getElementById("selectMerge").value)}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(mergeResolved)
@@ -295,14 +284,8 @@ function useFile(file) {
             </nav>
 
             <div id={"options"}>
-                <button onClick={handleRefreshFields}>Refresh Fields</button>
-                <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
-                <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
-                <button onClick={handleNewField}>New Field</button>
                 <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
                 <button onClick={handleNewBranch}>New Branch</button>
-                <button onClick={handleDeleteBranch}>DeleteBranch</button>
-
 
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                     <>
@@ -318,11 +301,13 @@ function useFile(file) {
                     </>
                 </select>
 
+                <button onClick={handleDeleteBranch}>DeleteBranch</button>
+
                 {Array.isArray(fileTitles) && fileTitles.length > 1 ?
                     <>
-                        <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
+                        <select id="selectMerge">
                             {
-                                fileTitles.map(value => {
+                                fileTitles.map(value=> {
 
                                     if (value.branch_title === currentBranch) {
                                         return null;
@@ -335,6 +320,16 @@ function useFile(file) {
                         <button onClick={handleMergeBranch}>Merge Branch target</button>
                     </>
                     : null}
+
+                <br/>
+
+                <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+                <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
+                <button onClick={handleNewField}>New Field</button>
+
+
+
+
             </div>
             <div id={"fields"}>
                 {

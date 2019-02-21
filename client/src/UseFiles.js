@@ -81,10 +81,7 @@ function useFiles(report) {
 
     const getFiles = async (reportId) => {
 
-
-        let fetchUrl = encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`);
-
-        const response = await fetch(fetchUrl);
+        const response = await fetch(encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`));
         const body = await response.json();
 
         if (response.status !== 200) {
