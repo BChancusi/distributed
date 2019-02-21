@@ -20,7 +20,7 @@ function useFile(file) {
 
     useEffect(() => {
         if (file !== "") {
-            getFields(file.id)
+            getFields()
                 .then(res => {
                     setFields(res.fields);
                     setFileTitles(res.fileTitles);
@@ -33,9 +33,10 @@ function useFile(file) {
 
     }, [file.id, currentBranch]);
 
-    const getFields = async (fileId) => {
+    const getFields = async () => {
 
-        let fetchUrl = `/fields?file_id=${fileId}&branch_title=${currentBranch}&title=${file.title}`;
+
+        let fetchUrl = `/fields?report_id=${file.report_id}&branch_title=${currentBranch}&title=${file.title}`;
 
         fetchUrl = encodeURI(fetchUrl);
 
@@ -70,16 +71,6 @@ function useFile(file) {
         }
         return body;
     };
-
-    const deleteField = async (fieldId) => {
-
-        await fetch(`/fields/${fieldId}`, {
-            method: 'DELETE',
-        });
-
-        return null;
-    };
-
 
     const putField = async (field) => {
 
@@ -119,7 +110,7 @@ function useFile(file) {
 
 
     function handleRefreshFields() {
-        getFields(file.id)
+        getFields()
             .then(res => setFields(res.express))
             .catch(err => console.log(err));
     }
@@ -130,9 +121,41 @@ function useFile(file) {
             .catch(err => console.log(err));
     }
 
-    function handleDeleteFile(fieldId) {
-        deleteField(fieldId).then(() => null);
-    }
+
+    const handleDeleteFile = async (fieldId, key) => {
+
+        await fetch(`/fields/${fieldId}`, {
+            method: 'DELETE',
+        }).then(response => {
+
+            if (response.status !== 200) {
+                throw Error(response.status.toString())
+            }
+
+            setFields(fields.filter((value, index) => {
+
+                return key !== index;
+            }));
+        });
+    };
+
+    const handleDeleteBranch = async () => {
+
+        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${file.id}`, {
+            method: 'DELETE',
+        }).then(response => {
+
+            if (response.status !== 200) {
+                throw Error(response.status.toString())
+            }
+
+            setFileTitles(fileTitles.filter(value => {
+                return value.branch_title !== currentBranch;
+            }));
+
+            setCurrentBranch("master");
+        });
+    };
 
     function handleNewBranch() {
         postBranch(fields).then(() => null);
@@ -281,31 +304,34 @@ function useFile(file) {
                 <button onClick={handleNewField}>New Field</button>
                 <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
                 <button onClick={handleNewBranch}>New Branch</button>
+                <button onClick={handleDeleteBranch}>DeleteBranch</button>
+
 
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                     <>
                         {
                             Array.isArray(fileTitles) ?
-                                Object.keys(fileTitles).map(key => {
+                                fileTitles.map(value => {
 
-                                    return <option key={fileTitles[key].id}
-                                                   value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                                    return <option key={value.id}
+                                                   value={value.branch_title}>{value.branch_title}</option>
                                 })
                                 : null
                         }
                     </>
                 </select>
+
                 {Array.isArray(fileTitles) && fileTitles.length > 1 ?
                     <>
                         <select value={mergeBranch} onChange={(event) => setMergeBranch(event.target.value)}>
                             {
-                                Object.keys(fileTitles).map((key) => {
+                                fileTitles.map(value => {
 
-                                    if (fileTitles[key].branch_title === currentBranch) {
+                                    if (value.branch_title === currentBranch) {
                                         return null;
                                     }
-                                    return <option key={fileTitles[key].id}
-                                                   value={fileTitles[key].branch_title}>{fileTitles[key].branch_title}</option>
+                                    return <option key={value.id}
+                                                   value={value.branch_title}>{value.branch_title}</option>
                                 })
                             }
                         </select>
@@ -315,15 +341,15 @@ function useFile(file) {
             </div>
             <div id={"fields"}>
                 {
-                    Object.keys(fields).map(key => {
-                        total += fields[key].value;
-                        return <Fragment key={fields[key].id}>
+                    fields.map((value, index) => {
+                        total += value.value;
+                        return <Fragment key={value.id}>
 
-                            <input type="text" value={fields[key].title} name="title"
-                                   onChange={(event) => handlePutField(event, key)}/>
-                            <input type="text" value={fields[key].value} name="value"
-                                   onChange={(event) => handlePutField(event, key)}/>
-                            <button onClick={() => handleDeleteFile(fields[key].id)}>Delete</button>
+                            <input type="text" value={value.title} name="title"
+                                   onChange={(event) => handlePutField(event, index)}/>
+                            <input type="text" value={value.value} name="value"
+                                   onChange={(event) => handlePutField(event, index)}/>
+                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
 
                         </Fragment>
                     })
@@ -334,32 +360,30 @@ function useFile(file) {
                 <div id="conflicts">
                     <>
                         {
-                            Object.keys(mergeBranchConflictsSource).map(key => {
-                                return <Fragment key={mergeBranchConflictsSource[key].id}>
+                            mergeBranchConflictsSource.map(value => {
+                                return <Fragment key={value.id}>
                                     <label>
-                                        {mergeBranchConflictsSource[key].title}
+                                        {value.title}
                                     </label>
                                     <label>
-                                        {mergeBranchConflictsSource[key].value}
+                                        {value.value}
                                     </label>
                                     <input type="checkbox" onChange={(event) =>
-                                        handleCheckbox(event, mergeBranchConflictsSource[key])}/>
+                                        handleCheckbox(event, value)}/>
                                 </Fragment>
                             })
                         }
                         <br/>
 
                         {
-                            Object.keys(mergeBranchConflictsTarget).map(key => {
-                                return <Fragment key={mergeBranchConflictsTarget[key].id}>
+                            mergeBranchConflictsTarget.map(value => {
+                                return <Fragment key={value.id}>
                                     <label>
-                                        {mergeBranchConflictsTarget[key].title}
+                                        {value.title}
                                     </label>
                                     <label>
-                                        {mergeBranchConflictsTarget[key].value}
+                                        {value.value}
                                     </label>
-                                    {/*<input onChange={(event) =>*/}
-                                    {/*handleCheckbox(event, mergeBranchConflictsTarget[key])} type="checkbox"/>*/}
                                 </Fragment>
                             })
 
@@ -373,3 +397,5 @@ function useFile(file) {
 }
 
 export default useFile;
+
+// TODO reset new fields on success

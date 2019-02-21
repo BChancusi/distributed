@@ -118,8 +118,6 @@ function useFiles(report) {
                 throw Error(body.message)
             }
 
-            console.debug(body.express)
-
             setFiles(files.concat(body.express));
             setNewFile("")
         });
@@ -170,20 +168,20 @@ function useFiles(report) {
             <header>
                 <h1 align="CENTER">{report.title}</h1>
             </header>
-            <nav>
 
+            <nav>
                 <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
                 <button onClick={handleNewFile}>New File</button>
-
-                <button onClick={() => setReportClose(true)}>Return
-                </button>
+                <button onClick={() => setReportClose(true)}>Return</button>
             </nav>
+
             <div id={"files"}>
                 {
                     files.map((value, index) => {
                         return <Fragment key={value.id}>
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => handlePutFile(document.getElementById(`textInput${value.id}`).value, index)}>Update field</button>
+                            <button onClick={() => handlePutFile(document
+                                .getElementById(`textInput${value.id}`).value, index)}>Update field</button>
                             <button onClick={() => setFileOpen(value)}>Open file</button>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
                         </Fragment>
