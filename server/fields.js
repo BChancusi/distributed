@@ -134,10 +134,22 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         let sourceMap = new Map();
         let conflictsSource = [];
         let conflictsTarget = [];
+        let newFields = [];
 
-        for (let i = 0; i < req.body.length; i++) {
-            sourceMap.set(req.body[i].title, i)
-        }
+        let query = [];
+
+        req.body.forEach((value, index) => {
+
+            delete value.id;
+            delete value.timestamp;
+
+            value.branch_title = req.params.mergeBranch;
+
+            query.push(Object.values(value));
+
+            sourceMap.set(value.title, index)
+
+        });
 
         for (let i = 0; i < results.length; i++) {
 
@@ -155,17 +167,6 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
         }else{
-            let query = [];
-
-            req.body.forEach(value => {
-
-                delete value.id;
-                delete value.timestamp;
-
-                value.branch_title = req.params.mergeBranch;
-
-                query.push(Object.values(value))
-            });
 
             pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
                 if (error) throw error;
