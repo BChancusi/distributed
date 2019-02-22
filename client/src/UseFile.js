@@ -105,20 +105,33 @@ function useFile(file) {
     function handlePutFields() {
 
             putFields(fields)
-                .then(() => null)
+                .then(res =>{
+
+                    // if (res.express !== "no conflicts") {
+                    //     setMergeBranchConflictsSource(res.conflictsSource);
+                    //     setMergeBranchConflictsTarget(res.conflictsTarget);
+                    // }
+
+                })
                 .catch(err => console.log(err));
 
     }
 
     const putFields = async () => {
 
-        await fetch(`/fields`, {
+        const response = await fetch(`/fields`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(fields)
         });
 
-        return null;
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+
+        return body;
     };
 
     const handleDeleteFile = async (fieldId, key) => {
