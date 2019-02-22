@@ -47,7 +47,12 @@ function useFile(file) {
     };
 
     function handleNewField() {
-        postField().then(res => setFields(fields.concat(res.express)))
+        postField()
+            .then(res => {
+                setFields(fields.concat(res.express));
+                setNewFieldTitle("");
+                setNewFieldValue(0);
+            })
             .catch(err => console.log(err));
     }
 
@@ -164,7 +169,7 @@ function useFile(file) {
 
         postMergeBranch().then(res => {
 
-            if(res.express !== "no conflicts"){
+            if (res.express !== "no conflicts") {
                 setMergeBranchConflictsSource(res.conflictsSource);
                 setMergeBranchConflictsTarget(res.conflictsTarget);
             }
@@ -213,16 +218,16 @@ function useFile(file) {
                 }
             }
 
-            for(let k = 0; k < mergeBranchConflictsTarget.length && boolean === false; k++){
+            for (let k = 0; k < mergeBranchConflictsTarget.length && boolean === false; k++) {
 
-                if(mergeBranchConflictsTarget[k].title === fields[i].title){
+                if (mergeBranchConflictsTarget[k].title === fields[i].title) {
 
                     boolean = true;
                     break;
                 }
             }
 
-            if(boolean === false) {
+            if (boolean === false) {
                 let cloneFields = JSON.parse(JSON.stringify(fields));
 
                 cloneFields[i].branch_title = (document.getElementById("selectMerge").value);
@@ -232,7 +237,7 @@ function useFile(file) {
                 mergeResolved.push(cloneFields[i]);
             }
         }
-        postMergeResolved(mergeResolved).then(()=> {
+        postMergeResolved(mergeResolved).then(() => {
             setMergeBranchConflictsTarget([]);
             setMergeBranchConflictsSource([]);
             setMergeBranchResolved([]);
@@ -307,7 +312,7 @@ function useFile(file) {
                     <>
                         <select id="selectMerge">
                             {
-                                fileTitles.map(value=> {
+                                fileTitles.map(value => {
 
                                     if (value.branch_title === currentBranch) {
                                         return null;
@@ -326,8 +331,6 @@ function useFile(file) {
                 <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
-
-
 
 
             </div>
