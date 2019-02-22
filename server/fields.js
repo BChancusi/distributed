@@ -4,22 +4,15 @@ const pool = require('./database');
 
 
 router.route('/:fileBranch')
-    .put((req, res) => {
+    .delete((req, res) => {
 
-        pool.query(`UPDATE fields SET ?  WHERE id = ?`, [req.body, req.params.fileBranch], function (error) {
+        pool.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
         });
-    }).delete((req, res) => {
 
-    pool.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
     });
-
-});
 
 router.get('/file/:fileIds', (req, res) => {
 
@@ -70,6 +63,20 @@ router.route('/')
             });
         });
 
+    })
+    .put((req, res) => {
+
+        req.body.forEach((value) => {
+
+            delete value.timestamp;
+
+            pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
+                if (error) throw error;
+
+            });
+        });
+
+        res.sendStatus(200)
     });
 
 
@@ -84,7 +91,7 @@ router.post('/branch/:branchTitle', (req, res) => {
     pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
         if (error) throw error;
 
-        if(req.body.length > 0) {
+        if (req.body.length > 0) {
 
             let query = [];
 
@@ -111,7 +118,7 @@ router.post('/branch/:branchTitle', (req, res) => {
                 })
 
             });
-        }else{
+        } else {
             pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
                 if (error) throw error;
 
@@ -123,7 +130,7 @@ router.post('/branch/:branchTitle', (req, res) => {
 
 router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
-    if(req.body.length === 0){
+    if (req.body.length === 0) {
         res.send({express: "no conflicts"});
     }
 
@@ -163,10 +170,10 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             }
         }
 
-        if(conflictsTarget.length > 0 && conflictsSource.length > 0){
+        if (conflictsTarget.length > 0 && conflictsSource.length > 0) {
             res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
-        }else{
+        } else {
 
             pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                 if (error) throw error;
@@ -231,10 +238,10 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
 router.delete('/deleteBranch/query', (req, res) => {
 
-    pool.query(`DELETE FROM fields WHERE file_id = ? AND branch_title=?`, [ req.query.file_id, req.query.branch_title], function (error) {
+    pool.query(`DELETE FROM fields WHERE file_id = ? AND branch_title=?`, [req.query.file_id, req.query.branch_title], function (error) {
         if (error) throw error;
 
-        pool.query(`DELETE FROM files WHERE id = ? AND branch_title=?`, [ req.query.file_id, req.query.branch_title], function (error) {
+        pool.query(`DELETE FROM files WHERE id = ? AND branch_title=?`, [req.query.file_id, req.query.branch_title], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)

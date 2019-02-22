@@ -76,18 +76,9 @@ function useFile(file) {
         return body;
     };
 
-    const putField = async (field) => {
 
-        await fetch(`/fields/${field.id}`, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": field.title, "value": field.value})
-        });
 
-        return null;
-    };
-
-    function handlePutField(event, key) {
+    function handleFieldChange(event, key) {
 
         if (event.target.name === "title") {
 
@@ -95,9 +86,8 @@ function useFile(file) {
 
             cloneFields[key].title = event.target.value;
 
-            putField(cloneFields[key])
-                .then(() => setFields(cloneFields))
-                .catch(err => console.log(err));
+            setFields(cloneFields);
+
 
         } else if (event.target.name === "value") {
 
@@ -106,11 +96,30 @@ function useFile(file) {
 
             cloneFields[key].value = event.target.value;
 
-            putField(cloneFields[key])
-                .then(() => setFields(cloneFields))
-                .catch(err => console.log(err));
+            setFields(cloneFields);
+
         }
+
     }
+
+    function handlePutFields() {
+
+            putFields(fields)
+                .then(() => null)
+                .catch(err => console.log(err));
+
+    }
+
+    const putFields = async () => {
+
+        await fetch(`/fields`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(fields)
+        });
+
+        return null;
+    };
 
     const handleDeleteFile = async (fieldId, key) => {
 
@@ -337,6 +346,11 @@ function useFile(file) {
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
 
+                <button onClick={handlePutFields}>Save Changes</button>
+
+
+
+
 
             </div>
             <div id={"fields"}>
@@ -346,9 +360,9 @@ function useFile(file) {
                         return <Fragment key={value.id}>
 
                             <input type="text" value={value.title} name="title"
-                                   onChange={(event) => handlePutField(event, index)}/>
+                                   onChange={(event) => handleFieldChange(event, index)}/>
                             <input type="text" value={value.value} name="value"
-                                   onChange={(event) => handlePutField(event, index)}/>
+                                   onChange={(event) => handleFieldChange(event, index)}/>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
 
                         </Fragment>
