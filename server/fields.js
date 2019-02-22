@@ -81,7 +81,7 @@ router.post('/branch/:branchTitle', (req, res) => {
     delete fileValue.id;
     fileValue.branch_title = req.params.branchTitle;
 
-    pool.query(`INSERT INTO files SET ?`, [fileValue], function (error) {
+    pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
         if (error) throw error;
 
         if(req.body.length > 0) {
@@ -101,21 +101,31 @@ router.post('/branch/:branchTitle', (req, res) => {
 
             });
 
-            console.debug(query)
-
             pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                 if (error) throw error;
 
-                res.sendStatus(200)
+                pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                    if (error) throw error;
+
+                    res.send({express: resultsSelect});
+                })
 
             });
         }else{
-            res.sendStatus(200)
+            pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                if (error) throw error;
+
+                res.send({express: resultsSelect});
+            })
         }
     });
 });
 
 router.post('/mergeBranch/:mergeBranch', (req, res) => {
+
+    if(req.body.length === 0){
+        res.send({express: "no conflicts"});
+    }
 
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;

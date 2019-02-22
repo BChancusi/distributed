@@ -148,7 +148,7 @@ function useFile(file) {
     };
 
     function handleNewBranch() {
-        postBranch(fields).then(() => null);
+        postBranch(fields).then(res => setFileTitles(fileTitles.concat(res.express)));
     }
 
     const postBranch = async () => {
@@ -156,13 +156,18 @@ function useFile(file) {
         let cloneFields = [...fields];
         cloneFields.push(file);
 
-        await fetch(`/fields/branch/${newBranchTitle}`, {
+        const response =  await fetch(`/fields/branch/${newBranchTitle}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cloneFields)
         });
 
-        return null;
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+        return body;
     };
 
     function handleMergeBranch() {
