@@ -66,6 +66,34 @@ router.route('/')
     })
     .put((req, res) => {
 
+        // let query = [];
+        //
+        // req.body.forEach(value => {
+        //
+        //     query.push(value.id);
+        // });
+        //
+        // pool.query(`SELECT * FROM fields WHERE id IN (?)`, [query], function (error, results) {
+        //     if (error) throw error;
+        //
+        //     let conflictingTimestamps= [];
+        //
+        //     results.forEach(value =>{
+        //
+        //         req.body.forEach(valueInner => {
+        //             console.debug("value outer timestamp " + value.timestamp)
+        //             console.debug("value inner timestamp: " + valueInner.timestamp)
+        //             if(value.id === valueInner.id && value.timestamp !== valueInner.timestamp && value.value !== valueInner.value){
+        //                 conflictingTimestamps.push(valueInner)
+        //             }
+        //         })
+        //     })
+        //
+        //
+        //
+        // });
+
+
         req.body.forEach((value) => {
 
             delete value.timestamp;
@@ -75,6 +103,7 @@ router.route('/')
 
             });
         });
+
 
         res.sendStatus(200)
     });
@@ -253,3 +282,7 @@ router.delete('/deleteBranch/query', (req, res) => {
 module.exports = router;
 
 //TODO no branch conflicts inserting identical fields
+//      Check timestamps on field saves
+//      Change new field saves from post on new field to post on save
+//      Field title change still matching id changes
+//      MYSQL timestamp output being converted
