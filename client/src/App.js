@@ -12,4 +12,3 @@ function App() {
 export default App;
 
 //TODO Cant select same file twice after return
-//      Merge branch initial being sent instead of target

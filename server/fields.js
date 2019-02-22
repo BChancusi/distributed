@@ -245,4 +245,4 @@ router.delete('/deleteBranch/query', (req, res) => {
 
 module.exports = router;
 
-//TODO Branch names being identical will cause double fetch on each branch
+//TODO no branch conflicts inserting identical fields

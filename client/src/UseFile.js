@@ -397,5 +397,3 @@ function useFile(file) {
 }
 
 export default useFile;
-
-// TODO reset new fields on success
