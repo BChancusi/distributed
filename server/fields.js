@@ -13,7 +13,7 @@ router.route('/:fileBranch')
         });
     }).delete((req, res) => {
 
-    pool.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error, results) {
+    pool.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error) {
         if (error) throw error;
 
         res.sendStatus(200)
@@ -168,7 +168,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
         }else{
 
-            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
+            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                 if (error) throw error;
 
                 res.send({express: "no conflicts"});

@@ -28,7 +28,7 @@ router.route('/')
 router.route('/:fileId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error, results) {
+        pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
