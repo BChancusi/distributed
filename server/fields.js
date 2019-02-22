@@ -81,32 +81,37 @@ router.post('/branch/:branchTitle', (req, res) => {
     delete fileValue.id;
     fileValue.branch_title = req.params.branchTitle;
 
-    pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
+    pool.query(`INSERT INTO files SET ?`, [fileValue], function (error) {
         if (error) throw error;
 
-        let query = [];
+        if(req.body.length > 0) {
 
-        req.body.forEach(value => {
+            let query = [];
 
-
-            delete value.timestamp;
-            delete value.id;
-            value.version_id = value.version_id + 1;
-            value.branch_title = req.params.branchTitle;
-            value.file_Id = results.insertId;
+            req.body.forEach(value => {
 
 
-            query.push(Object.values(value));
+                delete value.timestamp;
+                delete value.id;
+                value.version_id = value.version_id + 1;
+                value.branch_title = req.params.branchTitle;
+
+                query.push(Object.values(value));
 
 
-        });
+            });
 
-        pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error, results) {
-            if (error) throw error;
+            console.debug(query)
 
+            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
+                if (error) throw error;
+
+                res.sendStatus(200)
+
+            });
+        }else{
             res.sendStatus(200)
-
-        });
+        }
     });
 });
 
