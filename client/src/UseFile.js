@@ -98,7 +98,7 @@ function useFile(file) {
 
             let cloneFields = [...fields];
 
-            cloneFields[key].value = event.target.value;
+            cloneFields[key].value = parseFloat(event.target.value).toFixed(2);
 
             setFields(cloneFields);
 
@@ -436,10 +436,10 @@ function useFile(file) {
                             mergeBranchConflictsSource.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {value.title}
+                                        {"New value - " +value.title}
                                     </label>
                                     <label>
-                                        {value.value}
+                                        {" : " + value.value}
                                     </label>
                                     <input type="checkbox" onChange={(event) =>
                                         handleCheckboxMerge(event, value)}/>
@@ -452,16 +452,17 @@ function useFile(file) {
                             mergeBranchConflictsTarget.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {value.title}
+                                        {"Value on file - " + value.title}
                                     </label>
                                     <label>
-                                        {value.value}
+                                        {" : " + value.value}
                                     </label>
                                 </Fragment>
                             })
 
                         }
-                        <button onClick={handleResolveConflicts}>Resolve Conflicts Merge</button>
+                        <br/>
+                        <button onClick={handleResolveConflicts}>Resolve Merge Conflicts </button>
                     </>
                 </div> : null
             }
@@ -472,10 +473,10 @@ function useFile(file) {
                             commitNew.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {value.title}
+                                        {"New value - " + value.title}
                                     </label>
                                     <label>
-                                        {value.value}
+                                        {" : " + value.value}
                                     </label>
                                     <input type="checkbox" onChange={(event) =>
                                         handleCheckboxCommit(event, value)}/>
@@ -488,16 +489,17 @@ function useFile(file) {
                             commitOld.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {value.title}
+                                        {"Value on file - " + value.title}
                                     </label>
                                     <label>
-                                        {value.value}
+                                        {" : " + value.value}
                                     </label>
                                 </Fragment>
                             })
 
                         }
-                        <button onClick={handleResolveConflictsCommit}>Resolve Conflicts Commit</button>
+                        <br/>
+                        <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts </button>
                     </>
                 </div> : null
             }
