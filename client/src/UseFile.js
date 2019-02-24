@@ -55,7 +55,7 @@ function useFile(file) {
             .then(res => {
                 setFields(fields.concat(res.express));
                 setNewFieldTitle("");
-                setNewFieldValue(0);
+                setNewFieldValue("0");
             })
             .catch(err => console.log(err));
     }
