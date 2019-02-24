@@ -172,7 +172,10 @@ function useFile(file) {
     };
 
     function handleNewBranch() {
-        postBranch(fields).then(res => setFileTitles(fileTitles.concat(res.express)));
+        postBranch(fields).then(res => {
+            setFileTitles(fileTitles.concat(res.express));
+            setNewBranchTitle("");
+        } );
     }
 
     const postBranch = async () => {
