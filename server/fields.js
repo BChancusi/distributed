@@ -66,6 +66,11 @@ router.route('/')
     })
     .put((req, res) => {
 
+
+        if (req.body.length === 0) {
+            res.send({express: "no conflicts"});
+        }
+
         let query = [];
 
         req.body.forEach(value => {
@@ -76,7 +81,9 @@ router.route('/')
         pool.query(`SELECT * FROM fields WHERE id IN (?)`, [query], function (error, results) {
             if (error) throw error;
 
-            let conflicts= [];
+
+            let conflictsNew = [];
+            let conflictsOld = [];
 
             results.forEach(value =>{
 
@@ -87,13 +94,14 @@ router.route('/')
                         && JSON.stringify(value.timestamp) !== valueInner.timestamp
                         && value.value !== valueInner.value){
 
-                        conflicts.push(valueInner)
+                        conflictsNew.push(valueInner);
+                        conflictsOld.push(value);
                     }
                 })
             });
 
-            if (conflicts.length > 0) {
-                res.send({"conflicts": conflicts});
+            if (conflictsNew.length > 0 && conflictsOld.length > 0) {
+                res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
 
             } else {
 
@@ -110,22 +118,6 @@ router.route('/')
                     res.send({express: "no conflicts"});
             }
         });
-
-
-
-        //
-        // req.body.forEach((value) => {
-        //
-        //     delete value.timestamp;
-        //
-        //     pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
-        //         if (error) throw error;
-        //
-        //     });
-        // });
-
-
-        res.sendStatus(200)
     });
 
 
@@ -298,12 +290,29 @@ router.delete('/deleteBranch/query', (req, res) => {
     });
 });
 
+router.put('/commitResolved', (req, res) => {
+
+    req.body.forEach(value => {
+
+        delete value.timestamp;
+
+        pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
+            if (error) throw error;
+
+        });
+    });
+
+    res.sendStatus(200)
+});
+
 
 module.exports = router;
 
+
 //TODO no branch conflicts inserting identical fields
-//      Check timestamps on field saves
 //      Change new field saves from post on new field to post on save
 //      Field title change still matching id changes
-//      Duplicate conflicts source target when committing files
-//      CHECK TIMESTAMPS, file may be different but only timstamps matter indicating changes
+//      MYSQL change timestamp on change
+//      TIMESTAMP current POST
+//      only push check on merge/commit if timestamps dont match#
+//      Only retrun actual conflicts, post/insert rest of fields??

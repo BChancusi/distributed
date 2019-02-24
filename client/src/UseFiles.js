@@ -177,9 +177,9 @@ function useFiles(report) {
                     files.map((value, index) => {
                         return <Fragment key={value.id}>
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => handlePutFile(document
-                                .getElementById(`textInput${value.id}`).value, index)}>Update field</button>
                             <button onClick={() => setFileOpen(value)}>Open file</button>
+                            <button onClick={() => handlePutFile(document
+                                .getElementById(`textInput${value.id}`).value, index)}>Update title</button>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
                         </Fragment>
                     })

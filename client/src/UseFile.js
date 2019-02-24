@@ -9,11 +9,15 @@ function useFile(file) {
     const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
     const [mergeBranchResolved, setMergeBranchResolved] = useState([]);
 
+    const [commitNew, setCommitNew] = useState([]);
+    const [commitOld, setCommitOld] = useState([]);
+    const [commitResolved, setCommitResolved] = useState([]);
+
 
     const [fileTitles, setFileTitles] = useState("master");
 
     const [newFieldTitle, setNewFieldTitle] = useState("");
-    const [newFieldValue, setNewFieldValue] = useState(0);
+    const [newFieldValue, setNewFieldValue] = useState("0");
     const [newBranchTitle, setNewBranchTitle] = useState("");
 
 
@@ -106,12 +110,10 @@ function useFile(file) {
 
             putFields(fields)
                 .then(res =>{
-
-                    // if (res.express !== "no conflicts") {
-                    //     setMergeBranchConflictsSource(res.conflictsSource);
-                    //     setMergeBranchConflictsTarget(res.conflictsTarget);
-                    // }
-
+                    if (res.express !== "no conflicts") {
+                        setCommitNew(res.conflictsNew);
+                        setCommitOld(res.conflictsOld);
+                    }
                 })
                 .catch(err => console.log(err));
 
@@ -282,7 +284,7 @@ function useFile(file) {
         return null;
     };
 
-    function handleCheckbox(event, item) {
+    function handleCheckboxMerge(event, item) {
 
         if (event.target.checked === true) {
 
@@ -299,6 +301,46 @@ function useFile(file) {
             }))
         }
     }
+
+    function handleCheckboxCommit(event, item) {
+
+        if (event.target.checked === true) {
+
+            let cloneResolved = [...commitResolved];
+
+            cloneResolved.push(item);
+            setCommitResolved(cloneResolved)
+
+        } else {
+
+            setCommitResolved(commitResolved.filter(filterItem => {
+                return filterItem !== item
+
+            }))
+        }
+    }
+
+    function handleResolveConflictsCommit() {
+
+        postCommit().then(() => {
+            setCommitOld([]);
+            setCommitNew([]);
+            setCommitResolved([]);
+        })
+    }
+
+    const postCommit = async () => {
+
+        if(commitResolved.length > 0){
+            await fetch(`/fields/commitResolved`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(commitResolved)
+            });
+        }
+
+        return null;
+    };
 
     if (fields === "") {
         return "";
@@ -361,10 +403,6 @@ function useFile(file) {
 
                 <button onClick={handlePutFields}>Save Changes</button>
 
-
-
-
-
             </div>
             <div id={"fields"}>
                 {
@@ -396,7 +434,7 @@ function useFile(file) {
                                         {value.value}
                                     </label>
                                     <input type="checkbox" onChange={(event) =>
-                                        handleCheckbox(event, value)}/>
+                                        handleCheckboxMerge(event, value)}/>
                                 </Fragment>
                             })
                         }
@@ -415,7 +453,43 @@ function useFile(file) {
                             })
 
                         }
-                        <button onClick={handleResolveConflicts}>Resolve Conflicts</button>
+                        <button onClick={handleResolveConflicts}>Resolve Conflicts Merge</button>
+                    </>
+                </div> : null
+            }
+            {commitNew.length > 0 && commitOld.length > 0 ?
+                <div id="conflictsCommit">
+                    <>
+                        {
+                            commitNew.map(value => {
+                                return <Fragment key={value.id}>
+                                    <label>
+                                        {value.title}
+                                    </label>
+                                    <label>
+                                        {value.value}
+                                    </label>
+                                    <input type="checkbox" onChange={(event) =>
+                                        handleCheckboxCommit(event, value)}/>
+                                </Fragment>
+                            })
+                        }
+                        <br/>
+
+                        {
+                            commitOld.map(value => {
+                                return <Fragment key={value.id}>
+                                    <label>
+                                        {value.title}
+                                    </label>
+                                    <label>
+                                        {value.value}
+                                    </label>
+                                </Fragment>
+                            })
+
+                        }
+                        <button onClick={handleResolveConflictsCommit}>Resolve Conflicts Commit</button>
                     </>
                 </div> : null
             }
@@ -424,3 +498,6 @@ function useFile(file) {
 }
 
 export default useFile;
+
+//TODO  TOTAL DISPLAY when values are changed
+//      If old values are selected replace fields with old values
