@@ -377,7 +377,7 @@ function useFile(file) {
 
                 <button onClick={handleDeleteBranch}>DeleteBranch</button>
 
-                {Array.isArray(fileTitles) && fileTitles.length > 1 ?
+                {Array.isArray(fileTitles) && fileTitles.length > 1  && currentBranch !== "master" ?
                     <>
                         <select id="selectMerge">
                             {
