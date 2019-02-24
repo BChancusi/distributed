@@ -407,7 +407,11 @@ function useFile(file) {
             <div id={"fields"}>
                 {
                     fields.map((value, index) => {
-                        total += value.value;
+
+                        if(!isNaN(parseInt(value.value))){
+                            total += parseInt(value.value);
+                        }
+
                         return <Fragment key={value.id}>
 
                             <input type="text" value={value.title} name="title"
