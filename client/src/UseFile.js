@@ -410,7 +410,7 @@ function useFile(file) {
                     fields.map((value, index) => {
 
                         if(!isNaN(parseFloat(value.value))){
-                            total += parseFloat(value.value);
+                            total += parseFloat(parseFloat(value.value).toFixed(2));
                         }
 
                         return <Fragment key={value.id}>
