@@ -199,7 +199,7 @@ function useFiles(report) {
                         </Fragment>
                     })
                 }
-                <label>Total = {total}</label>
+                {files.length > 0 ? <label>Total = {total}</label> : null }
             </div>
 
         </>

@@ -395,21 +395,22 @@ function useFile(file) {
                     </>
                     : null}
 
+                <button onClick={handlePutFields}>Save Changes</button>
+
                 <br/>
 
                 <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
                 <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
                 <button onClick={handleNewField}>New Field</button>
 
-                <button onClick={handlePutFields}>Save Changes</button>
 
             </div>
             <div id={"fields"}>
                 {
                     fields.map((value, index) => {
 
-                        if(!isNaN(parseInt(value.value))){
-                            total += parseInt(value.value);
+                        if(!isNaN(parseFloat(value.value))){
+                            total += parseFloat(value.value);
                         }
 
                         return <Fragment key={value.id}>
