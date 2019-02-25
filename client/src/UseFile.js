@@ -172,6 +172,10 @@ function useFile(file) {
     };
 
     function handleNewBranch() {
+
+        if(newBranchTitle.trim() === ""){
+            return;
+        }
         postBranch(fields).then(res => {
             setFileTitles(fileTitles.concat(res.express));
             setNewBranchTitle("");
@@ -378,10 +382,10 @@ function useFile(file) {
                     </>
                 </select>
 
-                <button onClick={handleDeleteBranch}>DeleteBranch</button>
 
                 {Array.isArray(fileTitles) && fileTitles.length > 1  && currentBranch !== "master" ?
                     <>
+                        <button onClick={handleDeleteBranch}>Delete Current Branch</button>
                         <select id="selectMerge">
                             {
                                 fileTitles.map(value => {

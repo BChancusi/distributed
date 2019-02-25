@@ -68,7 +68,7 @@ router.route('/')
 
 
         if (req.body.length === 0) {
-            res.send({express: "no conflicts"});
+            return res.send({express: "no conflicts"});
         }
 
         let query = [];
@@ -193,7 +193,7 @@ router.post('/branch/:branchTitle', (req, res) => {
 router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
     if (req.body.length === 0) {
-        res.send({express: "no conflicts"});
+       return res.send({express: "no conflicts"});
     }
 
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
