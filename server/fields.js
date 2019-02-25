@@ -251,11 +251,14 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                 return boolean;
             });
 
-            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
-                if (error) throw error;
+            if(query.length > 0) {
+                pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
+                    if (error) throw error;
 
-                res.send({express: "no conflicts"});
-            });
+                });
+            }
+
+            res.send({express: "no conflicts"});
         }
 
     });
