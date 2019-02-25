@@ -155,7 +155,7 @@ function useFile(file) {
 
     const handleDeleteBranch = async () => {
 
-        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${file.id}`, {
+        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${file.id}&title=${file.title}`, {
             method: 'DELETE',
         }).then(response => {
 
@@ -513,5 +513,4 @@ function useFile(file) {
 
 export default useFile;
 
-//TODO  TOTAL DISPLAY when values are changed
-//      If old values are selected replace fields with old values
+//TODO  If old values are selected replace fields with old values
