@@ -158,7 +158,7 @@ function useFiles(report) {
         }).catch(err => console.log(err));
     };
 
-    let total = 0;
+    let total = 0.00;
 
     return fileRender === "" ? (
         <>
@@ -187,7 +187,7 @@ function useFiles(report) {
                 {
                     fileFields.map(value => {
 
-                        total += value.value;
+                            total += value.value;
 
                         return <Fragment key={value.id}>
                             <br/>
@@ -199,7 +199,7 @@ function useFiles(report) {
                         </Fragment>
                     })
                 }
-                {fileFields.length > 0 ? <label>Total = {total}</label> : null }
+                {fileFields.length > 0 ? <label>Total = {parseFloat(total).toFixed(2)}</label> : null }
             </div>
 
         </>
