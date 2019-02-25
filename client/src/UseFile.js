@@ -440,7 +440,7 @@ function useFile(file) {
                             mergeBranchConflictsSource.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {"New value - " +value.title}
+                                        {" New value - " +value.title}
                                     </label>
                                     <label>
                                         {" : " + value.value}
@@ -456,7 +456,7 @@ function useFile(file) {
                             mergeBranchConflictsTarget.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {"Value on file - " + value.title}
+                                        {" Value on file - " + value.title}
                                     </label>
                                     <label>
                                         {" : " + value.value}
@@ -477,7 +477,7 @@ function useFile(file) {
                             commitNew.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {"New value - " + value.title}
+                                        {" New value - " + value.title}
                                     </label>
                                     <label>
                                         {" : " + value.value}
@@ -493,7 +493,7 @@ function useFile(file) {
                             commitOld.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {"Value on file - " + value.title}
+                                        {" Value on file - " + value.title}
                                     </label>
                                     <label>
                                         {" : " + value.value}
@@ -514,3 +514,4 @@ function useFile(file) {
 export default useFile;
 
 //TODO  If old values are selected replace fields with old values
+//      MERGING branch doesnt save fields as well on current branch

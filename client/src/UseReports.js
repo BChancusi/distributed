@@ -28,12 +28,6 @@ function useReports() {
         return body;
     };
 
-    function handleRefreshReports() {
-        getReports()
-            .then(res => setReports(res.express))
-            .catch(err => console.log(err));
-    }
-
     const handleNewReport = async () => {
 
         if(newReport.trim() === ""){
@@ -104,7 +98,6 @@ function useReports() {
             </header>
 
             <nav>
-                <button onClick={handleRefreshReports}>Refresh reports</button>
                 <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
                 <button onClick={handleNewReport}>New report</button>
             </nav>
@@ -114,7 +107,7 @@ function useReports() {
                     reports.map((value, index) => {
                         return <Fragment key={value.id}>
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update field</button>
+                            <button onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update report title</button>
                             <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
                             <button onClick={() => setReportOpen(value)}>Open Report</button>
                         </Fragment>
