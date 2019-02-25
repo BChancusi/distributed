@@ -511,4 +511,3 @@ export default useFile;
 
 //TODO  TOTAL DISPLAY when values are changed
 //      If old values are selected replace fields with old values
-//      Total budget broken again

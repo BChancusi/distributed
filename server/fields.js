@@ -138,15 +138,12 @@ router.post('/branch/:branchTitle', (req, res) => {
 
             req.body.forEach(value => {
 
-
                 delete value.timestamp;
                 delete value.id;
                 value.version_id = value.version_id + 1;
                 value.branch_title = req.params.branchTitle;
 
                 query.push(Object.values(value));
-
-
             });
 
             pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
@@ -207,6 +204,8 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                 if (req.body[sourceGet].value !== results[i].value) {
                     conflictsSource.push(req.body[sourceGet]);
                     conflictsTarget.push(results[i]);
+                }else if(req.body[sourceGet].value === results[i].value){
+                    req.body.splice(sourceGet, 1)
                 }
             }
         }
@@ -315,4 +314,5 @@ module.exports = router;
 //      MYSQL change timestamp on change
 //      TIMESTAMP current POST
 //      only push check on merge/commit if timestamps dont match#
-//      Only retrun actual conflicts, post/insert rest of fields??
+//      Only return actual conflicts, post/insert rest of fields??
+//      Stream query tows?
