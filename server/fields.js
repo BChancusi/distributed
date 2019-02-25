@@ -84,20 +84,28 @@ router.route('/')
 
             let conflictsNew = [];
             let conflictsOld = [];
+            let sourceMap = new Map();
 
-            results.forEach(value =>{
+            req.body.forEach((value, index) => {
 
-                req.body.forEach(valueInner => {
+                sourceMap.set(value.id, index)
+            });
 
+            results.forEach(value => {
 
-                    if(value.id === valueInner.id
-                        && JSON.stringify(value.timestamp) !== valueInner.timestamp
-                        && value.value !== valueInner.value){
+                const sourceGet = sourceMap.get(value.title);
 
-                        conflictsNew.push(valueInner);
+                if (sourceGet !== undefined) {
+                    if (req.body[sourceGet].id === value.id
+                        && JSON.stringify(value.timestamp) !== req.body[sourceGet].timestamp
+                        && value.value !== req.body[sourceGet].value) {
+
+                        conflictsNew.push(req.body[sourceGet]);
                         conflictsOld.push(value);
+                    } else if (req.body[sourceGet].value === value.value) {
+                        req.body.splice(sourceGet, 1)
                     }
-                })
+                }
             });
 
             if (conflictsNew.length > 0 && conflictsOld.length > 0) {
@@ -107,15 +115,15 @@ router.route('/')
 
                 req.body.forEach(value => {
 
-                        delete value.timestamp;
+                    delete value.timestamp;
 
-                        pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
-                            if (error) throw error;
+                    pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
+                        if (error) throw error;
 
-                        });
                     });
+                });
 
-                    res.send({express: "no conflicts"});
+                res.send({express: "no conflicts"});
             }
         });
     });
@@ -179,7 +187,6 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         let sourceMap = new Map();
         let conflictsSource = [];
         let conflictsTarget = [];
-        let newFields = [];
 
         let query = [];
 
@@ -204,7 +211,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                 if (req.body[sourceGet].value !== results[i].value) {
                     conflictsSource.push(req.body[sourceGet]);
                     conflictsTarget.push(results[i]);
-                }else if(req.body[sourceGet].value === results[i].value){
+                } else if (req.body[sourceGet].value === results[i].value) {
                     req.body.splice(sourceGet, 1)
                 }
             }
