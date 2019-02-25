@@ -85,6 +85,7 @@ router.route('/')
             let conflictsNew = [];
             let conflictsOld = [];
             let sourceMap = new Map();
+            let deleteIds = [];
 
             req.body.forEach((value, index) => {
 
@@ -103,7 +104,8 @@ router.route('/')
                         conflictsNew.push(req.body[sourceGet]);
                         conflictsOld.push(value);
                     } else if (req.body[sourceGet].value === value.value) {
-                        req.body.splice(sourceGet, 1)
+
+                        deleteIds.push(req.body[sourceGet].id)
                     }
                 }
             });
@@ -112,6 +114,20 @@ router.route('/')
                 res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
 
             } else {
+
+
+                req.body = req.body.filter( value => {
+
+                    let boolean = true;
+                    for(let i = 0; i < deleteIds.length; i++){
+                        if(value.id === deleteIds[i].id){
+                            boolean = false;
+                            break;
+                        }
+                    }
+
+                    return boolean;
+                });
 
                 req.body.forEach(value => {
 
@@ -183,12 +199,12 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
         if (error) throw error;
 
-
         let sourceMap = new Map();
         let conflictsSource = [];
         let conflictsTarget = [];
-
         let query = [];
+        let deleteTitles = [];
+
 
         req.body.forEach((value, index) => {
 
@@ -212,7 +228,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                     conflictsSource.push(req.body[sourceGet]);
                     conflictsTarget.push(results[i]);
                 } else if (req.body[sourceGet].value === results[i].value) {
-                    req.body.splice(sourceGet, 1)
+                    deleteTitles.push(req.body[sourceGet].title)
                 }
             }
         }
@@ -221,6 +237,19 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
         } else {
+
+            query = query.filter( value => {
+
+                let boolean = true;
+                for(let i = 0; i < deleteTitles.length; i++){
+                    if(value.title === deleteTitles[i].title){
+                        boolean = false;
+                        break;
+                    }
+                }
+
+                return boolean;
+            });
 
             pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                 if (error) throw error;
