@@ -24,7 +24,6 @@ function shutdown(signal) {
 
                     console.log("pool closed");
 
-                    console.log('...waited 5s, exiting.');
                     process.exit(err ? 1 : 0);
                 });
             });
