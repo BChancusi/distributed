@@ -4,7 +4,7 @@ function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [loggedIn, setLoggedin] = useState(localStorage.getItem("loggedIn"));
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -19,7 +19,10 @@ function Login() {
             if (response.status !== 200) {
                 throw Error(body.message)
             }
-
+            if(body.express === "details correct"){
+                setLoggedin(true);
+                localStorage.setItem("loggedIn", "true")
+            }
         });
     };
 
