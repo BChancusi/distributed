@@ -4,38 +4,23 @@ function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    //
-    // const handlePutReport = async (value, key) => {
-    //
-    //
-    //     await fetch(`/reports/${cloneReports[key].id}`, {
-    //         method: 'POST',
-    //         headers: {'Content-Type': 'application/json'},
-    //         body: JSON.stringify({"title": cloneReports[key].title})
-    //     }).then(response => {
-    //
-    //         if (response.status !== 200) {
-    //             throw Error(response.status.toString())
-    //         }
-    //
-    //         setReports(cloneReports)
-    //     });
-    // };
+
 
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        await fetch(`/users.signin?username=${username}&password=${password}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': ' application/x-www-form-urlencoded'},
-                }).then(response => {
+        const response = await fetch(`/users/signin?username=${username}&password=${password}`, {
+            method: 'POST',
+            headers: {'Content-Type': ' application/x-www-form-urlencoded'},
+        });
 
-                    if (response.status !== 200) {
-                        throw Error(response.status.toString())
-                    }
+        await response.json().then(body =>{
 
-                    console.debug("posted")
-                });
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+
+        });
     };
 
     function handleChange(event) {

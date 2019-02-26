@@ -34,11 +34,11 @@ router.post('/signup', (req, res) => {
 
                 pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
                     if (error) throw error;
-                    res.send({express : "account created"})
+                    res.send({express: "account created"})
                 });
             });
-        }else{
-            res.send({express : "username exists"})
+        } else {
+            res.send({express: "username exists"})
         }
     });
 });
@@ -50,16 +50,15 @@ router.post('/signin', (req, res) => {
 
         if (results.length > 0) {
 
-            bcrypt.hash(req.query.password, 8, function (error, hash) {
-                if (error) throw error;
-
-                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
-                    if (error) throw error;
-                    res.send({express : "account created"})
-                });
+            bcrypt.compare(req.query.password, results[0].password).then((compare) => {
+                if (compare) {
+                    res.send({express: "details correct"})
+                } else {
+                    res.send({express: "details incorrect"})
+                }
             });
-        }else{
-            res.send({express : "username exists"})
+        } else {
+            res.send({express: "details incorrect"})
         }
     });
 });
@@ -73,7 +72,3 @@ router.delete('/users/:userId', (req) => {
 
 module.exports = router;
 
-//
-// bcrypt.compare(req.query.password, hash).then((res) => {
-//     console.debug(res);
-// });
