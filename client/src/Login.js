@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 function Login(props) {
 
@@ -6,12 +6,18 @@ function Login(props) {
     const [password, setPassword] = useState("");
 
 
+    useEffect(() => {
+        return () => {
+            setUsername(null);
+            setPassword(null);
+    }}, [localStorage.getItem("loggedIn")]);
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
         const response = await fetch(`/users/signin?username=${username}&password=${password}`, {
             method: 'POST',
-            headers: {'Content-Type': ' application/x-www-form-urlencoded'},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         });
 
         await response.json().then(body => {

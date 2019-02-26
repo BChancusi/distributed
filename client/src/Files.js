@@ -37,9 +37,9 @@ function Files(props) {
 
 
         return () => {
-            setFiles([]);
-            setFileFields([]);
-            setNewFile("");
+            setFiles(null);
+            setFileFields(null);
+            setNewFile(null);
         }
     }, [props.report.id]);
 

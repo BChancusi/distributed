@@ -30,6 +30,25 @@ function File(props) {
 
     }, [props.file.id, currentBranch]);
 
+    useEffect(() => {
+        return () => {
+            setFields(null);
+            setCurrentBranch(null);
+            setMergeBranchConflictsSource(null);
+            setMergeBranchConflictsTarget(null);
+            setMergeBranchResolved(null);
+            setCommitNew(null);
+            setCommitOld(null);
+            setCommitResolved(null);
+            setFileTitles(null);
+            setNewFieldTitle(null);
+            setNewFieldValue(null);
+            setNewBranchTitle(null);
+        }
+
+    }, []);
+
+
     const getFields = async () => {
 
         let fetchUrl =

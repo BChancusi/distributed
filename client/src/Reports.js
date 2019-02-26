@@ -10,6 +10,11 @@ function Reports(props) {
             .then(res => setReports(res.express))
             .catch(err => console.log(err));
 
+        return () => {
+            setReports(null);
+            setNewReport(null);
+        }
+
     }, []);
 
     const getReports = async () => {
