@@ -3,8 +3,9 @@ const reports = require('./reports');
 const files = require('./files');
 const fields = require('./fields');
 const users = require('./users');
-
 const path = require('path');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
 
