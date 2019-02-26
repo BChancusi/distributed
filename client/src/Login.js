@@ -25,8 +25,17 @@ function Login() {
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        console.debug("login")
+        await fetch(`/users.signin?username=${username}&password=${password}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': ' application/x-www-form-urlencoded'},
+                }).then(response => {
 
+                    if (response.status !== 200) {
+                        throw Error(response.status.toString())
+                    }
+
+                    console.debug("posted")
+                });
     };
 
     function handleChange(event) {

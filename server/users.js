@@ -22,20 +22,45 @@ router.get('/:userId', (req, res) => {
     });
 });
 
-router.post('/', (req) => {
+router.post('/signup', (req, res) => {
 
-    bcrypt.hash(req.body.password, 8, function(error, hash) {
-        if(error) throw error;
+    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
+        if (error) throw error;
 
-        req.body.password = hash;
+        if (results.length > 0) {
 
-        pool.query(`INSERT INTO users SET ?`, [req.body] , function (error) {
-            if (error) throw error;
-        });
+            bcrypt.hash(req.query.password, 8, function (error, hash) {
+                if (error) throw error;
 
-        // bcrypt.compare(oldPass, hash).then((res) => {
-        //     console.debug(res);
-        // });
+                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
+                    if (error) throw error;
+                    res.send({express : "account created"})
+                });
+            });
+        }else{
+            res.send({express : "username exists"})
+        }
+    });
+});
+
+router.post('/signin', (req, res) => {
+
+    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
+        if (error) throw error;
+
+        if (results.length > 0) {
+
+            bcrypt.hash(req.query.password, 8, function (error, hash) {
+                if (error) throw error;
+
+                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
+                    if (error) throw error;
+                    res.send({express : "account created"})
+                });
+            });
+        }else{
+            res.send({express : "username exists"})
+        }
     });
 });
 
@@ -47,3 +72,8 @@ router.delete('/users/:userId', (req) => {
 });
 
 module.exports = router;
+
+//
+// bcrypt.compare(req.query.password, hash).then((res) => {
+//     console.debug(res);
+// });
