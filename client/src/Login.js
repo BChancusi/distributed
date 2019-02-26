@@ -10,7 +10,8 @@ function Login(props) {
         return () => {
             setUsername(null);
             setPassword(null);
-    }}, [localStorage.getItem("loggedIn")]);
+        }
+    }, [localStorage.getItem("loggedIn")]);
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -37,7 +38,6 @@ function Login(props) {
     function handleChange(event) {
 
         if (event.target.name === "username") {
-
             setUsername(event.target.value)
         } else {
             setPassword(event.target.value)
@@ -53,12 +53,9 @@ function Login(props) {
                 <label>Password
                     <input onChange={handleChange} type="password" name="password" autoComplete="current-password"/>
                 </label>
-                <label>Login
-                    <input type="submit"/>
-                </label>
+                <input type="submit" value="Login"/>
             </form>
         </div>
-
     )
 }
 
