@@ -1,8 +1,8 @@
 import React, {useState, useEffect, Fragment} from 'react';
 
-function useFile(file) {
+function File(props) {
 
-    const [fields, setFields] = useState("");
+    const [fields, setFields] = useState([]);
     const [currentBranch, setCurrentBranch] = useState("master");
 
     const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
@@ -13,7 +13,6 @@ function useFile(file) {
     const [commitOld, setCommitOld] = useState([]);
     const [commitResolved, setCommitResolved] = useState([]);
 
-
     const [fileTitles, setFileTitles] = useState("master");
 
     const [newFieldTitle, setNewFieldTitle] = useState("");
@@ -22,7 +21,6 @@ function useFile(file) {
 
 
     useEffect(() => {
-        if (file !== "") {
             getFields()
                 .then(res => {
                     setFields(res.fields);
@@ -30,14 +28,12 @@ function useFile(file) {
                 })
                 .catch(err => console.log(err));
 
-        }
-
-    }, [file.id, currentBranch]);
+    }, [props.file.id, currentBranch]);
 
     const getFields = async () => {
 
         let fetchUrl =
-            `/fields?report_id=${file.report_id}&branch_title=${currentBranch}&title=${file.title}&file_id=${file.id}`;
+            `/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`;
 
         const response = await fetch(encodeURI(fetchUrl));
         const body = await response.json();
@@ -68,7 +64,7 @@ function useFile(file) {
             body: JSON.stringify({
                 "title": newFieldTitle.trim(),
                 "value": newFieldValue.trim(),
-                "file_id": file.id,
+                "file_id": props.file.id,
                 "branch_title": currentBranch
             })
         });
@@ -79,7 +75,6 @@ function useFile(file) {
         }
         return body;
     };
-
 
 
     function handleFieldChange(event, key) {
@@ -108,14 +103,14 @@ function useFile(file) {
 
     function handlePutFields() {
 
-            putFields(fields)
-                .then(res =>{
-                    if (res.express !== "no conflicts") {
-                        setCommitNew(res.conflictsNew);
-                        setCommitOld(res.conflictsOld);
-                    }
-                })
-                .catch(err => console.log(err));
+        putFields(fields)
+            .then(res => {
+                if (res.express !== "no conflicts") {
+                    setCommitNew(res.conflictsNew);
+                    setCommitOld(res.conflictsOld);
+                }
+            })
+            .catch(err => console.log(err));
 
     }
 
@@ -155,7 +150,7 @@ function useFile(file) {
 
     const handleDeleteBranch = async () => {
 
-        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${file.id}&title=${file.title}`, {
+        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             method: 'DELETE',
         }).then(response => {
 
@@ -173,21 +168,21 @@ function useFile(file) {
 
     function handleNewBranch() {
 
-        if(newBranchTitle.trim() === ""){
+        if (newBranchTitle.trim() === "") {
             return;
         }
         postBranch(fields).then(res => {
             setFileTitles(fileTitles.concat(res.express));
             setNewBranchTitle("");
-        } );
+        });
     }
 
     const postBranch = async () => {
 
         let cloneFields = [...fields];
-        cloneFields.push(file);
+        cloneFields.push(props.file);
 
-        const response =  await fetch(`/fields/branch/${newBranchTitle}`, {
+        const response = await fetch(`/fields/branch/${newBranchTitle}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cloneFields)
@@ -338,7 +333,7 @@ function useFile(file) {
 
     const postCommit = async () => {
 
-        if(commitResolved.length > 0){
+        if (commitResolved.length > 0) {
             await fetch(`/fields/commitResolved`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
@@ -349,19 +344,14 @@ function useFile(file) {
         return null;
     };
 
-    if (fields === "") {
-        return "";
-    }
-
     let total = 0;
 
-    return (
-        <>
+    return <>
             <header>
-                <h1 align="CENTER">{file.title}</h1>
+                <h1 align="CENTER">{props.file.title}</h1>
             </header>
             <nav>
-                <button onClick={() => setFields("")}>Return</button>
+                <button onClick={() => props.setFileOpen("")}>Return</button>
             </nav>
 
             <div id={"options"}>
@@ -383,7 +373,7 @@ function useFile(file) {
                 </select>
 
 
-                {Array.isArray(fileTitles) && fileTitles.length > 1  && currentBranch !== "master" ?
+                {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                     <>
                         <button onClick={handleDeleteBranch}>Delete Current Branch</button>
                         <select id="selectMerge">
@@ -416,7 +406,7 @@ function useFile(file) {
                 {
                     fields.map((value, index) => {
 
-                        if(!isNaN(parseFloat(value.value))){
+                        if (!isNaN(parseFloat(value.value))) {
                             total += parseFloat(parseFloat(value.value).toFixed(2));
                         }
 
@@ -440,7 +430,7 @@ function useFile(file) {
                             mergeBranchConflictsSource.map(value => {
                                 return <Fragment key={value.id}>
                                     <label>
-                                        {" New value - " +value.title}
+                                        {" New value - " + value.title}
                                     </label>
                                     <label>
                                         {" : " + value.value}
@@ -466,7 +456,7 @@ function useFile(file) {
 
                         }
                         <br/>
-                        <button onClick={handleResolveConflicts}>Resolve Merge Conflicts </button>
+                        <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
                     </>
                 </div> : null
             }
@@ -503,15 +493,14 @@ function useFile(file) {
 
                         }
                         <br/>
-                        <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts </button>
+                        <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
                     </>
                 </div> : null
             }
         </>
-    );
 }
 
-export default useFile;
+export default File;
 
 //TODO  If old values are selected replace fields with old values
 //      MERGING branch doesnt save fields as well on current branch

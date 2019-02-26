@@ -1,23 +1,13 @@
 import React, {useState, useEffect, Fragment} from 'react';
-import useFile from './UseFile';
 
-function useFiles(report) {
+function Files(props) {
 
     const [files, setFiles] = useState([]);
     const [newFile, setNewFile] = useState("");
     const [fileFields, setFileFields] = useState([]);
 
-    const [reportClose, setReportClose] = useState(true);
-    const [fileOpen, setFileOpen] = useState("");
-
-    const fileRender = useFile(fileOpen);
-
     useEffect(() => {
-        if (report !== "") {
-
-            setReportClose(false);
-
-            getFiles(report.id)
+            getFiles(props.report.id)
                 .then(res => {
 
                     setFiles(res.express);
@@ -44,15 +34,14 @@ function useFiles(report) {
 
                 })
                 .catch(err => console.log(err));
-        }
+
 
         return ()=>{
             setFiles([]);
             setFileFields([]);
             setNewFile("");
-            setFileOpen("");
         }
-    }, [report.id]);
+    }, [props.report.id]);
 
     const getFields = async (keys) => {
 
@@ -92,10 +81,6 @@ function useFiles(report) {
 
     };
 
-    if (reportClose) {
-        return true;
-    }
-
     const handleNewFile = async () => {
 
         if(newFile.trim() === ""){
@@ -106,7 +91,7 @@ function useFiles(report) {
         const response = await fetch('/files', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": newFile, "report_id": report.id})
+            body: JSON.stringify({"title": newFile, "report_id": props.report.id})
         });
 
         await response.json().then(body =>{
@@ -160,16 +145,15 @@ function useFiles(report) {
 
     let total = 0.00;
 
-    return fileRender === "" ? (
-        <>
+    return <>
             <header>
-                <h1 align="CENTER">{report.title}</h1>
+                <h1 align="CENTER">{props.report.title}</h1>
             </header>
 
             <nav>
                 <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
                 <button onClick={handleNewFile}>New File</button>
-                <button onClick={() => setReportClose(true)}>Return</button>
+                <button onClick={() => props.setReportOpen("")}>Return</button>
             </nav>
 
             <div id={"files"}>
@@ -177,7 +161,7 @@ function useFiles(report) {
                     files.map((value, index) => {
                         return <Fragment key={value.id}>
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => setFileOpen(value)}>Open file</button>
+                            <button onClick={() => props.setFileOpen(value)}>Open file</button>
                             <button onClick={() => handlePutFile(document
                                 .getElementById(`textInput${value.id}`).value, index)}>Update title</button>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
@@ -203,9 +187,6 @@ function useFiles(report) {
             </div>
 
         </>
-    ) : (
-        fileRender
-    );
 }
 
-export default useFiles ;
+export default Files;

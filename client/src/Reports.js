@@ -1,13 +1,9 @@
 import React, {useState, useEffect, Fragment} from 'react';
-import useFiles from "./UseFiles";
 
-function useReports() {
+function Reports(props) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
-    const [reportOpen, setReportOpen] = useState("");
-
-    const filesRender = useFiles(reportOpen);
 
     useEffect(() => {
         getReports()
@@ -91,8 +87,7 @@ function useReports() {
         });
     };
 
-    return filesRender === true ? (
-        <>
+    return <>
             <header>
                 <h1 align="CENTER">Reports</h1>
             </header>
@@ -109,16 +104,13 @@ function useReports() {
                             <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
                             <button onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update report title</button>
                             <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                            <button onClick={() => setReportOpen(value)}>Open Report</button>
+                            <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                         </Fragment>
                     })
                 }
 
             </div>
         </>
-    ) : (
-        filesRender
-    );
 }
 
-export default useReports;
+export default Reports;
