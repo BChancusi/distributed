@@ -1,6 +1,6 @@
 import './App.css';
 
-// import useReports from "./UseReports";
+import UseReports from "./UseReports";
 
 import Login from "./Login";
 
@@ -9,7 +9,13 @@ import React, {useState, useEffect, Fragment} from 'react';
 
 function App() {
 
-    return Login();
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("loggedIn"));
+
+    if(loggedIn!== "true"){
+        return <Login setLoggedIn={setLoggedIn}/>
+    }else{
+        return <UseReports></UseReports>
+    }
 
 }
 

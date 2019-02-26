@@ -1,10 +1,10 @@
 import React, {useState, useEffect, Fragment} from 'react';
 
-function Login() {
+function Login(props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loggedIn, setLoggedin] = useState(localStorage.getItem("loggedIn"));
+
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -20,7 +20,7 @@ function Login() {
                 throw Error(body.message)
             }
             if(body.express === "details correct"){
-                setLoggedin(true);
+                props.setLoggedIn(true);
                 localStorage.setItem("loggedIn", "true")
             }
         });
