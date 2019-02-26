@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState} from 'react';
 
 function Login(props) {
 
@@ -14,13 +14,15 @@ function Login(props) {
             headers: {'Content-Type': ' application/x-www-form-urlencoded'},
         });
 
-        await response.json().then(body =>{
+        await response.json().then(body => {
 
             if (response.status !== 200) {
                 throw Error(body.message)
             }
-            if(body.express === "details correct"){
-                props.setLoggedIn(true);
+            if (body.express === "details correct") {
+                setUsername("");
+                setPassword("");
+                props.setLoggedIn("true");
                 localStorage.setItem("loggedIn", "true")
             }
         });

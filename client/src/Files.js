@@ -7,36 +7,36 @@ function Files(props) {
     const [fileFields, setFileFields] = useState([]);
 
     useEffect(() => {
-            getFiles(props.report.id)
-                .then(res => {
+        getFiles(props.report.id)
+            .then(res => {
 
-                    setFiles(res.express);
-                    return res.express
-                })
+                setFiles(res.express);
+                return res.express
+            })
 
-                .then(files => {
+            .then(files => {
 
-                    let keyArray = [];
+                let keyArray = [];
 
-                    Object.keys(files).map((key) => {
-                        keyArray.push(files[key].id);
-                        return null;
-                    });
+                Object.keys(files).map((key) => {
+                    keyArray.push(files[key].id);
+                    return null;
+                });
 
-                    return keyArray
+                return keyArray
 
-                })
-                .then(keyArray => {
+            })
+            .then(keyArray => {
 
-                    getFields(keyArray)
-                        .then(res => setFileFields(res.express))
-                        .catch(err => console.log(err));
+                getFields(keyArray)
+                    .then(res => setFileFields(res.express))
+                    .catch(err => console.log(err));
 
-                })
-                .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
 
 
-        return ()=>{
+        return () => {
             setFiles([]);
             setFileFields([]);
             setNewFile("");
@@ -83,7 +83,7 @@ function Files(props) {
 
     const handleNewFile = async () => {
 
-        if(newFile.trim() === ""){
+        if (newFile.trim() === "") {
             setNewFile("");
             return;
         }
@@ -94,7 +94,7 @@ function Files(props) {
             body: JSON.stringify({"title": newFile, "report_id": props.report.id})
         });
 
-        await response.json().then(body =>{
+        await response.json().then(body => {
 
             if (response.status !== 200) {
                 throw Error(body.message)
@@ -146,47 +146,55 @@ function Files(props) {
     let total = 0.00;
 
     return <>
-            <header>
-                <h1 align="CENTER">{props.report.title}</h1>
-            </header>
+        <header>
+            <h1 align="CENTER">{props.report.title}</h1>
+        </header>
 
-            <nav>
-                <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
-                <button onClick={handleNewFile}>New File</button>
-                <button onClick={() => props.setReportOpen("")}>Return</button>
-            </nav>
+        <nav>
+            <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
+            <button onClick={handleNewFile}>New File</button>
+            <button onClick={() => props.setReportOpen("")}>Return</button>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
 
-            <div id={"files"}>
-                {
-                    files.map((value, index) => {
-                        return <Fragment key={value.id}>
-                            <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => props.setFileOpen(value)}>Open file</button>
-                            <button onClick={() => handlePutFile(document
-                                .getElementById(`textInput${value.id}`).value, index)}>Update title</button>
-                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                        </Fragment>
-                    })
-                }
-                {
-                    fileFields.map(value => {
+            }}>Logout
+            </button>
 
-                            total += value.value;
+        </nav>
 
-                        return <Fragment key={value.id}>
-                            <br/>
-                            <label>{value.title}</label>
-                            <br/>
-                            <label>{value.value}</label>
-                            <br/>
+        <div id={"files"}>
+            {
+                files.map((value, index) => {
+                    return <Fragment key={value.id}>
+                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                        <button onClick={() => props.setFileOpen(value)}>Open file</button>
+                        <button onClick={() => handlePutFile(document
+                            .getElementById(`textInput${value.id}`).value, index)}>Update title
+                        </button>
+                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                    </Fragment>
+                })
+            }
+            {
+                fileFields.map(value => {
 
-                        </Fragment>
-                    })
-                }
-                {fileFields.length > 0 ? <label>Total = {parseFloat(total).toFixed(2)}</label> : null }
-            </div>
+                    total += value.value;
 
-        </>
+                    return <Fragment key={value.id}>
+                        <br/>
+                        <label>{value.title}</label>
+                        <br/>
+                        <label>{value.value}</label>
+                        <br/>
+
+                    </Fragment>
+                })
+            }
+            {fileFields.length > 0 ? <label>Total = {parseFloat(total).toFixed(2)}</label> : null}
+        </div>
+
+    </>
 }
 
 export default Files;

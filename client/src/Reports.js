@@ -26,7 +26,7 @@ function Reports(props) {
 
     const handleNewReport = async () => {
 
-        if(newReport.trim() === ""){
+        if (newReport.trim() === "") {
             setNewReport("");
             return;
         }
@@ -37,7 +37,7 @@ function Reports(props) {
             body: JSON.stringify({"title": newReport})
         });
 
-        await response.json().then(body =>{
+        await response.json().then(body => {
 
             if (response.status !== 200) {
                 throw Error(body.message)
@@ -88,29 +88,38 @@ function Reports(props) {
     };
 
     return <>
-            <header>
-                <h1 align="CENTER">Reports</h1>
-            </header>
+        <header>
+            <h1 align="CENTER">Reports</h1>
+        </header>
 
-            <nav>
-                <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
-                <button onClick={handleNewReport}>New report</button>
-            </nav>
+        <nav>
+            <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
+            <button onClick={handleNewReport}>New report</button>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
 
-            <div id={"reports"}>
-                {
-                    reports.map((value, index) => {
-                        return <Fragment key={value.id}>
-                            <input type="text" defaultValue={value.title} id= {`textInput${value.id}`}/>
-                            <button onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update report title</button>
-                            <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                            <button onClick={() => props.setReportOpen(value)}>Open Report</button>
-                        </Fragment>
-                    })
-                }
+            }}>Logout
+            </button>
+        </nav>
 
-            </div>
-        </>
+        <div id={"reports"}>
+            {
+                reports.map((value, index) => {
+                    return <Fragment key={value.id}>
+                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                        <button
+                            onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
+                            report title
+                        </button>
+                        <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
+                    </Fragment>
+                })
+            }
+
+        </div>
+    </>
 }
 
 export default Reports;

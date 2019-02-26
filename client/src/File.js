@@ -21,12 +21,12 @@ function File(props) {
 
 
     useEffect(() => {
-            getFields()
-                .then(res => {
-                    setFields(res.fields);
-                    setFileTitles(res.fileTitles);
-                })
-                .catch(err => console.log(err));
+        getFields()
+            .then(res => {
+                setFields(res.fields);
+                setFileTitles(res.fileTitles);
+            })
+            .catch(err => console.log(err));
 
     }, [props.file.id, currentBranch]);
 
@@ -347,157 +347,163 @@ function File(props) {
     let total = 0;
 
     return <>
-            <header>
-                <h1 align="CENTER">{props.file.title}</h1>
-            </header>
-            <nav>
-                <button onClick={() => props.setFileOpen("")}>Return</button>
-            </nav>
+        <header>
+            <h1 align="CENTER">{props.file.title}</h1>
+        </header>
+        <nav>
+            <button onClick={() => props.setFileOpen("")}>Return</button>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
 
-            <div id={"options"}>
-                <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
-                <button onClick={handleNewBranch}>New Branch</button>
+            }}>Logout
+            </button>
+        </nav>
 
-                <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
-                    <>
+        <div id={"options"}>
+            <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
+            <button onClick={handleNewBranch}>New Branch</button>
+
+            <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                <>
+                    {
+                        Array.isArray(fileTitles) ?
+                            fileTitles.map(value => {
+
+                                return <option key={value.id}
+                                               value={value.branch_title}>{value.branch_title}</option>
+                            })
+                            : null
+                    }
+                </>
+            </select>
+
+
+            {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
+                <>
+                    <button onClick={handleDeleteBranch}>Delete Current Branch</button>
+                    <select id="selectMerge">
                         {
-                            Array.isArray(fileTitles) ?
-                                fileTitles.map(value => {
+                            fileTitles.map(value => {
 
-                                    return <option key={value.id}
-                                                   value={value.branch_title}>{value.branch_title}</option>
-                                })
-                                : null
-                        }
-                    </>
-                </select>
-
-
-                {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
-                    <>
-                        <button onClick={handleDeleteBranch}>Delete Current Branch</button>
-                        <select id="selectMerge">
-                            {
-                                fileTitles.map(value => {
-
-                                    if (value.branch_title === currentBranch) {
-                                        return null;
-                                    }
-                                    return <option key={value.id}
-                                                   value={value.branch_title}>{value.branch_title}</option>
-                                })
-                            }
-                        </select>
-                        <button onClick={handleMergeBranch}>Merge Branch target</button>
-                    </>
-                    : null}
-
-                <button onClick={handlePutFields}>Save Changes</button>
-
-                <br/>
-
-                <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
-                <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
-                <button onClick={handleNewField}>New Field</button>
-
-
-            </div>
-            <div id={"fields"}>
-                {
-                    fields.map((value, index) => {
-
-                        if (!isNaN(parseFloat(value.value))) {
-                            total += parseFloat(parseFloat(value.value).toFixed(2));
-                        }
-
-                        return <Fragment key={value.id}>
-
-                            <input type="text" value={value.title} name="title"
-                                   onChange={(event) => handleFieldChange(event, index)}/>
-                            <input type="text" value={value.value} name="value"
-                                   onChange={(event) => handleFieldChange(event, index)}/>
-                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-
-                        </Fragment>
-                    })
-                }
-                {fields.length === 0 ? null : <label>Total = {parseFloat(total).toFixed(2)}</label>}
-            </div>
-            {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 ?
-                <div id="conflicts">
-                    <>
-                        {
-                            mergeBranchConflictsSource.map(value => {
-                                return <Fragment key={value.id}>
-                                    <label>
-                                        {" New value - " + value.title}
-                                    </label>
-                                    <label>
-                                        {" : " + value.value}
-                                    </label>
-                                    <input type="checkbox" onChange={(event) =>
-                                        handleCheckboxMerge(event, value)}/>
-                                </Fragment>
+                                if (value.branch_title === currentBranch) {
+                                    return null;
+                                }
+                                return <option key={value.id}
+                                               value={value.branch_title}>{value.branch_title}</option>
                             })
                         }
-                        <br/>
+                    </select>
+                    <button onClick={handleMergeBranch}>Merge Branch target</button>
+                </>
+                : null}
 
-                        {
-                            mergeBranchConflictsTarget.map(value => {
-                                return <Fragment key={value.id}>
-                                    <label>
-                                        {" Value on file - " + value.title}
-                                    </label>
-                                    <label>
-                                        {" : " + value.value}
-                                    </label>
-                                </Fragment>
-                            })
+            <button onClick={handlePutFields}>Save Changes</button>
 
-                        }
-                        <br/>
-                        <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
-                    </>
-                </div> : null
+            <br/>
+
+            <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+            <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
+            <button onClick={handleNewField}>New Field</button>
+
+
+        </div>
+        <div id={"fields"}>
+            {
+                fields.map((value, index) => {
+
+                    if (!isNaN(parseFloat(value.value))) {
+                        total += parseFloat(parseFloat(value.value).toFixed(2));
+                    }
+
+                    return <Fragment key={value.id}>
+
+                        <input type="text" value={value.title} name="title"
+                               onChange={(event) => handleFieldChange(event, index)}/>
+                        <input type="text" value={value.value} name="value"
+                               onChange={(event) => handleFieldChange(event, index)}/>
+                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+
+                    </Fragment>
+                })
             }
-            {commitNew.length > 0 && commitOld.length > 0 ?
-                <div id="conflictsCommit">
-                    <>
-                        {
-                            commitNew.map(value => {
-                                return <Fragment key={value.id}>
-                                    <label>
-                                        {" New value - " + value.title}
-                                    </label>
-                                    <label>
-                                        {" : " + value.value}
-                                    </label>
-                                    <input type="checkbox" onChange={(event) =>
-                                        handleCheckboxCommit(event, value)}/>
-                                </Fragment>
-                            })
-                        }
-                        <br/>
+            {fields.length === 0 ? null : <label>Total = {parseFloat(total).toFixed(2)}</label>}
+        </div>
+        {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 ?
+            <div id="conflicts">
+                <>
+                    {
+                        mergeBranchConflictsSource.map(value => {
+                            return <Fragment key={value.id}>
+                                <label>
+                                    {" New value - " + value.title}
+                                </label>
+                                <label>
+                                    {" : " + value.value}
+                                </label>
+                                <input type="checkbox" onChange={(event) =>
+                                    handleCheckboxMerge(event, value)}/>
+                            </Fragment>
+                        })
+                    }
+                    <br/>
 
-                        {
-                            commitOld.map(value => {
-                                return <Fragment key={value.id}>
-                                    <label>
-                                        {" Value on file - " + value.title}
-                                    </label>
-                                    <label>
-                                        {" : " + value.value}
-                                    </label>
-                                </Fragment>
-                            })
+                    {
+                        mergeBranchConflictsTarget.map(value => {
+                            return <Fragment key={value.id}>
+                                <label>
+                                    {" Value on file - " + value.title}
+                                </label>
+                                <label>
+                                    {" : " + value.value}
+                                </label>
+                            </Fragment>
+                        })
 
-                        }
-                        <br/>
-                        <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
-                    </>
-                </div> : null
-            }
-        </>
+                    }
+                    <br/>
+                    <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
+                </>
+            </div> : null
+        }
+        {commitNew.length > 0 && commitOld.length > 0 ?
+            <div id="conflictsCommit">
+                <>
+                    {
+                        commitNew.map(value => {
+                            return <Fragment key={value.id}>
+                                <label>
+                                    {" New value - " + value.title}
+                                </label>
+                                <label>
+                                    {" : " + value.value}
+                                </label>
+                                <input type="checkbox" onChange={(event) =>
+                                    handleCheckboxCommit(event, value)}/>
+                            </Fragment>
+                        })
+                    }
+                    <br/>
+
+                    {
+                        commitOld.map(value => {
+                            return <Fragment key={value.id}>
+                                <label>
+                                    {" Value on file - " + value.title}
+                                </label>
+                                <label>
+                                    {" : " + value.value}
+                                </label>
+                            </Fragment>
+                        })
+
+                    }
+                    <br/>
+                    <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
+                </>
+            </div> : null
+        }
+    </>
 }
 
 export default File;
