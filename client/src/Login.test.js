@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Login from './Login';
+import {render, fireEvent, cleanup, wait, waitForElement} from 'react-testing-library'
 
-import {render, fireEvent, cleanup, waitForElement} from 'react-testing-library'
-
+afterEach(cleanup);
 
 test('renders without crashing', () => {
     const div = document.createElement('div');
@@ -40,9 +40,34 @@ test('username and password value can be emptied', () => {
     const passwordField = getByTestId("password-text");
     const usernameField = getByTestId("username-text");
 
+    fireEvent.change(usernameField, {target: {value: 'username'}});
     fireEvent.change(usernameField, {target: {value: ''}});
     expect(usernameField.value).toBe('');
 
+    fireEvent.change(passwordField, {target: {value: 'password'}});
     fireEvent.change(passwordField, {target: {value: ''}});
     expect(passwordField.value).toBe('');
+});
+
+test('login button can be clicked', () => {
+    const { container, getByText, getByTestId } = render(<Login />);
+    const loginButton = getByText("Login");
+
+    fireEvent.click(loginButton)
+
+});
+
+test('login butto clicked', async ()  => {
+    const { container, getByText, getByTestId } = render(<Login />);
+
+    const loginButton = getByText("Login");
+    const passwordField = getByTestId("password-text");
+    const usernameField = getByTestId("username-text");
+
+    fireEvent.change(usernameField, {target: {value: 'username'}});
+    fireEvent.change(passwordField, {target: {value: 'password'}});
+
+    fireEvent.click(loginButton);
+
+    await wait()
 });
