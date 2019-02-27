@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('./database');
-
+const format = require('date-fns/format');
 
 router.route('/:fileBranch')
     .delete((req, res) => {
@@ -89,17 +89,19 @@ router.route('/')
 
             req.body.forEach((value, index) => {
 
-                sourceMap.set(value.id, index)
+                sourceMap.set(value.title, index)
             });
 
             results.forEach(value => {
 
                 const sourceGet = sourceMap.get(value.title);
 
+
                 if (sourceGet !== undefined) {
+
                     if (req.body[sourceGet].id === value.id
                         && JSON.stringify(value.timestamp) !== req.body[sourceGet].timestamp
-                        && value.value !== req.body[sourceGet].value) {
+                        && value.value !== parseFloat(req.body[sourceGet].value)) {
 
                         conflictsNew.push(req.body[sourceGet]);
                         conflictsOld.push(value);
@@ -116,11 +118,12 @@ router.route('/')
             } else {
 
 
+
                 req.body = req.body.filter( value => {
 
                     let boolean = true;
                     for(let i = 0; i < deleteIds.length; i++){
-                        if(value.id === deleteIds[i].id){
+                        if(value.id === deleteIds[i]){
                             boolean = false;
                             break;
                         }
@@ -131,7 +134,10 @@ router.route('/')
 
                 req.body.forEach(value => {
 
-                    delete value.timestamp;
+                    value.timestamp = format(
+                        new Date(),
+                        'YYYY-MM-DD HH:mm:ss'
+                    );
 
                     pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
                         if (error) throw error;
@@ -224,16 +230,21 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             const sourceGet = sourceMap.get(results[i].title);
 
             if (sourceGet !== undefined) {
-                if (req.body[sourceGet].value !== results[i].value) {
+
+                if (parseFloat(req.body[sourceGet].value) !== results[i].value) {
+
                     conflictsSource.push(req.body[sourceGet]);
                     conflictsTarget.push(results[i]);
-                } else if (req.body[sourceGet].value === results[i].value) {
+
+                } else if (parseFloat(req.body[sourceGet].value) === results[i].value) {
+
                     deleteTitles.push(req.body[sourceGet].title)
                 }
             }
         }
 
         if (conflictsTarget.length > 0 && conflictsSource.length > 0) {
+
             res.send({conflictsSource: conflictsSource, conflictsTarget: conflictsTarget});
 
         } else {
@@ -242,14 +253,16 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
                 let boolean = true;
                 for(let i = 0; i < deleteTitles.length; i++){
-                    if(value.title === deleteTitles[i].title){
+
+                    if(value[3] === deleteTitles[i]){
+
                         boolean = false;
                         break;
                     }
                 }
-
                 return boolean;
             });
+
 
             if(query.length > 0) {
                 pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
@@ -301,6 +314,12 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
         if (resolvedUpdate.length > 0) {
 
             resolvedUpdate.forEach(value => {
+
+                value.timestamp = format(
+                    new Date(),
+                    'YYYY-MM-DD HH:mm:ss'
+                );
+
                 pool.query(`UPDATE fields SET ?  WHERE title = ? AND branch_title = ?`,
                     [value, value.title, value.branch_title], function (error) {
                         if (error) throw error;
@@ -332,8 +351,10 @@ router.put('/commitResolved', (req, res) => {
 
     req.body.forEach(value => {
 
-        delete value.timestamp;
-
+        value.timestamp = format(
+            new Date(),
+            'YYYY-MM-DD HH:mm:ss'
+        );
         pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
             if (error) throw error;
 
@@ -348,8 +369,6 @@ module.exports = router;
 
 //TODO  change new field saves from post on new field to post on save
 //      Field title change still matching id changes
-//      MYSQL change timestamp on change
-//      TIMESTAMP current POST
 //      only push check on merge/commit if timestamps dont match#
 //      Only return actual conflicts, post/insert rest of fields??
 //      Stream query tows?
