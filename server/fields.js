@@ -164,7 +164,6 @@ router.post('/branch/:branchTitle', (req, res) => {
 
                 delete value.timestamp;
                 delete value.id;
-                value.version_id = value.version_id + 1;
                 value.branch_title = req.params.branchTitle;
 
                 query.push(Object.values(value));

@@ -197,7 +197,6 @@ function Files(props) {
             }
             {fileFields.length > 0 ? <label>Total = {parseFloat(total).toFixed(2)}</label> : null}
         </div>
-
     </>
 }
 
