@@ -163,7 +163,9 @@ function Files(props) {
 
         </nav>
 
-        <div id={"files"}>
+        <br/>
+
+        <div id="files">
             {
                 files.map((value, index) => {
                     return <Fragment key={value.id}>
@@ -176,6 +178,8 @@ function Files(props) {
                     </Fragment>
                 })
             }
+        </div>
+        <div id="fields">
             {
                 fileFields.map(value => {
 

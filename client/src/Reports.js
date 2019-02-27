@@ -107,6 +107,7 @@ function Reports(props) {
             }}>Logout
             </button>
         </nav>
+        <br/>
 
         <div id={"reports"}>
             {

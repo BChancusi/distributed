@@ -379,6 +379,8 @@ function File(props) {
             </button>
         </nav>
 
+        <br/>
+
         <div id={"options"}>
             <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
             <button onClick={handleNewBranch}>New Branch</button>
@@ -427,6 +429,9 @@ function File(props) {
 
 
         </div>
+
+        <br/>
+
         <div id={"fields"}>
             {
                 fields.map((value, index) => {
@@ -442,6 +447,7 @@ function File(props) {
                         <input type="text" value={value.value} name="value"
                                onChange={(event) => handleFieldChange(event, index)}/>
                         <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                        <br/>
 
                     </Fragment>
                 })
