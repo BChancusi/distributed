@@ -48,10 +48,12 @@ function Login(props) {
         <div id="login">
             <form onSubmit={handleLogin}>
                 <label>Username
-                    <input onChange={handleChange} type="text" name="username" autoComplete="username"/>
+                    <input onChange={handleChange} type="text" name="username"
+                           autoComplete="username" data-testid="username-text"/>
                 </label>
                 <label>Password
-                    <input onChange={handleChange} type="password" name="password" autoComplete="current-password"/>
+                    <input onChange={handleChange} type="password" name="password"
+                           autoComplete="current-password" data-testid="password-text"/>
                 </label>
                 <input type="submit" value="Login"/>
             </form>
