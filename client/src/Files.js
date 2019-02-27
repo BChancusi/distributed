@@ -146,25 +146,11 @@ function Files(props) {
     let total = 0.00;
 
     return <>
-        <header>
-            <h1 align="CENTER">{props.report.title}</h1>
-        </header>
-
-        <nav>
+        <div>
             <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
             <button onClick={handleNewFile}>New File</button>
-            <button onClick={() => props.setReportOpen("")}>Return</button>
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedIn(null)
-
-            }}>Logout
-            </button>
-
-        </nav>
-
+        </div>
         <br/>
-
         <div id="files">
             {
                 files.map((value, index) => {

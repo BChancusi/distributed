@@ -366,21 +366,7 @@ function File(props) {
     let total = 0;
 
     return <>
-        <header>
-            <h1 align="CENTER">{props.file.title}</h1>
-        </header>
-        <nav>
-            <button onClick={() => props.setFileOpen("")}>Return</button>
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedIn(null)
-
-            }}>Logout
-            </button>
-        </nav>
-
         <br/>
-
         <div id={"options"}>
             <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
             <button onClick={handleNewBranch}>New Branch</button>
@@ -398,7 +384,6 @@ function File(props) {
                     }
                 </>
             </select>
-
 
             {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                 <>

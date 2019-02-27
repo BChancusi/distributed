@@ -93,26 +93,15 @@ function Reports(props) {
     };
 
     return <>
-        <header>
-            <h1 align="CENTER">Reports</h1>
-        </header>
-
-        <nav>
-            <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
+        <div>
             <button onClick={handleNewReport}>New report</button>
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedIn(null)
-
-            }}>Logout
-            </button>
-        </nav>
-        <br/>
-
+            <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
+        </div>
         <div id={"reports"}>
             {
                 reports.map((value, index) => {
                     return <Fragment key={value.id}>
+                        <br/>
                         <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
                         <button
                             onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
@@ -123,7 +112,6 @@ function Reports(props) {
                     </Fragment>
                 })
             }
-
         </div>
     </>
 }

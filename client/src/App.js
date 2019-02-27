@@ -13,14 +13,57 @@ function App() {
     const [fileOpen, setFileOpen] = useState("");
 
     if (loggedIn !== "true") {
-        return <Login setLoggedIn={setLoggedIn}/>
+        return <>
+            <header>
+                <h1 align="CENTER">Login</h1>
+            </header>
+            <Login setLoggedIn={setLoggedIn}/>
+        </>
     } else if (reportOpen === "") {
-        return <Reports setReportOpen={setReportOpen} setLoggedIn={setLoggedIn}/>
+        return <>
+            <header>
+                <h1 align="CENTER">Reports</h1>
+            </header>
+            <nav>
+                <button onClick={() => {
+                    localStorage.clear();
+                    setLoggedIn(null)
+                }}>Logout
+                </button>
+            </nav>
+            <Reports setReportOpen={setReportOpen}/>
+        </>
     } else if (reportOpen !== "" && fileOpen === "") {
-        return <Files setFileOpen={setFileOpen}
-                      report={reportOpen} setReportOpen={setReportOpen} setLoggedIn={setLoggedIn}/>
+        return <>
+            <header>
+                <h1 align="CENTER">{reportOpen.title}</h1>
+            </header>
+            <nav>
+                <button onClick={() => {
+                    localStorage.clear();
+                    setLoggedIn(null)
+                }}>Logout
+                </button>
+                <button onClick={() => setReportOpen("")}>Return</button>
+            </nav>
+            <Files setFileOpen={setFileOpen}
+                   report={reportOpen}/>
+        </>
     } else if (fileOpen !== "") {
-        return <File file={fileOpen} setFileOpen={setFileOpen} setLoggedIn={setLoggedIn}/>
+        return <>
+            <header>
+                <h1 align="CENTER">{fileOpen.title}</h1>
+            </header>
+            <nav>
+                <button onClick={() => {
+                    localStorage.clear();
+                    setLoggedIn(null)
+                }}>Logout
+                </button>
+                <button onClick={() => setFileOpen("")}>Return</button>
+            </nav>
+            <File file={fileOpen}/>
+        </>
     }
 }
 
