@@ -111,8 +111,7 @@ function Reports(props) {
         <div>
             <label>New Report Title
             <input type="text" value={newReport} ref={reportInput}
-                   onChange={(event) => setNewReport(event.target.value)} placeholder="Title"/>
-                <label>E.g "Report 2019</label>
+                   onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
             </label>
             <button onClick={handleNewReport}>New report</button>
         </div>
@@ -123,12 +122,12 @@ function Reports(props) {
                     return <Fragment key={value.id}>
                         <br/>
                         <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                         <button
                             onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
                             report title
                         </button>
                         <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                     </Fragment>
                 })
                 ) : <h2>No reports created</h2>

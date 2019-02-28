@@ -162,42 +162,49 @@ function Files(props) {
 
     return <>
         <div>
-            <input type="text" value={newFile} ref={fileInput} onChange={(event) => setNewFile(event.target.value)}/>
+            <label>New File Title
+                <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
+                       onChange={(event) => setNewFile(event.target.value)}/>
+            </label>
             <button onClick={handleNewFile}>New File</button>
         </div>
-        <br/>
-        <div id="files">
-            {
-                files.map((value, index) => {
-                    return <Fragment key={value.id}>
-                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                        <button onClick={() => props.setFileOpen(value)}>Open file</button>
-                        <button onClick={() => handlePutFile(document
-                            .getElementById(`textInput${value.id}`).value, index)}>Update title
-                        </button>
-                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                    </Fragment>
-                })
-            }
-        </div>
-        <div id="fields">
-            {
-                fileFields.map(value => {
+        {files.length > 0 ? (
+            <div id="files">
+                {
+                    files.map((value, index) => {
+                        return <Fragment key={value.id}>
+                            <br/>
+                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                            <button onClick={() => props.setFileOpen(value)}>Open file</button>
+                            <button onClick={() => handlePutFile(document
+                                .getElementById(`textInput${value.id}`).value, index)}>Update title
+                            </button>
+                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                        </Fragment>
+                    })
+                }
+            </div>
+            ) : <h2>No files created</h2>}
+        {fileFields.length > 0 &&
+            <div id="fields">
+                {
+                    fileFields.map(value => {
 
-                    total += value.value;
+                        total += value.value;
 
-                    return <Fragment key={value.id}>
-                        <br/>
-                        <label>{value.title}</label>
-                        <br/>
-                        <label>{value.value}</label>
-                        <br/>
+                        return <Fragment key={value.id}>
+                            <br/>
+                            <label>{value.title}</label>
+                            <br/>
+                            <label>{value.value}</label>
+                            <br/>
 
-                    </Fragment>
-                })
-            }
-            {fileFields.length > 0 && <label>Total = {parseFloat(total).toFixed(2)}</label>}
-        </div>
+                        </Fragment>
+                    })
+                }
+                <label>Total = £{parseFloat(total).toFixed(2)}</label>
+            </div>
+        }
     </>
 }
 
