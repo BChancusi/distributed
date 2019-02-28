@@ -16,7 +16,7 @@ function File(props) {
     const [fileTitles, setFileTitles] = useState("master");
 
     const [newFieldTitle, setNewFieldTitle] = useState("");
-    const [newFieldValue, setNewFieldValue] = useState("0");
+    const [newFieldValue, setNewFieldValue] = useState("");
     const [newBranchTitle, setNewBranchTitle] = useState("");
 
     const fieldTitleInput = useRef(null);
@@ -61,19 +61,19 @@ function File(props) {
     };
 
     function handleNewField() {
-        if(newFieldValue.trim() !== "") {
+        if (newFieldValue.trim() !== "") {
             postField()
                 .then(res => {
 
-                    if(res.express === "already exists"){
+                    if (res.express === "already exists") {
                         fieldTitleInput.current.style.backgroundColor = "red";
                         setNewFieldTitle("");
 
-                    }else{
+                    } else {
                         fieldTitleInput.current.style.backgroundColor = "white";
                         setFields(fields.concat(res.express));
                         setNewFieldTitle("");
-                        setNewFieldValue("0");
+                        setNewFieldValue("");
                     }
                 })
                 .catch(err => console.log(err));
@@ -112,18 +112,14 @@ function File(props) {
 
             setFields(cloneFields);
 
-
         } else if (event.target.name === "value") {
-
 
             let cloneFields = [...fields];
 
             cloneFields[key].value = event.target.value;
 
             setFields(cloneFields);
-
         }
-
     }
 
     function handlePutFields() {
@@ -338,8 +334,8 @@ function File(props) {
         } else {
 
             setMergeBranchResolved(mergeBranchResolved.filter(filterItem => {
-                return filterItem !== item
 
+                return filterItem !== item
             }))
         }
     }
@@ -357,7 +353,6 @@ function File(props) {
 
             setCommitResolved(commitResolved.filter(filterItem => {
                 return filterItem !== item
-
             }))
         }
     }
@@ -390,8 +385,10 @@ function File(props) {
     return <>
         <br/>
         <div id={"options"}>
-            <input type="text" value={newBranchTitle} ref={branchTitleInput}
-                   onChange={(event) => setNewBranchTitle(event.target.value)}/>
+            <label>New Branch Title
+                <input type="text" value={newBranchTitle} ref={branchTitleInput}
+                       onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
+            </label>
             <button onClick={handleNewBranch}>New Branch</button>
 
             <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
@@ -430,114 +427,118 @@ function File(props) {
             <button onClick={handlePutFields}>Save Changes</button>
 
             <br/>
+            <label>New Field Title
+                <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
+                       value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+            </label>
 
-            <input type="text" ref={fieldTitleInput}
-                   value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
-            <input type="number" value={newFieldValue} onChange={(event) => {
-                setNewFieldValue(event.target.value);
-            }}/>
+            <label>New Field Amount
+                <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
+                    setNewFieldValue(event.target.value);
+                }}/>
+            </label>
             <button onClick={handleNewField}>New Field</button>
-
-
         </div>
 
-        <br/>
+        {fields.length > 0 ? (
+            <div id={"fields"}>
+                <br/>
+                {
+                    fields.map((value, index) => {
 
-        <div id={"fields"}>
-            {
-                fields.map((value, index) => {
+                        if (!isNaN(parseFloat(value.value))) {
+                            total += parseFloat(parseFloat(value.value).toFixed(2));
+                        }
 
-                    if (!isNaN(parseFloat(value.value))) {
-                        total += parseFloat(parseFloat(value.value).toFixed(2));
-                    }
+                        return <Fragment key={value.id}>
 
-                    return <Fragment key={value.id}>
+                            <input type="text" value={value.title} name="title"
+                                   onChange={(event) => handleFieldChange(event, index)}/>
+                            <input type="number" value={value.value} name="value"
+                                   onChange={(event) => handleFieldChange(event, index)}/>
+                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                            <br/>
 
-                        <input type="text" value={value.title} name="title"
-                               onChange={(event) => handleFieldChange(event, index)}/>
-                        <input type="number" value={value.value} name="value"
-                               onChange={(event) => handleFieldChange(event, index)}/>
-                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                        <br/>
-
-                    </Fragment>
-                })
-            }
-            {fields.length === 0 ? null : <label>Total = {parseFloat(total).toFixed(2)}</label>}
-        </div>
-        {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 ?
-            <div id="conflicts">
-                <>
-                    {
-                        mergeBranchConflictsSource.map(value => {
-                            return <Fragment key={value.id}>
-                                <label>
-                                    {" New value - " + value.title}
-                                </label>
-                                <label>
-                                    {" : " + value.value}
-                                </label>
-                                <input type="checkbox" onChange={(event) =>
-                                    handleCheckboxMerge(event, value)}/>
-                            </Fragment>
-                        })
-                    }
-                    <br/>
-
-                    {
-                        mergeBranchConflictsTarget.map(value => {
-                            return <Fragment key={value.id}>
-                                <label>
-                                    {" Value on file - " + value.title}
-                                </label>
-                                <label>
-                                    {" : " + value.value}
-                                </label>
-                            </Fragment>
-                        })
-
-                    }
-                    <br/>
-                    <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
-                </>
-            </div> : null
+                        </Fragment>
+                    })
+                }
+                <label>Total = {parseFloat(total).toFixed(2)}</label>
+            </div>
+        ) : <h2>No fields created</h2>
         }
-        {commitNew.length > 0 && commitOld.length > 0 ?
-            <div id="conflictsCommit">
-                <>
-                    {
-                        commitNew.map(value => {
-                            return <Fragment key={value.id}>
-                                <label>
-                                    {" New value - " + value.title}
-                                </label>
-                                <label>
-                                    {" : " + value.value}
-                                </label>
-                                <input type="checkbox" onChange={(event) =>
-                                    handleCheckboxCommit(event, value)}/>
-                            </Fragment>
-                        })
-                    }
-                    <br/>
+        {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 &&
+        <div id="conflicts">
+            <>
+                {
+                    mergeBranchConflictsSource.map(value => {
+                        return <Fragment key={value.id}>
+                            <label>
+                                {" New value - " + value.title}
+                            </label>
+                            <label>
+                                {" : " + value.value}
+                            </label>
+                            <input type="checkbox" onChange={(event) =>
+                                handleCheckboxMerge(event, value)}/>
+                        </Fragment>
+                    })
+                }
+                <br/>
 
-                    {
-                        commitOld.map(value => {
-                            return <Fragment key={value.id}>
-                                <label>
-                                    {" Value on file - " + value.title}
-                                </label>
-                                <label>
-                                    {" : " + value.value}
-                                </label>
-                            </Fragment>
-                        })
+                {
+                    mergeBranchConflictsTarget.map(value => {
+                        return <Fragment key={value.id}>
+                            <label>
+                                {" Value on file - " + value.title}
+                            </label>
+                            <label>
+                                {" : " + value.value}
+                            </label>
+                        </Fragment>
+                    })
 
-                    }
-                    <br/>
-                    <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
-                </>
-            </div> : null
+                }
+                <br/>
+                <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
+            </>
+        </div>
+        }
+        {commitNew.length > 0 && commitOld.length > 0 &&
+        <div id="conflictsCommit">
+            <>
+                {
+                    commitNew.map(value => {
+                        return <Fragment key={value.id}>
+                            <label>
+                                {" New value - " + value.title}
+                            </label>
+                            <label>
+                                {" : " + value.value}
+                            </label>
+                            <input type="checkbox" onChange={(event) =>
+                                handleCheckboxCommit(event, value)}/>
+                        </Fragment>
+                    })
+                }
+                <br/>
+
+                {
+                    commitOld.map(value => {
+                        return <Fragment key={value.id}>
+                            <label>
+                                {" Value on file - " + value.title}
+                            </label>
+                            <label>
+                                {" : " + value.value}
+                            </label>
+                        </Fragment>
+                    })
+
+                }
+                <br/>
+                <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
+            </>
+        </div>
         }
     </>
 }
