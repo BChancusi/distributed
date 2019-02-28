@@ -41,15 +41,24 @@ router.get('/file/:fileIds', (req, res) => {
 router.route('/')
     .post((req, res) => {
 
-        pool.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
+        pool.query(`SELECT * FROM fields WHERE title = ? AND branch_title = ? AND file_id = ?`, [req.body.title, req.body.branch_title, req.body.file_id], function (error, results) {
             if (error) throw error;
 
-            pool.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
-                if (error) throw error;
+            if (results.length === 0) {
 
-                res.send({express: results});
-            });
-        })
+                pool.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
+                    if (error) throw error;
+
+                    pool.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+                        if (error) throw error;
+
+                        res.send({express: results});
+                    });
+                });
+            }else{
+                res.send({express: "already exists"})
+            }
+        });
     })
     .get((req, res) => {
 

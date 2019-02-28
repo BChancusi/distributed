@@ -76,9 +76,17 @@ function File(props) {
         if(newFieldValue.trim() !== "") {
             postField()
                 .then(res => {
-                    setFields(fields.concat(res.express));
-                    setNewFieldTitle("");
-                    setNewFieldValue("0");
+
+                    if(res.express === "already exists"){
+                        fieldTitleInput.current.style.backgroundColor = "red";
+                        setNewFieldTitle("");
+
+                    }else{
+                        fieldTitleInput.current.style.backgroundColor = "white";
+                        setFields(fields.concat(res.express));
+                        setNewFieldTitle("");
+                        setNewFieldValue("0");
+                    }
                 })
                 .catch(err => console.log(err));
         }
@@ -550,5 +558,4 @@ export default File;
 
 //TODO  If old values are selected replace fields with old values
 //      MERGING branch doesnt save fields as well on current branch
-//      Correctly prevent non number
-//      Prevent values which already exist
+//      Deep prevent non number
