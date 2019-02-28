@@ -5,12 +5,16 @@ function Reports(props) {
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     useEffect(() => {
         getReports()
             .then(res => setReports(res.express))
             .catch(err => console.log(err));
 
         return () => {
+            controller.abort();
             setReports(null);
             setNewReport(null);
         }
@@ -19,7 +23,7 @@ function Reports(props) {
 
     const getReports = async () => {
 
-        const response = await fetch('/reports');
+        const response = await fetch('/reports', {signal});
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -37,6 +41,7 @@ function Reports(props) {
         }
 
         const response = await fetch('/reports', {
+            signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": newReport})
@@ -57,6 +62,7 @@ function Reports(props) {
     const handleDeleteReport = async (reportId, key) => {
 
         await fetch(`/reports/${reportId}`, {
+            signal,
             method: 'DELETE',
         }).then(response => {
 
@@ -79,6 +85,7 @@ function Reports(props) {
         cloneReports[key].title = value;
 
         await fetch(`/reports/${cloneReports[key].id}`, {
+            signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": cloneReports[key].title})

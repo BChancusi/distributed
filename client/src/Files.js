@@ -6,6 +6,9 @@ function Files(props) {
     const [newFile, setNewFile] = useState("");
     const [fileFields, setFileFields] = useState([]);
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     useEffect(() => {
         getFiles(props.report.id)
             .then(res => {
@@ -37,6 +40,7 @@ function Files(props) {
 
 
         return () => {
+            controller.abort();
             setFiles(null);
             setFileFields(null);
             setNewFile(null);
@@ -56,7 +60,7 @@ function Files(props) {
         }
         idsURL += "+master";
 
-        const response = await fetch(`/fields/file/${idsURL}`);
+        const response = await fetch(`/fields/file/${idsURL}`, {signal});
 
         const body = await response.json();
 
@@ -70,7 +74,7 @@ function Files(props) {
 
     const getFiles = async (reportId) => {
 
-        const response = await fetch(encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`));
+        const response = await fetch(encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`), {signal});
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -89,6 +93,7 @@ function Files(props) {
         }
 
         const response = await fetch('/files', {
+            signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": newFile, "report_id": props.report.id})
@@ -109,6 +114,7 @@ function Files(props) {
     const handleDeleteFile = async (fileId, key) => {
 
         await fetch(`/files/${fileId}`, {
+            signal,
             method: 'DELETE',
         }).then(response => {
 
@@ -130,6 +136,7 @@ function Files(props) {
         cloneFiles[key].title = value;
 
         await fetch(`/files/${cloneFiles[key].id}`, {
+            signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": cloneFiles[key].title})
