@@ -109,12 +109,16 @@ function Reports(props) {
 
     return <>
         <div>
-            <button onClick={handleNewReport}>New report</button>
+            <label>New Report Title
             <input type="text" value={newReport} ref={reportInput}
-                   onChange={(event) => setNewReport(event.target.value)}/>
+                   onChange={(event) => setNewReport(event.target.value)} placeholder="Title"/>
+                <label>E.g "Report 2019</label>
+            </label>
+            <button onClick={handleNewReport}>New report</button>
         </div>
         <div id={"reports"}>
             {
+                reports.length > 0 ? (
                 reports.map((value, index) => {
                     return <Fragment key={value.id}>
                         <br/>
@@ -127,6 +131,7 @@ function Reports(props) {
                         <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                     </Fragment>
                 })
+                ) : <h2>No reports created</h2>
             }
         </div>
     </>
