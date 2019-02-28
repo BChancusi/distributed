@@ -14,6 +14,7 @@ router.route('/')
 
     })
     .post((req, res) => {
+
         pool.query(`SELECT * FROM files WHERE title = ? AND report_id = ? `, [req.body.title, req.body.report_id], function (error, results) {
             if (error) throw error;
 

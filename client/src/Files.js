@@ -108,14 +108,15 @@ function Files(props) {
                 throw Error(body.message)
             }
 
-            if (body.express !== "already exists") {
-                fileInput.current.style.backgroundColor = "white";
-                setFiles(files.concat(body.express));
-                setNewFile("")
-            } else {
+            if (body.express === "already exists") {
 
                 fileInput.current.style.backgroundColor = "red";
-                setNewFile("")
+                setNewFile("");
+            } else {
+
+                fileInput.current.style.backgroundColor = "white";
+                setFiles(files.concat(body.express));
+                setNewFile("");
             }
         });
     };

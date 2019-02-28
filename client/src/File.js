@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, useRef} from 'react';
 
 function File(props) {
 
@@ -18,6 +18,9 @@ function File(props) {
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldValue, setNewFieldValue] = useState("0");
     const [newBranchTitle, setNewBranchTitle] = useState("");
+
+    const fieldTitleInput = useRef(null);
+    const branchTitleInput = useRef(null);
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -70,13 +73,15 @@ function File(props) {
     };
 
     function handleNewField() {
-        postField()
-            .then(res => {
-                setFields(fields.concat(res.express));
-                setNewFieldTitle("");
-                setNewFieldValue("0");
-            })
-            .catch(err => console.log(err));
+        if(newFieldValue.trim() !== "") {
+            postField()
+                .then(res => {
+                    setFields(fields.concat(res.express));
+                    setNewFieldTitle("");
+                    setNewFieldValue("0");
+                })
+                .catch(err => console.log(err));
+        }
     }
 
     const postField = async () => {
@@ -194,21 +199,31 @@ function File(props) {
 
     function handleNewBranch() {
 
-        if (newBranchTitle.trim() === "") {
+        const newBranchTrimmed = newBranchTitle.trim();
+        if (newBranchTrimmed === "") {
             return;
         }
-        postBranch(fields).then(res => {
-            setFileTitles(fileTitles.concat(res.express));
-            setNewBranchTitle("");
+        postBranch(newBranchTrimmed).then(res => {
+
+            if (res.express === "already exists") {
+
+                branchTitleInput.current.style.backgroundColor = "red";
+                setNewBranchTitle("");
+
+            } else {
+                branchTitleInput.current.style.backgroundColor = "white";
+                setFileTitles(fileTitles.concat(res.express));
+                setNewBranchTitle("");
+            }
         });
     }
 
-    const postBranch = async () => {
+    const postBranch = async (newBranchTrimmed) => {
 
         let cloneFields = [...fields];
         cloneFields.push(props.file);
 
-        const response = await fetch(`/fields/branch/${newBranchTitle}`, {
+        const response = await fetch(`/fields/branch/${newBranchTrimmed}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -379,7 +394,8 @@ function File(props) {
     return <>
         <br/>
         <div id={"options"}>
-            <input type="text" value={newBranchTitle} onChange={(event) => setNewBranchTitle(event.target.value)}/>
+            <input type="text" value={newBranchTitle} ref={branchTitleInput}
+                   onChange={(event) => setNewBranchTitle(event.target.value)}/>
             <button onClick={handleNewBranch}>New Branch</button>
 
             <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
@@ -419,7 +435,8 @@ function File(props) {
 
             <br/>
 
-            <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+            <input type="text" ref={fieldTitleInput}
+                   value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
             <input type="number" value={newFieldValue} onChange={(event) => {
                 setNewFieldValue(event.target.value);
             }}/>

@@ -118,12 +118,11 @@ router.route('/')
             } else {
 
 
-
-                req.body = req.body.filter( value => {
+                req.body = req.body.filter(value => {
 
                     let boolean = true;
-                    for(let i = 0; i < deleteIds.length; i++){
-                        if(value.id === deleteIds[i]){
+                    for (let i = 0; i < deleteIds.length; i++) {
+                        if (value.id === deleteIds[i]) {
                             boolean = false;
                             break;
                         }
@@ -159,38 +158,48 @@ router.post('/branch/:branchTitle', (req, res) => {
     delete fileValue.id;
     fileValue.branch_title = req.params.branchTitle;
 
-    pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
+    pool.query(`SELECT * FROM files WHERE title = ? AND report_id = ? AND branch_title = ?`, [fileValue.title, fileValue.report_id, fileValue.branch_title], function (error, results) {
         if (error) throw error;
 
-        if (req.body.length > 0) {
+        if (results.length === 0) {
 
-            let query = [];
-
-            req.body.forEach(value => {
-
-                delete value.timestamp;
-                delete value.id;
-                value.branch_title = req.params.branchTitle;
-
-                query.push(Object.values(value));
-            });
-
-            pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
+            pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
                 if (error) throw error;
 
-                pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
-                    if (error) throw error;
+                if (req.body.length > 0) {
 
-                    res.send({express: resultsSelect});
-                })
+                    let query = [];
 
+                    req.body.forEach(value => {
+
+                        delete value.timestamp;
+                        delete value.id;
+                        value.branch_title = req.params.branchTitle;
+
+                        query.push(Object.values(value));
+                    });
+
+                    pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
+                        if (error) throw error;
+
+                        pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                            if (error) throw error;
+
+                            res.send({express: resultsSelect});
+                        })
+
+                    });
+                } else {
+                    pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                        if (error) throw error;
+
+                        res.send({express: resultsSelect});
+                    })
+                }
             });
+
         } else {
-            pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
-                if (error) throw error;
-
-                res.send({express: resultsSelect});
-            })
+            res.send({express: "already exists"})
         }
     });
 });
@@ -198,7 +207,7 @@ router.post('/branch/:branchTitle', (req, res) => {
 router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
     if (req.body.length === 0) {
-       return res.send({express: "no conflicts"});
+        return res.send({express: "no conflicts"});
     }
 
     pool.query('SELECT * FROM fields WHERE file_Id = ? AND branch_title = ?', [req.body[0].file_Id, req.params.mergeBranch], function (error, results) {
@@ -248,12 +257,12 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
         } else {
 
-            query = query.filter( value => {
+            query = query.filter(value => {
 
                 let boolean = true;
-                for(let i = 0; i < deleteTitles.length; i++){
+                for (let i = 0; i < deleteTitles.length; i++) {
 
-                    if(value[3] === deleteTitles[i]){
+                    if (value[3] === deleteTitles[i]) {
 
                         boolean = false;
                         break;
@@ -263,7 +272,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
             });
 
 
-            if(query.length > 0) {
+            if (query.length > 0) {
                 pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                     if (error) throw error;
 
@@ -338,7 +347,7 @@ router.delete('/deleteBranch/query', (req, res) => {
     pool.query(`DELETE FROM fields WHERE file_id = ? AND branch_title=?`, [req.query.file_id, req.query.branch_title], function (error) {
         if (error) throw error;
 
-        pool.query(`DELETE FROM files WHERE title = ? AND branch_title=?`, [req.query.title, req.query.branch_title ], function (error) {
+        pool.query(`DELETE FROM files WHERE title = ? AND branch_title=?`, [req.query.title, req.query.branch_title], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
