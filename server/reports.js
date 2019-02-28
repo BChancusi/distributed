@@ -15,15 +15,25 @@ router.route('/')
     })
     .post((req, res) => {
 
-        pool.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
+
+        pool.query(`SELECT * FROM reports WHERE title = ?`, [req.body.title], function (error, results) {
             if (error) throw error;
 
-            pool.query('SELECT * FROM reports WHERE id = ?', [results.insertId], function (error, results) {
-                if (error) throw error;
+            if(results.length === 0){
+                pool.query(`INSERT INTO reports SET ?`, [req.body], function (error, results) {
+                    if (error) throw error;
 
-                res.send({express: results});
-            });
+                    pool.query('SELECT * FROM reports WHERE id = ?', [results.insertId], function (error, results) {
+                        if (error) throw error;
+
+                        res.send({express: results});
+                    });
+                });
+            }else{
+                res.send({express: "already exists"})
+            }
         });
+
     });
 
 router.route('/:reportId')
@@ -39,7 +49,6 @@ router.route('/:reportId')
 
         pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
             if (error) throw error;
-
 
 
             res.sendStatus(200)

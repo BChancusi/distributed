@@ -1,9 +1,11 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, useRef, Fragment} from 'react';
 
 function Reports(props) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
+
+    const reportInput = useRef(null);
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -35,7 +37,8 @@ function Reports(props) {
 
     const handleNewReport = async () => {
 
-        if (newReport.trim() === "") {
+        const trimmed = newReport.trim();
+        if (trimmed === "") {
             setNewReport("");
             return;
         }
@@ -44,7 +47,7 @@ function Reports(props) {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": newReport})
+            body: JSON.stringify({"title": trimmed})
         });
 
         await response.json().then(body => {
@@ -53,8 +56,15 @@ function Reports(props) {
                 throw Error(body.message)
             }
 
-            setReports(reports.concat(body.express));
-            setNewReport("")
+            if (body.express !== "already exists") {
+                reportInput.current.style.backgroundColor = "white";
+                setReports(reports.concat(body.express));
+                setNewReport("")
+            } else {
+
+                reportInput.current.style.backgroundColor = "red";
+                setNewReport("")
+            }
         });
     };
 
@@ -102,7 +112,8 @@ function Reports(props) {
     return <>
         <div>
             <button onClick={handleNewReport}>New report</button>
-            <input type="text" value={newReport} onChange={(event) => setNewReport(event.target.value)}/>
+            <input type="text" value={newReport} ref={reportInput}
+                   onChange={(event) => setNewReport(event.target.value)}/>
         </div>
         <div id={"reports"}>
             {
