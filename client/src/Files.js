@@ -43,9 +43,6 @@ function Files(props) {
 
         return () => {
             controller.abort();
-            setFiles(null);
-            setFileFields(null);
-            setNewFile(null);
         }
     }, [props.report.id]);
 

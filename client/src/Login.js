@@ -1,17 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 function Login(props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-
-    useEffect(() => {
-        return () => {
-            setUsername(null);
-            setPassword(null);
-        }
-    }, [localStorage.getItem("loggedIn")]);
 
     const handleLogin = async (event) => {
         event.preventDefault();

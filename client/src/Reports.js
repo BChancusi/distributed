@@ -17,8 +17,6 @@ function Reports(props) {
 
         return () => {
             controller.abort();
-            setReports(null);
-            setNewReport(null);
         }
 
     }, []);
