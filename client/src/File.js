@@ -420,7 +420,9 @@ function File(props) {
             <br/>
 
             <input type="text" value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
-            <input type="text" value={newFieldValue} onChange={(event) => setNewFieldValue(event.target.value)}/>
+            <input type="number" value={newFieldValue} onChange={(event) => {
+                setNewFieldValue(event.target.value);
+            }}/>
             <button onClick={handleNewField}>New Field</button>
 
 
@@ -440,7 +442,7 @@ function File(props) {
 
                         <input type="text" value={value.title} name="title"
                                onChange={(event) => handleFieldChange(event, index)}/>
-                        <input type="text" value={value.value} name="value"
+                        <input type="number" value={value.value} name="value"
                                onChange={(event) => handleFieldChange(event, index)}/>
                         <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
                         <br/>
@@ -531,3 +533,5 @@ export default File;
 
 //TODO  If old values are selected replace fields with old values
 //      MERGING branch doesnt save fields as well on current branch
+//      Correctly prevent non number
+//      Prevent values which already exist
