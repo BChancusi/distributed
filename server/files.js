@@ -14,15 +14,23 @@ router.route('/')
 
     })
     .post((req, res) => {
-
-        pool.query(`INSERT INTO files SET ?`, req.body, function (error, results) {
+        pool.query(`SELECT * FROM files WHERE title = ? AND report_id = ? `, [req.body.title, req.body.report_id], function (error, results) {
             if (error) throw error;
 
-            pool.query('SELECT * FROM files WHERE id = ?', [results.insertId], function (error, results) {
-                if (error) throw error;
+            if (results.length === 0) {
 
-                res.send({express: results});
-            });
+                pool.query(`INSERT INTO files SET ?`, req.body, function (error, results) {
+                    if (error) throw error;
+
+                    pool.query('SELECT * FROM files WHERE id = ?', [results.insertId], function (error, results) {
+                        if (error) throw error;
+
+                        res.send({express: results});
+                    });
+                });
+            }else{
+                res.send({express: "already exists"})
+            }
         });
     });
 router.route('/:fileId')

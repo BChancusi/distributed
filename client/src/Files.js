@@ -1,10 +1,12 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, useRef} from 'react';
 
 function Files(props) {
 
     const [files, setFiles] = useState([]);
     const [newFile, setNewFile] = useState("");
     const [fileFields, setFileFields] = useState([]);
+
+    const fileInput = useRef(null);
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -87,7 +89,8 @@ function Files(props) {
 
     const handleNewFile = async () => {
 
-        if (newFile.trim() === "") {
+        const fileTrimmed = newFile.trim();
+        if (fileTrimmed === "") {
             setNewFile("");
             return;
         }
@@ -96,7 +99,7 @@ function Files(props) {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": newFile, "report_id": props.report.id})
+            body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
         });
 
         await response.json().then(body => {
@@ -105,8 +108,15 @@ function Files(props) {
                 throw Error(body.message)
             }
 
-            setFiles(files.concat(body.express));
-            setNewFile("")
+            if (body.express !== "already exists") {
+                fileInput.current.style.backgroundColor = "white";
+                setFiles(files.concat(body.express));
+                setNewFile("")
+            } else {
+
+                fileInput.current.style.backgroundColor = "red";
+                setNewFile("")
+            }
         });
     };
 
@@ -154,7 +164,7 @@ function Files(props) {
 
     return <>
         <div>
-            <input type="text" value={newFile} onChange={(event) => setNewFile(event.target.value)}/>
+            <input type="text" value={newFile} ref={fileInput} onChange={(event) => setNewFile(event.target.value)}/>
             <button onClick={handleNewFile}>New File</button>
         </div>
         <br/>
@@ -188,7 +198,7 @@ function Files(props) {
                     </Fragment>
                 })
             }
-            {fileFields.length > 0 ? <label>Total = {parseFloat(total).toFixed(2)}</label> : null}
+            {fileFields.length > 0 && <label>Total = {parseFloat(total).toFixed(2)}</label>}
         </div>
     </>
 }
