@@ -67,8 +67,6 @@ function File(props) {
 
                     if (res.express === "already exists") {
                         fieldTitleInput.current.style.backgroundColor = "red";
-                        setNewFieldTitle("");
-
                     } else {
                         fieldTitleInput.current.style.backgroundColor = "white";
                         setFields(fields.concat(res.express));
@@ -200,8 +198,6 @@ function File(props) {
             if (res.express === "already exists") {
 
                 branchTitleInput.current.style.backgroundColor = "red";
-                setNewBranchTitle("");
-
             } else {
                 branchTitleInput.current.style.backgroundColor = "white";
                 setFileTitles(fileTitles.concat(res.express));

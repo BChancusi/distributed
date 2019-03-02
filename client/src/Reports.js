@@ -54,13 +54,13 @@ function Reports(props) {
                 throw Error(body.message)
             }
 
-            if (body.express !== "already exists") {
-                reportInput.current.style.backgroundColor = "white";
-                setReports(reports.concat(body.express));
-                setNewReport("")
+            if (body.express === "already exists") {
+                reportInput.current.style.backgroundColor = "red";
+
             } else {
 
-                reportInput.current.style.backgroundColor = "red";
+                reportInput.current.style.backgroundColor = "white";
+                setReports(reports.concat(body.express));
                 setNewReport("")
             }
         });

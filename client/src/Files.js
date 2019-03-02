@@ -108,7 +108,6 @@ function Files(props) {
             if (body.express === "already exists") {
 
                 fileInput.current.style.backgroundColor = "red";
-                setNewFile("");
             } else {
 
                 fileInput.current.style.backgroundColor = "white";
