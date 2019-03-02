@@ -1,13 +1,14 @@
 import React, {useState, useEffect, Fragment, useRef} from 'react';
+import Conflicts from "./Conflicts";
 
 function File(props) {
 
     const [fields, setFields] = useState([]);
     const [currentBranch, setCurrentBranch] = useState("master");
 
-    const [mergeBranchConflictsSource, setMergeBranchConflictsSource] = useState([]);
-    const [mergeBranchConflictsTarget, setMergeBranchConflictsTarget] = useState([]);
-    const [mergeBranchResolved, setMergeBranchResolved] = useState([]);
+    const [mergeNew, setMergeNew] = useState([]);
+    const [mergeOld, setMergeOld] = useState([]);
+    const [mergeResolved, setMergeResolved] = useState([]);
 
     const [commitNew, setCommitNew] = useState([]);
     const [commitOld, setCommitOld] = useState([]);
@@ -75,7 +76,7 @@ function File(props) {
                     }
                 })
                 .catch(err => console.log(err));
-        }else{
+        } else {
             fieldTitleInput.current.style.backgroundColor = "red";
         }
     }
@@ -206,7 +207,7 @@ function File(props) {
                     setCurrentBranch(newBranchTrimmed);
                 }
             });
-        }else {
+        } else {
             branchTitleInput.current.style.backgroundColor = "red";
         }
     }
@@ -236,8 +237,8 @@ function File(props) {
         postMergeBranch().then(res => {
 
             if (res.express !== "no conflicts") {
-                setMergeBranchConflictsSource(res.conflictsSource);
-                setMergeBranchConflictsTarget(res.conflictsTarget);
+                setMergeNew(res.conflictsSource);
+                setMergeOld(res.conflictsTarget);
             }
         })
             .catch(err => console.log(err));
@@ -266,7 +267,7 @@ function File(props) {
 
         let mergeResolved = [];
 
-        let cloneMerge = [...mergeBranchResolved];
+        let cloneMerge = [...mergeResolved];
 
         for (let i = 0; i < fields.length; i++) {
 
@@ -285,9 +286,9 @@ function File(props) {
                 }
             }
 
-            for (let k = 0; k < mergeBranchConflictsTarget.length && boolean === false; k++) {
+            for (let k = 0; k < mergeOld.length && boolean === false; k++) {
 
-                if (mergeBranchConflictsTarget[k].title === fields[i].title) {
+                if (mergeOld[k].title === fields[i].title) {
 
                     boolean = true;
                     break;
@@ -305,9 +306,9 @@ function File(props) {
             }
         }
         postMergeResolved(mergeResolved).then(() => {
-            setMergeBranchConflictsTarget([]);
-            setMergeBranchConflictsSource([]);
-            setMergeBranchResolved([]);
+            setMergeOld([]);
+            setMergeNew([]);
+            setMergeResolved([]);
         })
     }
 
@@ -327,14 +328,14 @@ function File(props) {
 
         if (event.target.checked === true) {
 
-            let cloneResolved = [...mergeBranchResolved];
+            let cloneResolved = [...mergeResolved];
 
             cloneResolved.push(item);
-            setMergeBranchResolved(cloneResolved)
+            setMergeResolved(cloneResolved)
 
         } else {
 
-            setMergeBranchResolved(mergeBranchResolved.filter(filterItem => {
+            setMergeResolved(mergeResolved.filter(filterItem => {
 
                 return filterItem !== item
             }))
@@ -467,78 +468,19 @@ function File(props) {
             </div>
         ) : <h2>No fields created</h2>
         }
-        {mergeBranchConflictsSource.length > 0 && mergeBranchConflictsTarget.length > 0 &&
+        {mergeNew.length > 0 && mergeOld.length > 0 &&
         <div id="conflicts">
-            <>
-                {
-                    mergeBranchConflictsSource.map(value => {
-                        return <Fragment key={value.id}>
-                            <label>
-                                {" New value - " + value.title}
-                            </label>
-                            <label>
-                                {" : " + value.value}
-                            </label>
-                            <input type="checkbox" onChange={(event) =>
-                                handleCheckboxMerge(event, value)}/>
-                        </Fragment>
-                    })
-                }
-                <br/>
 
-                {
-                    mergeBranchConflictsTarget.map(value => {
-                        return <Fragment key={value.id}>
-                            <label>
-                                {" Value on file - " + value.title}
-                            </label>
-                            <label>
-                                {" : " + value.value}
-                            </label>
-                        </Fragment>
-                    })
+            <Conflicts source={mergeNew} target={mergeOld}
+                       event={handleCheckboxMerge}/>
+            <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
 
-                }
-                <br/>
-                <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
-            </>
         </div>
         }
         {commitNew.length > 0 && commitOld.length > 0 &&
         <div id="conflictsCommit">
-            <>
-                {
-                    commitNew.map(value => {
-                        return <Fragment key={value.id}>
-                            <label>
-                                {" New value - " + value.title}
-                            </label>
-                            <label>
-                                {" : " + value.value}
-                            </label>
-                            <input type="checkbox" onChange={(event) =>
-                                handleCheckboxCommit(event, value)}/>
-                        </Fragment>
-                    })
-                }
-                <br/>
-
-                {
-                    commitOld.map(value => {
-                        return <Fragment key={value.id}>
-                            <label>
-                                {" Value on file - " + value.title}
-                            </label>
-                            <label>
-                                {" : " + value.value}
-                            </label>
-                        </Fragment>
-                    })
-
-                }
-                <br/>
-                <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
-            </>
+            <Conflicts source={commitNew} target={commitOld} event={handleCheckboxCommit}/>
+            <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
         </div>
         }
     </>
