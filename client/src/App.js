@@ -15,7 +15,8 @@ function App() {
     if (loggedIn !== "true") {
         return <>
             <header>
-                <h1 align="CENTER">Login</h1>
+                <h1 align="CENTER">Distributed Budgeting App</h1>
+                <h2>Login</h2>
             </header>
             <Login setLoggedIn={setLoggedIn}/>
         </>
@@ -52,7 +53,7 @@ function App() {
     } else if (fileOpen !== "") {
         return <>
             <header>
-                <h1 align="CENTER">{fileOpen.title}</h1>
+                <h1 align="CENTER">{reportOpen.title + "\\" + fileOpen.title}</h1>
             </header>
             <nav>
                 <button onClick={() => {

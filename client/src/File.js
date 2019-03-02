@@ -342,7 +342,6 @@ function File(props) {
                 }))
 
             }
-            console.debug(mergeResolved)
 
         }else{
             if (event.target.checked === true) {
@@ -358,9 +357,6 @@ function File(props) {
                     return filterItem !== item
                 }))
             }
-
-            console.debug(commitResolved)
-
         }
     }
 
@@ -397,20 +393,22 @@ function File(props) {
                        onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
             </label>
             <button onClick={handleNewBranch}>New Branch</button>
+            <br/>
+            <label>Current Branch
+                <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                    <>
+                        {
+                            Array.isArray(fileTitles) ?
+                                fileTitles.map(value => {
 
-            <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
-                <>
-                    {
-                        Array.isArray(fileTitles) ?
-                            fileTitles.map(value => {
-
-                                return <option key={value.id}
-                                               value={value.branch_title}>{value.branch_title}</option>
-                            })
-                            : null
-                    }
-                </>
-            </select>
+                                    return <option key={value.id}
+                                                   value={value.branch_title}>{value.branch_title}</option>
+                                })
+                                : null
+                        }
+                    </>
+                </select>
+            </label>
 
             {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                 <>
@@ -431,8 +429,6 @@ function File(props) {
                 </>
                 : null}
 
-            <button onClick={handlePutFields}>Save Changes</button>
-
             <br/>
             <label>New Field Title
                 <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
@@ -449,6 +445,7 @@ function File(props) {
 
         {fields.length > 0 ? (
             <div id={"fields"}>
+                <button onClick={handlePutFields}>Save Changes</button>
                 <br/>
                 {
                     fields.map((value, index) => {
