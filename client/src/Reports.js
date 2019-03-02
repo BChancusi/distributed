@@ -36,34 +36,36 @@ function Reports(props) {
     const handleNewReport = async () => {
 
         const trimmed = newReport.trim();
-        if (trimmed === "") {
+        if (trimmed !== "") {
+
+            const response = await fetch('/reports', {
+                signal,
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"title": trimmed})
+            });
+
+            await response.json().then(body => {
+
+                if (response.status !== 200) {
+                    throw Error(body.message)
+                }
+
+                if (body.express === "already exists") {
+                    reportInput.current.style.backgroundColor = "red";
+
+                } else {
+
+                    reportInput.current.style.backgroundColor = "white";
+                    setReports(reports.concat(body.express));
+                    setNewReport("")
+                }
+            });
+        }else{
+
             setNewReport("");
-            return;
+            reportInput.current.style.backgroundColor = "red";
         }
-
-        const response = await fetch('/reports', {
-            signal,
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": trimmed})
-        });
-
-        await response.json().then(body => {
-
-            if (response.status !== 200) {
-                throw Error(body.message)
-            }
-
-            if (body.express === "already exists") {
-                reportInput.current.style.backgroundColor = "red";
-
-            } else {
-
-                reportInput.current.style.backgroundColor = "white";
-                setReports(reports.concat(body.express));
-                setNewReport("")
-            }
-        });
     };
 
 

@@ -75,6 +75,8 @@ function File(props) {
                     }
                 })
                 .catch(err => console.log(err));
+        }else{
+            fieldTitleInput.current.style.backgroundColor = "red";
         }
     }
 
@@ -190,20 +192,23 @@ function File(props) {
     function handleNewBranch() {
 
         const newBranchTrimmed = newBranchTitle.trim();
-        if (newBranchTrimmed === "") {
-            return;
+
+        if (newBranchTrimmed !== "") {
+            postBranch(newBranchTrimmed).then(res => {
+
+                if (res.express === "already exists") {
+
+                    branchTitleInput.current.style.backgroundColor = "red";
+                } else {
+                    branchTitleInput.current.style.backgroundColor = "white";
+                    setFileTitles(fileTitles.concat(res.express));
+                    setNewBranchTitle("");
+                    setCurrentBranch(newBranchTrimmed);
+                }
+            });
+        }else {
+            branchTitleInput.current.style.backgroundColor = "red";
         }
-        postBranch(newBranchTrimmed).then(res => {
-
-            if (res.express === "already exists") {
-
-                branchTitleInput.current.style.backgroundColor = "red";
-            } else {
-                branchTitleInput.current.style.backgroundColor = "white";
-                setFileTitles(fileTitles.concat(res.express));
-                setNewBranchTitle("");
-            }
-        });
     }
 
     const postBranch = async (newBranchTrimmed) => {

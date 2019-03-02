@@ -87,34 +87,35 @@ function Files(props) {
     const handleNewFile = async () => {
 
         const fileTrimmed = newFile.trim();
-        if (fileTrimmed === "") {
+        if (fileTrimmed !== "") {
+
+            const response = await fetch('/files', {
+                signal,
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
+            });
+
+            await response.json().then(body => {
+
+                if (response.status !== 200) {
+                    throw Error(body.message)
+                }
+
+                if (body.express === "already exists") {
+
+                    fileInput.current.style.backgroundColor = "red";
+                } else {
+
+                    fileInput.current.style.backgroundColor = "white";
+                    setFiles(files.concat(body.express));
+                    setNewFile("");
+                }
+            });
+        } else {
             setNewFile("");
-            return;
+            fileInput.current.style.backgroundColor = "red";
         }
-
-        const response = await fetch('/files', {
-            signal,
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
-        });
-
-        await response.json().then(body => {
-
-            if (response.status !== 200) {
-                throw Error(body.message)
-            }
-
-            if (body.express === "already exists") {
-
-                fileInput.current.style.backgroundColor = "red";
-            } else {
-
-                fileInput.current.style.backgroundColor = "white";
-                setFiles(files.concat(body.express));
-                setNewFile("");
-            }
-        });
     };
 
 
