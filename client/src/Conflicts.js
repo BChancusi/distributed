@@ -12,7 +12,7 @@ function Conflicts(props) {
                     <label>
                         {" : " + value.value}
                     </label>
-                    <input type="checkbox" onChange={(event) =>
+                    <input type="checkbox" name={props.name} onChange={(event) =>
                         props.event(event, value)}/>
                 </Fragment>
             })

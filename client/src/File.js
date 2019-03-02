@@ -265,7 +265,7 @@ function File(props) {
 
     function handleResolveConflicts() {
 
-        let mergeResolved = [];
+        let resolved = [];
 
         let cloneMerge = [...mergeResolved];
 
@@ -280,7 +280,7 @@ function File(props) {
                     cloneMerge[j].branch_title = (document.getElementById("selectMerge").value);
                     delete cloneMerge[j].timestamp;
                     delete cloneMerge[j].id;
-                    mergeResolved.push(cloneMerge[j]);
+                    resolved.push(cloneMerge[j]);
                     boolean = true;
                     break;
                 }
@@ -302,10 +302,10 @@ function File(props) {
                 delete cloneFields[i].timestamp;
                 delete cloneFields[i].id;
 
-                mergeResolved.push(cloneFields[i]);
+                resolved.push(cloneFields[i]);
             }
         }
-        postMergeResolved(mergeResolved).then(() => {
+        postMergeResolved(resolved).then(() => {
             setMergeOld([]);
             setMergeNew([]);
             setMergeResolved([]);
@@ -324,38 +324,43 @@ function File(props) {
         return null;
     };
 
-    function handleCheckboxMerge(event, item) {
+    function handleCheckbox(event, item) {
 
-        if (event.target.checked === true) {
+        if(event.target.name === "merge"){
+            if (event.target.checked === true) {
 
-            let cloneResolved = [...mergeResolved];
+                let cloneResolved = [...mergeResolved];
 
-            cloneResolved.push(item);
-            setMergeResolved(cloneResolved)
+                cloneResolved.push(item);
+                setMergeResolved(cloneResolved)
 
-        } else {
+            } else {
 
-            setMergeResolved(mergeResolved.filter(filterItem => {
+                setMergeResolved(mergeResolved.filter(filterItem => {
 
-                return filterItem !== item
-            }))
-        }
-    }
+                    return filterItem !== item
+                }))
 
-    function handleCheckboxCommit(event, item) {
+            }
+            console.debug(mergeResolved)
 
-        if (event.target.checked === true) {
+        }else{
+            if (event.target.checked === true) {
 
-            let cloneResolved = [...commitResolved];
+                let cloneResolved = [...commitResolved];
 
-            cloneResolved.push(item);
-            setCommitResolved(cloneResolved)
+                cloneResolved.push(item);
+                setCommitResolved(cloneResolved)
 
-        } else {
+            } else {
 
-            setCommitResolved(commitResolved.filter(filterItem => {
-                return filterItem !== item
-            }))
+                setCommitResolved(commitResolved.filter(filterItem => {
+                    return filterItem !== item
+                }))
+            }
+
+            console.debug(commitResolved)
+
         }
     }
 
@@ -471,15 +476,14 @@ function File(props) {
         {mergeNew.length > 0 && mergeOld.length > 0 &&
         <div id="conflicts">
 
-            <Conflicts source={mergeNew} target={mergeOld}
-                       event={handleCheckboxMerge}/>
+            <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
             <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
 
         </div>
         }
         {commitNew.length > 0 && commitOld.length > 0 &&
         <div id="conflictsCommit">
-            <Conflicts source={commitNew} target={commitOld} event={handleCheckboxCommit}/>
+            <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
             <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
         </div>
         }
