@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Fragment} from 'react';
 
-function Reports(props) {
+function Reports(q) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");

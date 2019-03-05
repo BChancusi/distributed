@@ -1,10 +1,10 @@
 import './App.css';
 import React, {useState} from 'react';
 
-import Reports from "./Reports";
-import Login from "./Login";
-import Files from "./Files";
-import File from './File';
+import Reports from "./reports/Reports";
+import Login from "./login/Login";
+import Files from "./files/Files";
+import File from './file/File';
 
 function App() {
 

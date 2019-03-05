@@ -185,10 +185,11 @@ function Files(props) {
                 }
             </div>
             ) : <h2>No files created</h2>}
+
         {fileFields.length > 0 &&
             <div id="fields">
                 {
-                    fileFields.map(value => {
+                    fileFields.map( value => {
 
                         total += value.value;
 
