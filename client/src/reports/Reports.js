@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Fragment} from 'react';
 
-function Reports(q) {
+function Reports(props) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
@@ -29,7 +29,6 @@ function Reports(q) {
         if (response.status !== 200) {
             throw Error(body.message)
         }
-
         return body;
     };
 

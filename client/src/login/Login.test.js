@@ -86,7 +86,6 @@ describe('login faliure', () => {
     test('style set to red', async () => {
         fetchMock.mock('/users/signin?username=username&password=password', {express: 'details incorrect'});
 
-
         const {getByText, getByTestId} = render(<Login/>);
 
         const loginButton = getByText("Login");
@@ -105,6 +104,27 @@ describe('login faliure', () => {
         expect(passwordField.value).toBe("");
 
     });
+
+    // test('throws error if status !== to 200', async () => {
+    //     fetchMock.mock('/users/signin?username=username&password=password', 400);
+    //
+    //     const {container, getByText, getByTestId} = render(<Login/>);
+    //
+    //     const loginButton = getByText("Login");
+    //     const usernameField = getByTestId("username-text");
+    //     const passwordField = getByTestId("password-text");
+    //
+    //     fireEvent.change(usernameField, {target: {value: 'username'}});
+    //     fireEvent.change(passwordField, {target: {value: 'password'}});
+    //     fireEvent.click(loginButton);
+    //
+    //     await waitForElement(() => usernameField);
+    //     await waitForElement(() => passwordField);
+    //
+    //     // expect(handleNewReport).toThrow();
+    //
+    //
+    // });
 
     // test('invalid password length', () => {
     //     const { container, getByText, getByTestId } = render(<Login />);
