@@ -106,7 +106,7 @@ describe('login faliure', () => {
     });
 
     // test('throws error if status !== to 200', async () => {
-    //     fetchMock.mock('/users/signin?username=username&password=password', 400);
+    //     fetchMock.mock('/users/signin?username=username&password=password', 201);
     //
     //     const {container, getByText, getByTestId} = render(<Login/>);
     //
@@ -122,7 +122,6 @@ describe('login faliure', () => {
     //     await waitForElement(() => passwordField);
     //
     //     // expect(handleNewReport).toThrow();
-    //
     //
     // });
 

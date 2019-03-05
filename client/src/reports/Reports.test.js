@@ -138,6 +138,3 @@ test('open report event fired once with item', async () => {
     expect(mockSetReportOpen).toHaveBeenCalledTimes(1);
     expect(mockSetReportOpen).toHaveBeenCalledWith({"id": 112, "timestamp": "2019-02-28T21:25:08.000Z", "title": "Report 2019"});
 });
-
-
-

@@ -18,46 +18,34 @@ function Files(props) {
                 setFiles(res.express);
                 return res.express
             })
+            .then((resFiles) => {
 
-            .then(files => {
-
-                let keyArray = [];
-
-                Object.keys(files).map((key) => {
-                    keyArray.push(files[key].id);
-                    return null;
-                });
-
-                return keyArray
-
-            })
-            .then(keyArray => {
-
-                getFields(keyArray)
+                getFields(resFiles)
                     .then(res => setFileFields(res.express))
                     .catch(err => console.log(err));
-
+                //TODO catch and ignore aborted error
             })
             .catch(err => console.log(err));
-
 
         return () => {
             controller.abort();
         }
     }, [props.report.id]);
 
-    const getFields = async (keys) => {
+    const getFields = async (resFiles) => {
+//TODO change +master to query
 
         let idsURL = "";
 
-        for (let i = 0; i < keys.length; i++) {
-            if (i !== keys.length - 1) {
-                idsURL += keys[i] + "+"
-            } else if (keys.length - 1 === i) {
-                idsURL += keys[i]
-            }
+        resFiles.forEach(value =>{
+            idsURL += value.id + "+"
+        });
+
+        if(idsURL === ""){
+            idsURL += "+master";
+        }else{
+            idsURL += "master";
         }
-        idsURL += "+master";
 
         const response = await fetch(`/fields/file/${idsURL}`, {signal});
 
@@ -81,7 +69,6 @@ function Files(props) {
         }
 
         return body;
-
     };
 
     const handleNewFile = async () => {
