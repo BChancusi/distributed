@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Conflicts from "./Conflicts";
 
 function File(props) {
@@ -386,15 +386,16 @@ function File(props) {
     let total = 0;
 
     return <>
-        <br/>
         <div id={"options"}>
-            <label>New Branch Title
+            <ul>
+                <li>
+                <label>New Branch Title</label>
                 <input type="text" value={newBranchTitle} ref={branchTitleInput}
                        onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
-            </label>
-            <button onClick={handleNewBranch}>New Branch</button>
-            <br/>
-            <label>Current Branch
+                <button onClick={handleNewBranch}>New Branch</button>
+                </li>
+            <li>
+                <label>Current Branch</label>
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                     <>
                         {
@@ -408,45 +409,44 @@ function File(props) {
                         }
                     </>
                 </select>
-            </label>
+            </li>
+                {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
+                    <li>
+                        <button onClick={handleDeleteBranch}>Delete Current Branch</button>
+                        <select id="selectMerge">
+                            {
+                                fileTitles.map(value => {
 
-            {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
-                <>
-                    <button onClick={handleDeleteBranch}>Delete Current Branch</button>
-                    <select id="selectMerge">
-                        {
-                            fileTitles.map(value => {
+                                    if (value.branch_title === currentBranch) {
+                                        return null;
+                                    }
+                                    return <option key={value.id}
+                                                   value={value.branch_title}>{value.branch_title}</option>
+                                })
+                            }
+                        </select>
+                        <button onClick={handleMergeBranch}>Merge Branch target</button>
+                    </li>
+                    : null}
+                <li>
 
-                                if (value.branch_title === currentBranch) {
-                                    return null;
-                                }
-                                return <option key={value.id}
-                                               value={value.branch_title}>{value.branch_title}</option>
-                            })
-                        }
-                    </select>
-                    <button onClick={handleMergeBranch}>Merge Branch target</button>
-                </>
-                : null}
-
-            <br/>
-            <label>New Field Title
+                <label>New Field Title</label>
                 <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
                        value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
-            </label>
 
-            <label>New Field Amount
+                <label>New Field Amount            </label>
                 <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
                     setNewFieldValue(event.target.value);
                 }}/>
-            </label>
-            <button onClick={handleNewField}>New Field</button>
+                <button onClick={handleNewField}>New Field</button>
+                </li>
+
+            </ul>
         </div>
 
         {fields.length > 0 ? (
             <div id={"fields"}>
-                <button onClick={handlePutFields}>Save Changes</button>
-                <br/>
+                <ul>
                 {
                     fields.map((value, index) => {
 
@@ -454,21 +454,22 @@ function File(props) {
                             total += parseFloat(parseFloat(value.value).toFixed(2));
                         }
 
-                        return <Fragment key={value.id}>
-
+                        return <li key={value.id}>
                             <input type="text" value={value.title} name="title"
                                    onChange={(event) => handleFieldChange(event, index)}/>
                             <input type="number" value={value.value} name="value"
                                    onChange={(event) => handleFieldChange(event, index)}/>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                            <br/>
-
-                        </Fragment>
+                        </li>
                     })
                 }
-                <label>Total = {parseFloat(total).toFixed(2)}</label>
+                    </ul>
+
+                    <label>Total = {parseFloat(total).toFixed(2)}</label>
+                <button onClick={handlePutFields}>Save Changes</button>
             </div>
         ) : <h2>No fields created</h2>
+
         }
         {mergeNew.length > 0 && mergeOld.length > 0 &&
         <div id="conflicts">

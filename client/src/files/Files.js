@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 function Files(props) {
 
@@ -149,47 +149,47 @@ function Files(props) {
 
     return <>
         <div>
-            <label>New File Title
-                <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
-                       onChange={(event) => setNewFile(event.target.value)}/>
-            </label>
+            <label>New File Title</label>
+            <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
+                   onChange={(event) => setNewFile(event.target.value)}/>
             <button onClick={handleNewFile}>New File</button>
         </div>
         {files.length > 0 ? (
             <div id="files">
+                <ul>
+
                 {
                     files.map((value, index) => {
-                        return <Fragment key={value.id}>
-                            <br/>
+                        return <li key={value.id}>
                             <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
                             <button onClick={() => props.setFileOpen(value)}>Open file</button>
                             <button onClick={() => handlePutFile(document
                                 .getElementById(`textInput${value.id}`).value, index)}>Update title
                             </button>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                        </Fragment>
+                        </li>
                     })
                 }
+                </ul>
+
             </div>
             ) : <h2>No files created</h2>}
 
         {fileFields.length > 0 &&
             <div id="fields">
+                <ul>
                 {
                     fileFields.map( value => {
 
                         total += value.value;
 
-                        return <Fragment key={value.id}>
-                            <br/>
-                            <label>{value.title}</label>
-                            <br/>
-                            <label>{value.value}</label>
-                            <br/>
-
-                        </Fragment>
+                        return <ul key={value.id}>
+                            <li>{value.title}</li>
+                            <li>{value.value}</li>
+                        </ul>
                     })
                 }
+                </ul>
                 <label>Total = £{parseFloat(total).toFixed(2)}</label>
             </div>
         }

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, Fragment} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 function Reports(props) {
 
@@ -110,18 +110,17 @@ function Reports(props) {
 
     return <>
         <div>
-            <label>New Report Title
+            <label>New Report Title</label>
             <input type="text" value={newReport} ref={reportInput}
                    onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
-            </label>
             <button onClick={handleNewReport}>New report</button>
         </div>
         <div id={"reports"}>
+            <ul>
             {
                 reports.length > 0 ? (
                 reports.map((value, index) => {
-                    return <Fragment key={value.id}>
-                        <br/>
+                    return <li key={value.id}>
                         <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
                         <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                         <button
@@ -129,10 +128,11 @@ function Reports(props) {
                             report title
                         </button>
                         <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                    </Fragment>
+                    </li>
                 })
                 ) : <h2>No reports created</h2>
             }
+            </ul>
         </div>
     </>
 }
