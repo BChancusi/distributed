@@ -69,3 +69,6 @@ function App() {
 }
 
 export default App;
+
+//TODO add branch to current path
+//      Fix no X created displayed loading, can make a loading text

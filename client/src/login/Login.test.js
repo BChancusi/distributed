@@ -106,24 +106,36 @@ describe('login faliure', () => {
     });
 
     // test('throws error if status !== to 200', async () => {
-    //     fetchMock.mock('/users/signin?username=username&password=password', 201);
     //
-    //     const {container, getByText, getByTestId} = render(<Login/>);
+    //     fetchMock.mock('/users/signin?username=username&password=password', 400);
     //
-    //     const loginButton = getByText("Login");
-    //     const usernameField = getByTestId("username-text");
-    //     const passwordField = getByTestId("password-text");
+    //     expect.assertions(1);
+    //     try{
+    //         const {container, getByText, getByTestId} = render(<Login/>);
     //
-    //     fireEvent.change(usernameField, {target: {value: 'username'}});
-    //     fireEvent.change(passwordField, {target: {value: 'password'}});
-    //     fireEvent.click(loginButton);
+    //         const loginButton = getByText("Login");
+    //         const usernameField = getByTestId("username-text");
+    //         const passwordField = getByTestId("password-text");
     //
-    //     await waitForElement(() => usernameField);
-    //     await waitForElement(() => passwordField);
+    //         fireEvent.change(usernameField, {target: {value: 'username'}});
+    //         fireEvent.change(passwordField, {target: {value: 'password'}});
+    //         fireEvent.click(loginButton);
     //
-    //     // expect(handleNewReport).toThrow();
-    //
-    // });
+    //         await waitForElement(() => usernameField);
+    //         await waitForElement(() => passwordField);
+    //         await expect( container.prototype.handleLogin("aa")).rejects.toEqual({
+    //             error: 'User with 3 not found.',
+    //         });
+    //     }catch(e){
+    //         console.debug(e)
+    //         expect(e).toEqual({error: "a error"});
+    //     }
+
+
+
+        // expect(handleNewReport).toThrow();
+
+    });
 
     // test('invalid password length', () => {
     //     const { container, getByText, getByTestId } = render(<Login />);
