@@ -22,16 +22,16 @@ function Login(props) {
 
         }).then((result) => {
             if (result.express === "details correct") {
-                usernameInput.current.style.backgroundColor = "white";
-                passwordInput.current.style.backgroundColor = "white";
+                usernameInput.current.style.border = "";
+                passwordInput.current.style.border = "";
                 setUsername("");
                 setPassword("");
                 props.setLoggedIn("true");
                 localStorage.setItem("loggedIn", "true")
             } else {
                 setPassword("");
-                usernameInput.current.style.backgroundColor = "red";
-                passwordInput.current.style.backgroundColor = "red";
+                usernameInput.current.style.border = "2px solid red";
+                passwordInput.current.style.border = "2px solid red";
             }
         }, (error) => {
             throw Error(error)

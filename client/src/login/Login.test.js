@@ -77,7 +77,6 @@ describe('login faliure', () => {
         await waitForElement(() => usernameField);
         await waitForElement(() => passwordField);
 
-        expect(usernameField).toHaveStyle(`background-color: red`);
         expect(passwordField.value).toBe("");
         expect(fetchMock.done()).toBe(true);
     });
@@ -100,7 +99,7 @@ describe('login faliure', () => {
         await waitForElement(() => passwordField);
 
         expect(fetchMock.done()).toBe(true);
-        expect(usernameField).toHaveStyle(`background-color: red`);
+        expect(usernameField).toHaveStyle(`border : 2px solid red`);
         expect(passwordField.value).toBe("");
 
     });
@@ -135,7 +134,7 @@ describe('login faliure', () => {
 
         // expect(handleNewReport).toThrow();
 
-    });
+    // });
 
     // test('invalid password length', () => {
     //     const { container, getByText, getByTestId } = render(<Login />);
@@ -188,6 +187,7 @@ test('CSS turn red then white after failure/success', async () => {
     const usernameField = getByTestId("username-text");
     const passwordField = getByTestId("password-text");
 
+
     fireEvent.change(usernameField, {target: {value: 'username111'}});
     fireEvent.change(passwordField, {target: {value: 'password111'}});
     fireEvent.click(loginButton);
@@ -195,7 +195,7 @@ test('CSS turn red then white after failure/success', async () => {
     await waitForElement(() => usernameField);
     await waitForElement(() => passwordField);
 
-    expect(usernameField).toHaveStyle(`background-color: red`);
+    expect(usernameField).toHaveStyle(`border : 2px solid red`);
     expect(usernameField.value).toBe("username111");
     expect(passwordField.value).toBe("");
 
@@ -208,7 +208,7 @@ test('CSS turn red then white after failure/success', async () => {
     await waitForElement(() => usernameField);
     await waitForElement(() => passwordField);
 
-    expect(usernameField).toHaveStyle(`background-color: white`);
+    expect(usernameField).not.toHaveStyle(`border : 2px solid red`);
     expect(usernameField.value).toBe("");
     expect(passwordField.value).toBe("");
     expect(mockSetLoggedIn).toHaveBeenCalledTimes(1);

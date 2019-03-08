@@ -90,18 +90,18 @@ function Files(props) {
                 }
 
                 if (body.express === "already exists") {
-
-                    fileInput.current.style.backgroundColor = "red";
+                    console.debug(fileInput.current.style);
+                    fileInput.current.style.border = "2px solid red";
                 } else {
 
-                    fileInput.current.style.backgroundColor = "white";
+                    fileInput.current.style.border = "";
                     setFiles(files.concat(body.express));
                     setNewFile("");
                 }
             });
         } else {
             setNewFile("");
-            fileInput.current.style.backgroundColor = "red";
+            fileInput.current.style.border = "2px solid red";
         }
     };
 

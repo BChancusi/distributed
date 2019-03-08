@@ -67,9 +67,9 @@ function File(props) {
                 .then(res => {
 
                     if (res.express === "already exists") {
-                        fieldTitleInput.current.style.backgroundColor = "red";
+                        fieldTitleInput.current.style.border = "2px solid red";
                     } else {
-                        fieldTitleInput.current.style.backgroundColor = "white";
+                        fieldTitleInput.current.style.border = "";
                         setFields(fields.concat(res.express));
                         setNewFieldTitle("");
                         setNewFieldValue("");
@@ -77,7 +77,7 @@ function File(props) {
                 })
                 .catch(err => console.log(err));
         } else {
-            fieldTitleInput.current.style.backgroundColor = "red";
+            fieldTitleInput.current.style.border = "2px solid red";
         }
     }
 
@@ -199,16 +199,16 @@ function File(props) {
 
                 if (res.express === "already exists") {
 
-                    branchTitleInput.current.style.backgroundColor = "red";
+                    branchTitleInput.current.style.border = "2px solid red";
                 } else {
-                    branchTitleInput.current.style.backgroundColor = "white";
+                    branchTitleInput.current.style.border = "";
                     setFileTitles(fileTitles.concat(res.express));
                     setNewBranchTitle("");
                     setCurrentBranch(newBranchTrimmed);
                 }
             });
         } else {
-            branchTitleInput.current.style.backgroundColor = "red";
+            branchTitleInput.current.style.border = "2px solid red";
         }
     }
 

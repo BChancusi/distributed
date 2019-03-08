@@ -51,11 +51,11 @@ function Reports(props) {
                 }
 
                 if (body.express === "already exists") {
-                    reportInput.current.style.backgroundColor = "red";
+                    reportInput.current.style.border = "2px solid red";
 
                 } else {
 
-                    reportInput.current.style.backgroundColor = "white";
+                    reportInput.current.style.border = "";
                     setReports(reports.concat(body.express));
                     setNewReport("")
                 }
@@ -63,7 +63,7 @@ function Reports(props) {
         }else{
 
             setNewReport("");
-            reportInput.current.style.backgroundColor = "red";
+            reportInput.current.style.border = "2px solid red";
         }
     };
 
