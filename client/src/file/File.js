@@ -472,17 +472,17 @@ function File(props) {
 
         }
         {mergeNew.length > 0 && mergeOld.length > 0 &&
-        <div id="conflicts">
+        <div id="conflictsMerge">
 
             <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-            <button onClick={handleResolveConflicts}>Resolve Merge Conflicts</button>
+            <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
 
         </div>
         }
         {commitNew.length > 0 && commitOld.length > 0 &&
         <div id="conflictsCommit">
             <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
-            <button onClick={handleResolveConflictsCommit}>Resolve Commit Conflicts</button>
+            <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
         </div>
         }
     </>

@@ -33,8 +33,9 @@
 
 
 body {
-  background-color: darkslategrey;
+  background-color: dimgrey;
   color : white;
+  padding: 50px 200px;
 }
 ul {
  list-style-type: none;
