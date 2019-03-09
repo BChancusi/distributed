@@ -12,7 +12,7 @@ afterEach(fetchMock.reset);
 
 
 test('renders without crashing', () => {
-    const {container} = render(<Files file={
+    const {container} = render(<Files report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",

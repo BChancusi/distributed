@@ -386,7 +386,7 @@ function File(props) {
     let total = 0;
 
     return <>
-        <div id={"options"}>
+        <div id="options">
             <ul>
                 <li>
                 <label>New Branch Title</label>
@@ -397,7 +397,6 @@ function File(props) {
             <li>
                 <label>Current Branch</label>
                 <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
-                    <>
                         {
                             Array.isArray(fileTitles) ?
                                 fileTitles.map(value => {
@@ -407,12 +406,11 @@ function File(props) {
                                 })
                                 : null
                         }
-                    </>
                 </select>
-            </li>
                 {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
-                    <li>
+                    <>
                         <button onClick={handleDeleteBranch}>Delete Current Branch</button>
+                        <label>Merge Branch</label>
                         <select id="selectMerge">
                             {
                                 fileTitles.map(value => {
@@ -426,8 +424,11 @@ function File(props) {
                             }
                         </select>
                         <button onClick={handleMergeBranch}>Merge Branch target</button>
-                    </li>
+                    </>
                     : null}
+
+            </li>
+
                 <li>
 
                 <label>New Field Title</label>
@@ -445,7 +446,7 @@ function File(props) {
         </div>
 
         {fields.length > 0 ? (
-            <div id={"fields"}>
+            <div id="fields">
                 <ul>
                 {
                     fields.map((value, index) => {

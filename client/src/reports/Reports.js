@@ -60,7 +60,7 @@ function Reports(props) {
                     setNewReport("")
                 }
             });
-        }else{
+        } else {
 
             setNewReport("");
             reportInput.current.style.border = "2px solid red";
@@ -115,24 +115,26 @@ function Reports(props) {
                    onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
             <button onClick={handleNewReport}>New report</button>
         </div>
-        <div id={"reports"}>
-            <ul>
+        <div id="reports">
             {
                 reports.length > 0 ? (
-                reports.map((value, index) => {
-                    return <li key={value.id}>
-                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
-                        <button
-                            onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
-                            report title
-                        </button>
-                        <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                    </li>
-                })
+                    <ul>
+                        {
+                            reports.map((value, index) => {
+                                return <li key={value.id}>
+                                    <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                    <button onClick={() => props.setReportOpen(value)}>Open Report</button>
+                                    <button
+                                        onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
+                                        report title
+                                    </button>
+                                    <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                                </li>
+                            })
+                        }
+                    </ul>
                 ) : <h2>No reports created</h2>
             }
-            </ul>
         </div>
     </>
 }

@@ -31,16 +31,3 @@
   }
 }
 
-
-body {
-  background-color: dimgrey;
-  color : white;
-  padding: 50px 200px;
-}
-ul {
- list-style-type: none;
-}
-label {
-  align-items : center;
-  padding: 0 50px;
-}
