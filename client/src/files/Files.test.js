@@ -156,6 +156,89 @@ test('text when no reports in document', async () => {
     expect(getByText("No files created")).toBeInTheDocument();
 });
 
+test('new file inserted into document with empty new field', async () => {
+
+    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+        express: []
+    }).get('/fields/file/+master', {express: []})
+        .post("/files", {express: {branch_title: "master", id: 179, report_id: 115,
+                timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}});
+
+    const {getByText,getByPlaceholderText} = render(<Files report={
+        {
+            id: 115,
+            timestamp: "2019-03-05T05:12:22.000Z",
+            title: "New report"
+        }
+    }/>);
+    await waitForElement(() => getByText("New File"));
+
+    fireEvent.change(getByPlaceholderText("E.g - Contract one"), {target: {value: 'Contract two 2017'}});
+    fireEvent.click(getByText("New File"));
+
+    await waitForElement(() => getByText("Open File"));
+
+    expect(getByText("Open File")).toBeInTheDocument();
+    expect(getByPlaceholderText("E.g - Contract one").value).toBe("");
+
+});
+
+test('duplicate file error', async () => {
+
+    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+        express: [{branch_title: "master", id: 179, report_id: 115,
+            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
+    }).get('/fields/file/179+master', {express: []}).post("/files", {express: "already exists"});
+
+    const {getByText,getByPlaceholderText} = render(<Files report={
+        {
+            id: 115,
+            timestamp: "2019-03-05T05:12:22.000Z",
+            title: "New report"
+        }
+    }/>);
+    await waitForElement(() => getByText("Open File"));
+
+    fireEvent.change(getByPlaceholderText("E.g - Contract one"), {target: {value: 'Contract one'}});
+    fireEvent.click(getByText("New File"));
+
+    await wait();
+
+    expect(getByPlaceholderText("E.g - Contract one")).toHaveStyle(`border : 2px solid red`);
+
+});
+
+test('open file event fired once with item', async () => {
+
+    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+        express: [{branch_title: "master", id: 179, report_id: 115,
+            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
+    }).get('/fields/file/179+master', {express: []});
+
+    const mockSetFileOpen = jest.fn();
+
+    const {getByText,getByPlaceholderText} = render(<Files setFileOpen={mockSetFileOpen} report={
+        {
+            id: 115,
+            timestamp: "2019-03-05T05:12:22.000Z",
+            title: "New report"
+        }
+    }/>);
+
+    await waitForElement(() => getByText("Open File"));
+
+    fireEvent.click(getByText("Open File"));
+
+    expect(mockSetFileOpen).toHaveBeenCalledTimes(1);
+    expect(mockSetFileOpen).toHaveBeenCalledWith(
+        {id: 179, report_id: 115, branch_title: "master", title: "Contract one", timestamp: "2019-03-09T00:26:46.000Z"}
+    );
+});
+
+//TODO Delete file test
+//TODO Put file test
+
+
 //
 // test('trims empty string and resets field', async () => {
 //
@@ -170,33 +253,8 @@ test('text when no reports in document', async () => {
 //     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
 // });
 //
-// test('new created report in document', async () => {
-//     fetchMock.get('/reports', {express: []})
-//         .post('/reports', {express: [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
-//
-//     const {getByPlaceholderText, getByText} = render(<Reports/>);
-//
-//     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
-//     fireEvent.click(getByText("New report"));
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     expect(getByText("Open Report")).toBeInTheDocument();
-// });
-//
-// test('new report field clears with after fetch', async () => {
-//     fetchMock.get('/reports', {express: []})
-//         .post('/reports', {express: [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
-//
-//     const {getByPlaceholderText, getByText} = render(<Reports/>);
-//
-//     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
-//     fireEvent.click(getByText("New report"));
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
-// });
+
+
 //
 // test('PUT field title fetch options', async () => {
 //

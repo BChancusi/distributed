@@ -90,7 +90,6 @@ function Files(props) {
                 }
 
                 if (body.express === "already exists") {
-                    console.debug(fileInput.current.style);
                     fileInput.current.style.border = "2px solid red";
                 } else {
 
@@ -162,9 +161,9 @@ function Files(props) {
                     files.map((value, index) => {
                         return <li key={value.id}>
                             <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                            <button onClick={() => props.setFileOpen(value)}>Open file</button>
+                            <button onClick={() => props.setFileOpen(value)}>Open File</button>
                             <button onClick={() => handlePutFile(document
-                                .getElementById(`textInput${value.id}`).value, index)}>Update title
+                                .getElementById(`textInput${value.id}`).value, index)}>Update Title
                             </button>
                             <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
                         </li>
