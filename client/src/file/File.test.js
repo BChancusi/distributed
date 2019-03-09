@@ -20,3 +20,26 @@ test('renders without crashing', () => {
                                          title: "New report"}}
     />);
 });
+
+test('header path correct', async () => {
+
+    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+        express: [{branch_title: "master", id: 179, report_id: 115,
+            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
+    }).get('/fields/file/179+master', {express: []});
+
+    //TODO correct fetch mock
+
+    const {container, getByText} = render(<File file={
+        {id: 179, report_id: 115, branch_title: "master", title: "Contract one", timestamp: "2019-03-09T00:26:46.000Z"}
+    }
+                                     report={{id: 115,
+                                         timestamp: "2019-03-05T05:12:22.000Z",
+                                         title: "New report"}}
+    />);
+
+    expect(getByText("New report\\Contract one\\master")).toBeInTheDocument();
+
+});
+
+//TODO test branch header changes

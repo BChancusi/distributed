@@ -208,6 +208,25 @@ test('duplicate file error', async () => {
 
 });
 
+test('header matches opened file', async () => {
+
+    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+        express: [{branch_title: "master", id: 179, report_id: 115,
+            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
+    }).get('/fields/file/179+master', {express: []});
+
+    const {getByText} = render(<Files report={
+        {
+            id: 115,
+            timestamp: "2019-03-05T05:12:22.000Z",
+            title: "New report"
+        }
+    }/>);
+
+    expect(getByText("New report")).toBeInTheDocument();
+
+});
+
 test('open file event fired once with item', async () => {
 
     fetchMock.get('/files/branch?report_id=115&branch_title=master', {
