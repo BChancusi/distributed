@@ -12,7 +12,7 @@ afterEach(fetchMock.reset);
 
 
 test('renders without crashing', () => {
-    const {container} = render(<Files report={
+    const {container} = render(<Files file={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -237,84 +237,3 @@ test('open file event fired once with item', async () => {
 
 //TODO Delete file test
 //TODO Put file test
-
-
-//
-// test('trims empty string and resets field', async () => {
-//
-//     const {getByPlaceholderText, getByText} = render(<Reports/>);
-//     await waitForElement(() => getByPlaceholderText("E.g - Report 2019"));
-//
-//     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: '     '}});
-//     fireEvent.click(getByText("New report"));
-//
-//     await waitForElement(() => getByPlaceholderText("E.g - Report 2019"));
-//
-//     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
-// });
-//
-
-
-//
-// test('PUT field title fetch options', async () => {
-//
-//     fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
-//         .put('/reports/112', 200);
-//
-//
-//     const {getByText, getByDisplayValue} = render(<Reports/>);
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     fireEvent.change(getByDisplayValue("Report 2019"), {target: {value: 'Report 2017'}});
-//
-//     expect(getByDisplayValue("Report 2017").value).toBe("Report 2017");
-//
-//     fireEvent.click(getByText("Update report title"));
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     expect(fetchMock.lastUrl()).toBe("/reports/112")
-//     expect(fetchMock.lastOptions().body).toBe("{\"title\":\"Report 2017\"}")
-// });
-//
-// test('report deleted from document', async () => {
-//
-//     fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
-//         .delete('/reports/112', 200);
-//
-//
-//     const {getByText, getByDisplayValue, queryByText} = render(<Reports/>);
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     expect(getByDisplayValue("Report 2019")).toBeInTheDocument();
-//
-//     fireEvent.click(getByText("Delete"));
-//
-//     await waitForElement(() => getByText("No reports created"));
-//
-//     expect(queryByText("Report 2019")).not.toBeInTheDocument();
-//     expect(fetchMock.lastUrl()).toBe("/reports/112")
-// });
-//
-// test('open report event fired once with item', async () => {
-//
-//     fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]});
-//
-//     const mockSetReportOpen = jest.fn();
-//     const {getByText, getByDisplayValue, queryByText} = render(<Reports setReportOpen={mockSetReportOpen}/>);
-//
-//     await waitForElement(() => getByText("Open Report"));
-//
-//     expect(getByDisplayValue("Report 2019")).toBeInTheDocument();
-//
-//     fireEvent.click(getByText("Open Report"));
-//
-//     expect(mockSetReportOpen).toHaveBeenCalledTimes(1);
-//     expect(mockSetReportOpen).toHaveBeenCalledWith({
-//         "id": 112,
-//         "timestamp": "2019-02-28T21:25:08.000Z",
-//         "title": "Report 2019"
-//     });
-// });
