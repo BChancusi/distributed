@@ -51,7 +51,7 @@ function Login(props) {
         <>
             <header>
                 <h1 align="CENTER">Distributed Budgeting App</h1>
-                <h2>Login</h2>
+                <h2>Login Page</h2>
             </header>
             <div id="login">
                 <form onSubmit={handleLogin}>

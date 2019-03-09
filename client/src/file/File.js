@@ -382,7 +382,6 @@ function File(props) {
 
         return null;
     };
-
     let total = 0;
     return <>
 
