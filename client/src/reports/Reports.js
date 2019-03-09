@@ -109,6 +109,16 @@ function Reports(props) {
     };
 
     return <>
+        <header>
+            <h1 align="CENTER">Reports</h1>
+        </header>
+        <nav>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
+            }}>Logout
+            </button>
+        </nav>
         <div>
             <label>New Report Title</label>
             <input type="text" value={newReport} ref={reportInput}

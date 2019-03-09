@@ -48,19 +48,26 @@ function Login(props) {
     }
 
     return (
-        <div id="login">
-            <form onSubmit={handleLogin}>
-                <label>Username
-                    <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
-                           autoComplete="username" data-testid="username-text"/>
-                </label>
-                <label>Password
-                    <input value={password} onChange={handleChange} type="password" name="password" ref={passwordInput}
-                           autoComplete="current-password" data-testid="password-text"/>
-                </label>
-                <input type="submit" value="Login"/>
-            </form>
-        </div>
+        <>
+            <header>
+                <h1 align="CENTER">Distributed Budgeting App</h1>
+                <h2>Login</h2>
+            </header>
+            <div id="login">
+                <form onSubmit={handleLogin}>
+                    <label>Username
+                        <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
+                               autoComplete="username" data-testid="username-text"/>
+                    </label>
+                    <label>Password
+                        <input value={password} onChange={handleChange} type="password" name="password"
+                               ref={passwordInput}
+                               autoComplete="current-password" data-testid="password-text"/>
+                    </label>
+                    <input type="submit" value="Login"/>
+                </form>
+            </div>
+        </>
     )
 }
 

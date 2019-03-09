@@ -326,7 +326,7 @@ function File(props) {
 
     function handleCheckbox(event, item) {
 
-        if(event.target.name === "merge"){
+        if (event.target.name === "merge") {
             if (event.target.checked === true) {
 
                 let cloneResolved = [...mergeResolved];
@@ -343,7 +343,7 @@ function File(props) {
 
             }
 
-        }else{
+        } else {
             if (event.target.checked === true) {
 
                 let cloneResolved = [...commitResolved];
@@ -384,19 +384,31 @@ function File(props) {
     };
 
     let total = 0;
-
     return <>
+
+        <header>
+            <h1 align="CENTER">{props.report.title + "\\" + props.file.title + "\\" + currentBranch}</h1>
+        </header>
+        <nav>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
+            }}>Logout
+            </button>
+            <button onClick={() => props.setFileOpen("")}>Return</button>
+        </nav>
+
         <div id="options">
             <ul>
                 <li>
-                <label>New Branch Title</label>
-                <input type="text" value={newBranchTitle} ref={branchTitleInput}
-                       onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
-                <button onClick={handleNewBranch}>New Branch</button>
+                    <label>New Branch Title</label>
+                    <input type="text" value={newBranchTitle} ref={branchTitleInput}
+                           onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
+                    <button onClick={handleNewBranch}>New Branch</button>
                 </li>
-            <li>
-                <label>Current Branch</label>
-                <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
+                <li>
+                    <label>Current Branch</label>
+                    <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                         {
                             Array.isArray(fileTitles) ?
                                 fileTitles.map(value => {
@@ -406,40 +418,40 @@ function File(props) {
                                 })
                                 : null
                         }
-                </select>
-                {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
-                    <>
-                        <button onClick={handleDeleteBranch}>Delete Current Branch</button>
-                        <label>Merge Branch</label>
-                        <select id="selectMerge">
-                            {
-                                fileTitles.map(value => {
+                    </select>
+                    {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
+                        <>
+                            <button onClick={handleDeleteBranch}>Delete Current Branch</button>
+                            <label>Merge Branch</label>
+                            <select id="selectMerge">
+                                {
+                                    fileTitles.map(value => {
 
-                                    if (value.branch_title === currentBranch) {
-                                        return null;
-                                    }
-                                    return <option key={value.id}
-                                                   value={value.branch_title}>{value.branch_title}</option>
-                                })
-                            }
-                        </select>
-                        <button onClick={handleMergeBranch}>Merge Branch target</button>
-                    </>
-                    : null}
+                                        if (value.branch_title === currentBranch) {
+                                            return null;
+                                        }
+                                        return <option key={value.id}
+                                                       value={value.branch_title}>{value.branch_title}</option>
+                                    })
+                                }
+                            </select>
+                            <button onClick={handleMergeBranch}>Merge Branch target</button>
+                        </>
+                        : null}
 
-            </li>
+                </li>
 
                 <li>
 
-                <label>New Field Title</label>
-                <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
-                       value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+                    <label>New Field Title</label>
+                    <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
+                           value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
-                <label>New Field Amount            </label>
-                <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
-                    setNewFieldValue(event.target.value);
-                }}/>
-                <button onClick={handleNewField}>New Field</button>
+                    <label>New Field Amount </label>
+                    <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
+                        setNewFieldValue(event.target.value);
+                    }}/>
+                    <button onClick={handleNewField}>New Field</button>
                 </li>
 
             </ul>
@@ -448,25 +460,25 @@ function File(props) {
         {fields.length > 0 ? (
             <div id="fields">
                 <ul>
-                {
-                    fields.map((value, index) => {
+                    {
+                        fields.map((value, index) => {
 
-                        if (!isNaN(parseFloat(value.value))) {
-                            total += parseFloat(parseFloat(value.value).toFixed(2));
-                        }
+                            if (!isNaN(parseFloat(value.value))) {
+                                total += parseFloat(parseFloat(value.value).toFixed(2));
+                            }
 
-                        return <li key={value.id}>
-                            <input type="text" value={value.title} name="title"
-                                   onChange={(event) => handleFieldChange(event, index)}/>
-                            <input type="number" value={value.value} name="value"
-                                   onChange={(event) => handleFieldChange(event, index)}/>
-                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                        </li>
-                    })
-                }
-                    </ul>
+                            return <li key={value.id}>
+                                <input type="text" value={value.title} name="title"
+                                       onChange={(event) => handleFieldChange(event, index)}/>
+                                <input type="number" value={value.value} name="value"
+                                       onChange={(event) => handleFieldChange(event, index)}/>
+                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                            </li>
+                        })
+                    }
+                </ul>
 
-                    <label>Total = {parseFloat(total).toFixed(2)}</label>
+                <label>Total = {parseFloat(total).toFixed(2)}</label>
                 <button onClick={handlePutFields}>Save Changes</button>
             </div>
         ) : <h2>No fields created</h2>

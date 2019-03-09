@@ -37,13 +37,13 @@ function Files(props) {
 
         let idsURL = "";
 
-        resFiles.forEach(value =>{
+        resFiles.forEach(value => {
             idsURL += value.id + "+"
         });
 
-        if(idsURL === ""){
+        if (idsURL === "") {
             idsURL += "+master";
-        }else{
+        } else {
             idsURL += "master";
         }
 
@@ -147,6 +147,18 @@ function Files(props) {
     let total = 0.00;
 
     return <>
+        <header>
+            <h1 align="CENTER">{props.report.title}</h1>
+        </header>
+        <nav>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
+            }}>Logout
+            </button>
+            <button onClick={() => props.setReportOpen("")}>Return</button>
+        </nav>
+
         <div>
             <label>New File Title</label>
             <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
@@ -157,28 +169,28 @@ function Files(props) {
             <div id="files">
                 <ul>
 
-                {
-                    files.map((value, index) => {
-                        return <li key={value.id}>
-                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                            <button onClick={() => props.setFileOpen(value)}>Open File</button>
-                            <button onClick={() => handlePutFile(document
-                                .getElementById(`textInput${value.id}`).value, index)}>Update Title
-                            </button>
-                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                        </li>
-                    })
-                }
+                    {
+                        files.map((value, index) => {
+                            return <li key={value.id}>
+                                <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                <button onClick={() => props.setFileOpen(value)}>Open File</button>
+                                <button onClick={() => handlePutFile(document
+                                    .getElementById(`textInput${value.id}`).value, index)}>Update Title
+                                </button>
+                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                            </li>
+                        })
+                    }
                 </ul>
 
             </div>
-            ) : <h2>No files created</h2>}
+        ) : <h2>No files created</h2>}
 
         {fileFields.length > 0 &&
-            <div id="fields">
-                <ul>
+        <div id="fields">
+            <ul>
                 {
-                    fileFields.map( value => {
+                    fileFields.map(value => {
 
                         total += value.value;
 
@@ -188,9 +200,9 @@ function Files(props) {
                         </ul>
                     })
                 }
-                </ul>
-                <label>Total = £{parseFloat(total).toFixed(2)}</label>
-            </div>
+            </ul>
+            <label>Total = £{parseFloat(total).toFixed(2)}</label>
+        </div>
         }
     </>
 }
