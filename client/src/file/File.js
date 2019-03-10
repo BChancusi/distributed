@@ -62,7 +62,7 @@ function File(props) {
     };
 
     function handleNewField() {
-        if (newFieldValue.trim() !== "") {
+        if (newFieldTitle.trim() !== "") {
             postField()
                 .then(res => {
 
@@ -89,7 +89,7 @@ function File(props) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 "title": newFieldTitle.trim(),
-                "value": newFieldValue.trim(),
+                "value": newFieldValue !== "" ? newFieldValue : 0,
                 "file_id": props.file.id,
                 "branch_title": currentBranch
             })
