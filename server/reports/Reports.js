@@ -39,10 +39,41 @@ router.route('/')
 router.route('/:reportId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error) {
+        pool.query(`SELECT id FROM files WHERE report_id = ?`, [req.params.reportId], function (error, results) {
             if (error) throw error;
 
-            res.sendStatus(200)
+            if(results.length > 0){
+
+                const ids = results.map( value =>{
+                    return value.id;
+                });
+
+                pool.query(`DELETE FROM fields WHERE file_id IN (?)`, [ids], function (error) {
+                    if (error) throw error;
+
+                    pool.query(`DELETE FROM files WHERE report_id = ?`, [req.params.reportId], function (error) {
+                        if (error) throw error;
+
+                        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error) {
+                            if (error) throw error;
+
+                            res.sendStatus(200)
+                        });
+
+                    });
+                });
+            }else{
+                pool.query(`DELETE FROM files WHERE report_id = ?`, [req.params.reportId], function (error) {
+                    if (error) throw error;
+
+                    pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error) {
+                        if (error) throw error;
+
+                        res.sendStatus(200)
+                    });
+
+                });
+            }
         });
     })
     .put((req, res) => {
