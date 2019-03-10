@@ -28,8 +28,6 @@ function App() {
 
 export default App;
 
-//TODO add branch to current path
-//      Fix no X created displayed loading, can make a loading text
-//      Nav bar
+//TODO Fix no X created displayed loading, can make a loading text
 //      CSS load first to prevent jaring white screen
 //      Delete not functioning correctly, pos because of foreign keys
