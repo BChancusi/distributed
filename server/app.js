@@ -1,12 +1,11 @@
 const express = require('express');
-const reports = require('./reports');
-const files = require('./files');
-const fields = require('./fields');
-const users = require('./users');
+const reports = require('./reports/Reports');
+const files = require('./files/Files');
+const fields = require('./fields/Fields');
+const users = require('./users/Users');
 const path = require('path');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
 const app = express();
 
 app.use(express.json()); // for parsing application/json

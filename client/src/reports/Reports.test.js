@@ -28,6 +28,7 @@ test('reports in document from fetch', async () => {
     expect(getByDisplayValue("Report 2")).toBeInTheDocument();
 });
 
+
 test('text when no reports in document', async () => {
 
     fetchMock.get('/API/reports', {express: []});
