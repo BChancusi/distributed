@@ -11,7 +11,7 @@ function Login(props) {
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        fetch(`/users/signin?username=${username}&password=${password}`, {
+        fetch(`/API/users/signin?username=${username}&password=${password}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         }).then(res => {

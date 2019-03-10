@@ -47,7 +47,7 @@ function Files(props) {
             idsURL += "master";
         }
 
-        const response = await fetch(`/fields/file/${idsURL}`, {signal});
+        const response = await fetch(`/API/fields/file/${idsURL}`, {signal});
 
         const body = await response.json();
 
@@ -61,7 +61,7 @@ function Files(props) {
 
     const getFiles = async (reportId) => {
 
-        const response = await fetch(encodeURI(`/files/branch?report_id=${reportId}&branch_title=master`), {signal});
+        const response = await fetch(encodeURI(`/API/files/branch?report_id=${reportId}&branch_title=master`), {signal});
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -76,7 +76,7 @@ function Files(props) {
         const fileTrimmed = newFile.trim();
         if (fileTrimmed !== "") {
 
-            const response = await fetch('/files', {
+            const response = await fetch('/API/files', {
                 signal,
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -107,7 +107,7 @@ function Files(props) {
 
     const handleDeleteFile = async (fileId, key) => {
 
-        await fetch(`/files/${fileId}`, {
+        await fetch(`/API/files/${fileId}`, {
             signal,
             method: 'DELETE',
         }).then(response => {
@@ -135,7 +135,7 @@ function Files(props) {
 
         cloneFiles[key].title = value;
 
-        await fetch(`/files/${cloneFiles[key].id}`, {
+        await fetch(`/API/files/${cloneFiles[key].id}`, {
             signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},

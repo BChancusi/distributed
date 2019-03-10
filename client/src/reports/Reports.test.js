@@ -17,7 +17,7 @@ test('renders without crashing', () => {
 
 test('reports in document from fetch', async () => {
 
-    fetchMock.get('/reports', {express: [{id: 112, title: "Report 1", timestamp: "2019-02-28T21:25:08.000Z"},
+    fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 1", timestamp: "2019-02-28T21:25:08.000Z"},
                                         {id: 113, title: "Report 2", timestamp: "2019-03-05T02:23:58.000Z"} ]});
 
     const {getByDisplayValue} = render(<Reports/>);
@@ -30,7 +30,7 @@ test('reports in document from fetch', async () => {
 
 test('text when no reports in document', async () => {
 
-    fetchMock.get('/reports', {express: []});
+    fetchMock.get('/API/reports', {express: []});
 
     const {getByText} = render(<Reports/>);
     await waitForElement(() => getByText("No reports created"));
@@ -53,8 +53,8 @@ test('trims empty string and resets field', async () => {
 });
 
 test('new created report in document', async () => {
-    fetchMock.get('/reports', {express: []})
-        .post('/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
+    fetchMock.get('/API/reports', {express: []})
+        .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
     const {getByPlaceholderText, getByText} = render(<Reports/>);
 
@@ -67,8 +67,9 @@ test('new created report in document', async () => {
 });
 
 test('new report field clears with after fetch', async () => {
-    fetchMock.get('/reports', {express: []})
-        .post('/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
+    //TODO see why fetch does not match
+    fetchMock.get('/API/reports', {express: []})
+        .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
     const {getByPlaceholderText, getByText} = render(<Reports/>);
 
@@ -82,8 +83,8 @@ test('new report field clears with after fetch', async () => {
 
 test('PUT field title fetch options', async () => {
 
-    fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
-        .put('/reports/112', 200);
+    fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
+        .put('/API/reports/112', 200);
 
 
     const {getByText, getByDisplayValue} = render(<Reports/>);
@@ -98,14 +99,14 @@ test('PUT field title fetch options', async () => {
 
     await waitForElement(() => getByText("Open Report"));
 
-    expect(fetchMock.lastUrl()).toBe("/reports/112")
+    expect(fetchMock.lastUrl()).toBe("/API/reports/112")
     expect(fetchMock.lastOptions().body).toBe("{\"title\":\"Report 2017\"}")
 });
 
 test('report deleted from document', async () => {
 
-    fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
-        .delete('/reports/112', 200);
+    fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
+        .delete('/API/reports/112', 200);
 
 
     const {getByText, getByDisplayValue, queryByText} = render(<Reports/>);
@@ -119,12 +120,12 @@ test('report deleted from document', async () => {
     await waitForElement(() => getByText("No reports created"));
 
     expect(queryByText("Report 2019")).not.toBeInTheDocument();
-    expect(fetchMock.lastUrl()).toBe("/reports/112")
+    expect(fetchMock.lastUrl()).toBe("/API/reports/112")
 });
 
 test('open report event fired once with item', async () => {
 
-    fetchMock.get('/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]});
+    fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]});
 
     const mockSetReportOpen = jest.fn();
     const {getByText, getByDisplayValue, queryByText} = render(<Reports setReportOpen={mockSetReportOpen}/>);

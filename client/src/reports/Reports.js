@@ -23,7 +23,7 @@ function Reports(props) {
 
     const getReports = async () => {
 
-        const response = await fetch('/reports', {signal});
+        const response = await fetch('/API/reports', {signal});
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -37,7 +37,7 @@ function Reports(props) {
         const trimmed = newReport.trim();
         if (trimmed !== "") {
 
-            const response = await fetch('/reports', {
+            const response = await fetch('/API/reports', {
                 signal,
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -70,7 +70,7 @@ function Reports(props) {
 
     const handleDeleteReport = async (reportId, key) => {
 
-        await fetch(`/reports/${reportId}`, {
+        await fetch(`/API/reports/${reportId}`, {
             signal,
             method: 'DELETE',
         }).then(response => {
@@ -93,7 +93,7 @@ function Reports(props) {
 
         cloneReports[key].title = value;
 
-        await fetch(`/reports/${cloneReports[key].id}`, {
+        await fetch(`/API/reports/${cloneReports[key].id}`, {
             signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},

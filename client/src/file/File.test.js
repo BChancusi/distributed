@@ -23,10 +23,10 @@ test('renders without crashing', () => {
 
 test('header path correct', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [{branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
-    }).get('/fields/file/179+master', {express: []});
+    }).get('/API/fields/file/179+master', {express: []});
 
     //TODO correct fetch mock
 

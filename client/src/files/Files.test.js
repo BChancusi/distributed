@@ -24,7 +24,7 @@ test('renders without crashing', () => {
 
 test('files in document from fetch', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [
             {
                 branch_title: "master",
@@ -40,7 +40,7 @@ test('files in document from fetch', async () => {
                 timestamp: "2019-03-05T05:13:05.000Z",
                 title: "Contract two"
             }]
-    }).get('/fields/file/175+176+master', {express: []});
+    }).get('/API/fields/file/175+176+master', {express: []});
 
     const {getByDisplayValue} = render(<Files report={
         {
@@ -59,7 +59,7 @@ test('files in document from fetch', async () => {
 
 test('field from files in document from fetch', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [
             {
                 branch_title: "master",
@@ -75,7 +75,7 @@ test('field from files in document from fetch', async () => {
                 timestamp: "2019-03-05T05:13:05.000Z",
                 title: "Contract two"
             }]
-    }).get('/fields/file/175+176+master', {
+    }).get('/API/fields/file/175+176+master', {
         express: [{
             branch_title: "master", file_Id: 175, id: 910,
             timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
@@ -109,7 +109,7 @@ test('field from files in document from fetch', async () => {
 
 test('Total amount in document with 2 decimal point', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [
             {
                 branch_title: "master",
@@ -125,7 +125,7 @@ test('Total amount in document with 2 decimal point', async () => {
                 timestamp: "2019-03-05T05:13:05.000Z",
                 title: "Contract two"
             }]
-    }).get('/fields/file/175+176+master', {
+    }).get('/API/fields/file/175+176+master', {
         express: [{
             branch_title: "master", file_Id: 175, id: 910,
             timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
@@ -152,9 +152,9 @@ test('Total amount in document with 2 decimal point', async () => {
 
 test('text when no reports in document', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: []
-    }).get('/fields/file/+master', {express: []});
+    }).get('/API/fields/file/+master', {express: []});
 
     const {getByText} = render(<Files report={
         {
@@ -170,10 +170,10 @@ test('text when no reports in document', async () => {
 
 test('new file inserted into document with empty new field', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: []
-    }).get('/fields/file/+master', {express: []})
-        .post("/files", {
+    }).get('/API/fields/file/+master', {express: []})
+        .post("/API/files", {
             express: {
                 branch_title: "master", id: 179, report_id: 115,
                 timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
@@ -201,12 +201,12 @@ test('new file inserted into document with empty new field', async () => {
 
 test('duplicate file error', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [{
             branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
         }]
-    }).get('/fields/file/179+master', {express: []}).post("/files", {express: "already exists"});
+    }).get('/API/fields/file/179+master', {express: []}).post("/API/files", {express: "already exists"});
 
     const {getByText, getByPlaceholderText} = render(<Files report={
         {
@@ -228,12 +228,12 @@ test('duplicate file error', async () => {
 
 test('header matches opened file', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [{
             branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
         }]
-    }).get('/fields/file/179+master', {express: []});
+    }).get('/API/fields/file/179+master', {express: []});
 
     const {getByText} = render(<Files report={
         {
@@ -249,12 +249,12 @@ test('header matches opened file', async () => {
 
 test('open file event fired once with item', async () => {
 
-    fetchMock.get('/files/branch?report_id=115&branch_title=master', {
+    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
         express: [{
             branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
         }]
-    }).get('/fields/file/179+master', {express: []});
+    }).get('/API/fields/file/179+master', {express: []});
 
     const mockSetFileOpen = jest.fn();
 
@@ -279,7 +279,7 @@ test('open file event fired once with item', async () => {
 test('file deleted from document', async () => {
 
     fetchMock
-        .get('/files/branch?report_id=115&branch_title=master', {
+        .get('/API/files/branch?report_id=115&branch_title=master', {
             express: [
                 {
                     branch_title: "master",
@@ -289,13 +289,13 @@ test('file deleted from document', async () => {
                     title: "Contract one"
                 }]
         })
-        .get('/fields/file/175+master', {
+        .get('/API/fields/file/175+master', {
             express: [{
                 branch_title: "master", file_Id: 175, id: 910,
                 timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
             }]
         })
-        .delete('/files/175', 200);
+        .delete('/API/files/175', 200);
 
     const {getByText, getByDisplayValue, queryByText, queryByLabelText, queryByDisplayValue} = render(<Files report={
         {
@@ -322,7 +322,7 @@ test('file deleted from document', async () => {
 test('trims empty string and resets new file field', async () => {
 
     fetchMock
-        .get('/files/branch?report_id=115&branch_title=master', {
+        .get('/API/files/branch?report_id=115&branch_title=master', {
             express: [
                 {
                     branch_title: "master",
@@ -332,13 +332,13 @@ test('trims empty string and resets new file field', async () => {
                     title: "Contract one"
                 }]
         })
-        .get('/fields/file/175+master', {
+        .get('/API/fields/file/175+master', {
             express: [{
                 branch_title: "master", file_Id: 175, id: 910,
                 timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
             }]
         })
-        .delete('/files/175', 200);
+        .delete('/API/files/175', 200);
 
     const {getByText, getByPlaceholderText} = render(<Files report={
         {

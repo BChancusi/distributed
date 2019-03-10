@@ -48,7 +48,7 @@ function File(props) {
     const getFields = async () => {
 
         let fetchUrl =
-            `/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`;
+            `API/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`;
 
         const response = await fetch(encodeURI(fetchUrl), {signal});
         const body = await response.json();
@@ -83,7 +83,7 @@ function File(props) {
 
     const postField = async () => {
 
-        const response = await fetch('/fields', {
+        const response = await fetch('/API/fields', {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -138,7 +138,7 @@ function File(props) {
 
     const putFields = async () => {
 
-        const response = await fetch(`/fields`, {
+        const response = await fetch(`/API/fields`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(fields)
@@ -155,7 +155,7 @@ function File(props) {
 
     const handleDeleteFile = async (fieldId, key) => {
 
-        await fetch(`/fields/${fieldId}`, {
+        await fetch(`/API/fields/${fieldId}`, {
             signal,
             method: 'DELETE',
         }).then(response => {
@@ -173,7 +173,7 @@ function File(props) {
 
     const handleDeleteBranch = async () => {
 
-        await fetch(`/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
+        await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
             method: 'DELETE',
         }).then(response => {
@@ -217,7 +217,7 @@ function File(props) {
         let cloneFields = [...fields];
         cloneFields.push(props.file);
 
-        const response = await fetch(`/fields/branch/${newBranchTrimmed}`, {
+        const response = await fetch(`/API/fields/branch/${newBranchTrimmed}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -247,7 +247,7 @@ function File(props) {
 
     const postMergeBranch = async () => {
 
-        const response = await fetch(`/fields/mergeBranch/${(document.getElementById("selectMerge").value)}`, {
+        const response = await fetch(`/API/fields/mergeBranch/${(document.getElementById("selectMerge").value)}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -314,7 +314,7 @@ function File(props) {
 
     const postMergeResolved = async (mergeResolved) => {
 
-        await fetch(`/fields/mergeResolved/${(document.getElementById("selectMerge").value)}`, {
+        await fetch(`/API/fields/mergeResolved/${(document.getElementById("selectMerge").value)}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -372,7 +372,7 @@ function File(props) {
     const postCommit = async () => {
 
         if (commitResolved.length > 0) {
-            await fetch(`/fields/commitResolved`, {
+            await fetch(`/API/fields/commitResolved`, {
                 signal,
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},

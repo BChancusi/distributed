@@ -12,10 +12,10 @@ const app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use('/reports', reports);
-app.use('/files', files);
-app.use('/fields', fields);
-app.use('/users', users);
+app.use('/API/reports', reports);
+app.use('/API/files', files);
+app.use('/API/fields', fields);
+app.use('/API/users', users);
 
 if (process.env.NODE_ENV === 'production') {
 
