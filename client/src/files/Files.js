@@ -120,6 +120,12 @@ function Files(props) {
 
                 return key !== index;
             }));
+
+
+            setFileFields(fileFields.filter(value => {
+
+                return value.file_Id !== fileId;
+            }))
         });
     };
 

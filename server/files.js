@@ -37,10 +37,14 @@ router.route('/')
 router.route('/:fileId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
+        pool.query(`DELETE FROM fields WHERE file_Id =?`, [req.params.fileId], function (error) {
             if (error) throw error;
 
-            res.sendStatus(200)
+            pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
+                if (error) throw error;
+
+                res.sendStatus(200)
+            });
         });
     })
     .put((req, res) => {
