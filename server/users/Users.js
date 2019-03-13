@@ -6,21 +6,21 @@ const bcrypt = require('bcryptjs');
 
 router.get('/', (req, res) => {
 
-    pool.query('SELECT * FROM users', function (error, results) {
+    pool.query('SELECT username, id FROM users', function (error, results) {
         if (error) throw error;
 
         res.send({express: results});
     });
 });
 
-router.get('/:userId', (req, res) => {
-
-    pool.query('SELECT * FROM users', function (error, results) {
-        if (error) throw error;
-
-        res.send({express: results});
-    });
-});
+// router.get('/:userId', (req, res) => {
+//
+//     pool.query('SELECT username, id FROM users', function (error, results) {
+//         if (error) throw error;
+//
+//         res.send({express: results});
+//     });
+// });
 
 router.post('/signup', (req, res) => {
 

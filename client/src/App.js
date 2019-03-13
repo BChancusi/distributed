@@ -5,25 +5,28 @@ import Reports from "./reports/Reports";
 import Login from "./login/Login";
 import Files from "./files/Files";
 import File from './file/File';
+import Admin from './admin/Admin';
+
 
 function App() {
 
-    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("loggedIn"));
-    const [reportOpen, setReportOpen] = useState("");
-    const [fileOpen, setFileOpen] = useState("");
-
-    if (loggedIn !== "true") {
-        return <Login setLoggedIn={setLoggedIn}/>
-    } else if (reportOpen === "") {
-        return  <Reports setLoggedIn={setLoggedIn} setReportOpen={setReportOpen}/>
-
-    } else if (reportOpen !== "" && fileOpen === "") {
-        return <Files setLoggedIn={setLoggedIn} setFileOpen={setFileOpen}
-                   report={reportOpen} setReportOpen={setReportOpen}/>
-
-    } else if (fileOpen !== "") {
-        return <File setLoggedIn={setLoggedIn} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}/>
-    }
+    return <Admin/>
+    // const [loggedIn, setLoggedIn] = useState(localStorage.getItem("loggedIn"));
+    // const [reportOpen, setReportOpen] = useState("");
+    // const [fileOpen, setFileOpen] = useState("");
+    //
+    // if (loggedIn !== "true") {
+    //     return <Login setLoggedIn={setLoggedIn}/>
+    // } else if (reportOpen === "") {
+    //     return  <Reports setLoggedIn={setLoggedIn} setReportOpen={setReportOpen}/>
+    //
+    // } else if (reportOpen !== "" && fileOpen === "") {
+    //     return <Files setLoggedIn={setLoggedIn} setFileOpen={setFileOpen}
+    //                report={reportOpen} setReportOpen={setReportOpen}/>
+    //
+    // } else if (fileOpen !== "") {
+    //     return <File setLoggedIn={setLoggedIn} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}/>
+    // }
 }
 
 export default App;
