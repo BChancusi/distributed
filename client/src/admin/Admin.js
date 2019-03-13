@@ -37,14 +37,13 @@ function Admin(props) {
             })
     }
 
-    function postUser () {
+    function handlePostUser () {
 
-        fetch("API/users", {
+        fetch(`API/users?username=${newUsername}&password=${newPassword}`, {
             signal,
             method : "POST",
-            body: JSON.stringify({username: newUsername, password: newPassword})
-
-            }).then(res => {
+            }
+            ).then(res => {
 
                 if(res.status !== 200){
                     throw Error(res.status + "")
@@ -91,7 +90,7 @@ function Admin(props) {
             <label>New Password</label>
             <input value={newPassword} onChange={handleChange} name={"newPassword"} type="password"/>
 
-            <button>Create New User</button>
+            <button onClick={handlePostUser}>Create New User</button>
         </div>
 
         <div id="users">

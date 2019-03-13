@@ -4,44 +4,35 @@ const pool = require('../database');
 const bcrypt = require('bcryptjs');
 
 
-router.get('/', (req, res) => {
+router.route("/")
+    .get((req, res) => {
 
-    pool.query('SELECT username, id FROM users', function (error, results) {
-        if (error) throw error;
+        pool.query('SELECT username, id FROM users', function (error, results) {
+            if (error) throw error;
 
-        res.send({express: results});
-    });
-});
+            res.send({express: results});
+        });
+    })
+    .post((req, res) => {
 
-// router.get('/:userId', (req, res) => {
-//
-//     pool.query('SELECT username, id FROM users', function (error, results) {
-//         if (error) throw error;
-//
-//         res.send({express: results});
-//     });
-// });
+        pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
+            if (error) throw error;
 
-router.post('/signup', (req, res) => {
+            if (results.length === 0) {
 
-    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
-        if (error) throw error;
-
-        if (results.length > 0) {
-
-            bcrypt.hash(req.query.password, 8, function (error, hash) {
-                if (error) throw error;
-
-                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
+                bcrypt.hash(req.query.password, 8, function (error, hash) {
                     if (error) throw error;
-                    res.send({express: "account created"})
+
+                    pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
+                        if (error) throw error;
+                        res.send({express: "account created"})
+                    });
                 });
-            });
-        } else {
-            res.send({express: "username exists"})
-        }
+            } else {
+                res.send({express: "username exists"})
+            }
+        });
     });
-});
 
 router.post('/signin', (req, res) => {
 
