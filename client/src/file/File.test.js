@@ -12,7 +12,7 @@ afterEach(fetchMock.reset);
 
 
 test('renders without crashing', () => {
-    const {container} = render(<File file={
+    const {container} = render(<File user={{permission: 0}} file={
         {id: 179, report_id: 115, branch_title: "master", title: "Contract one", timestamp: "2019-03-09T00:26:46.000Z"}
     }
                                      report={{id: 115,
@@ -30,7 +30,7 @@ test('header path correct', async () => {
 
     //TODO correct fetch mock
 
-    const {container, getByText} = render(<File file={
+    const {container, getByText} = render(<File user={{permission: 0}} file={
         {id: 179, report_id: 115, branch_title: "master", title: "Contract one", timestamp: "2019-03-09T00:26:46.000Z"}
     }
                                      report={{id: 115,

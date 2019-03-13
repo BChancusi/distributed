@@ -12,7 +12,7 @@ afterEach(fetchMock.reset);
 
 
 test('renders without crashing', () => {
-    const {container} = render(<Reports/>);
+    const {container} = render(<Reports user={{permission: 0}}/>);
 });
 
 test('reports in document from fetch', async () => {
@@ -20,7 +20,7 @@ test('reports in document from fetch', async () => {
     fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 1", timestamp: "2019-02-28T21:25:08.000Z"},
                                         {id: 113, title: "Report 2", timestamp: "2019-03-05T02:23:58.000Z"} ]});
 
-    const {getByDisplayValue} = render(<Reports/>);
+    const {getByDisplayValue} = render(<Reports user={{permission: 0}}/>);
     await waitForElement(() => getByDisplayValue("Report 1"));
     await waitForElement(() => getByDisplayValue("Report 2"));
 
@@ -33,7 +33,7 @@ test('text when no reports in document', async () => {
 
     fetchMock.get('/API/reports', {express: []});
 
-    const {getByText} = render(<Reports/>);
+    const {getByText} = render(<Reports user={{permission: 0}}/>);
     await waitForElement(() => getByText("No reports created"));
 
     expect(getByText("No reports created")).toBeInTheDocument();
@@ -42,7 +42,7 @@ test('text when no reports in document', async () => {
 
 test('trims empty string and resets field', async () => {
 
-    const {getByPlaceholderText, getByText} = render(<Reports/>);
+    const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
     await waitForElement(() => getByPlaceholderText("E.g - Report 2019"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: '     '}});
@@ -57,7 +57,7 @@ test('new created report in document', async () => {
     fetchMock.get('/API/reports', {express: []})
         .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
-    const {getByPlaceholderText, getByText} = render(<Reports/>);
+    const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
@@ -72,7 +72,7 @@ test('new report field clears with after fetch', async () => {
     fetchMock.get('/API/reports', {express: []})
         .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
-    const {getByPlaceholderText, getByText} = render(<Reports/>);
+    const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
@@ -88,7 +88,7 @@ test('PUT field title fetch options', async () => {
         .put('/API/reports/112', 200);
 
 
-    const {getByText, getByDisplayValue} = render(<Reports/>);
+    const {getByText, getByDisplayValue} = render(<Reports user={{permission: 0}}/>);
 
     await waitForElement(() => getByText("Open Report"));
 
@@ -100,7 +100,7 @@ test('PUT field title fetch options', async () => {
 
     await waitForElement(() => getByText("Open Report"));
 
-    expect(fetchMock.lastUrl()).toBe("/API/reports/112")
+    expect(fetchMock.lastUrl()).toBe("/API/reports/112");
     expect(fetchMock.lastOptions().body).toBe("{\"title\":\"Report 2017\"}")
 });
 
@@ -110,7 +110,7 @@ test('report deleted from document', async () => {
         .delete('/API/reports/112', 200);
 
 
-    const {getByText, getByDisplayValue, queryByText} = render(<Reports/>);
+    const {getByText, getByDisplayValue, queryByText} = render(<Reports user={{permission: 0}}/>);
 
     await waitForElement(() => getByText("Open Report"));
 
@@ -129,7 +129,7 @@ test('open report event fired once with item', async () => {
     fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]});
 
     const mockSetReportOpen = jest.fn();
-    const {getByText, getByDisplayValue, queryByText} = render(<Reports setReportOpen={mockSetReportOpen}/>);
+    const {getByText, getByDisplayValue, queryByText} = render(<Reports user={{permission: 0}} setReportOpen={mockSetReportOpen}/>);
 
     await waitForElement(() => getByText("Open Report"));
 

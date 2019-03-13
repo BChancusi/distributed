@@ -152,11 +152,12 @@ describe('login faliure', () => {
 
 test('login button calls fetch', async () => {
 
-    const mockSetLoggedIn = jest.fn();
+    const mockSetLoggedInUser = jest.fn();
 
-    fetchMock.mock('/API/users/signin?username=username&password=password', {express: 'details correct'});
+    fetchMock.mock('/API/users/signin?username=username&password=password',
+        {express: {username: "username", permission: 0}});
 
-    const {getByText, getByTestId} = render(<Login setLoggedIn={mockSetLoggedIn}/>);
+    const {getByText, getByTestId} = render(<Login setLoggedInUser={mockSetLoggedInUser}/>);
 
     const loginButton = getByText("Login");
     const usernameField = getByTestId("username-text");
@@ -170,18 +171,18 @@ test('login button calls fetch', async () => {
     await waitForElement(() => passwordField);
 
     expect(usernameField).toHaveStyle(`background-color: white`);
-    expect(mockSetLoggedIn).toHaveBeenCalledTimes(1);
+    expect(mockSetLoggedInUser).toHaveBeenCalledTimes(1);
     expect(fetchMock.done()).toBe(true)
 
 });
 
 test('CSS turn red then white after failure/success', async () => {
 
-    const mockSetLoggedIn = jest.fn();
+    const mockSetLoggedInUser = jest.fn();
 
     fetchMock.mock('/API/users/signin?username=username111&password=password111', {express: 'details incorrect'});
 
-    const {getByText, getByTestId} = render(<Login setLoggedIn={mockSetLoggedIn}/>);
+    const {getByText, getByTestId} = render(<Login setLoggedInUser={mockSetLoggedInUser}/>);
 
     const loginButton = getByText("Login");
     const usernameField = getByTestId("username-text");
@@ -211,7 +212,7 @@ test('CSS turn red then white after failure/success', async () => {
     expect(usernameField).not.toHaveStyle(`border : 2px solid red`);
     expect(usernameField.value).toBe("");
     expect(passwordField.value).toBe("");
-    expect(mockSetLoggedIn).toHaveBeenCalledTimes(1);
+    expect(mockSetLoggedInUser).toHaveBeenCalledTimes(1);
 
     expect(fetchMock.done()).toBe(true);
 });

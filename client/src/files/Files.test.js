@@ -12,7 +12,7 @@ afterEach(fetchMock.reset);
 
 
 test('renders without crashing', () => {
-    const {container} = render(<Files report={
+    const {container} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -42,7 +42,7 @@ test('files in document from fetch', async () => {
             }]
     }).get('/API/fields/file/175+176+master', {express: []});
 
-    const {getByDisplayValue} = render(<Files report={
+    const {getByDisplayValue} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -86,7 +86,7 @@ test('field from files in document from fetch', async () => {
             }]
     });
 
-    const {getByDisplayValue, getByText} = render(<Files report={
+    const {getByDisplayValue, getByText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -136,7 +136,7 @@ test('Total amount in document with 2 decimal point', async () => {
             }]
     });
 
-    const {getByText} = render(<Files report={
+    const {getByText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -156,7 +156,7 @@ test('text when no reports in document', async () => {
         express: []
     }).get('/API/fields/file/+master', {express: []});
 
-    const {getByText} = render(<Files report={
+    const {getByText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -180,7 +180,7 @@ test('new file inserted into document with empty new field', async () => {
             }
         });
 
-    const {getByText, getByPlaceholderText} = render(<Files report={
+    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -208,7 +208,7 @@ test('duplicate file error', async () => {
         }]
     }).get('/API/fields/file/179+master', {express: []}).post("/API/files", {express: "already exists"});
 
-    const {getByText, getByPlaceholderText} = render(<Files report={
+    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -235,7 +235,7 @@ test('header matches opened file', async () => {
         }]
     }).get('/API/fields/file/179+master', {express: []});
 
-    const {getByText} = render(<Files report={
+    const {getByText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -258,7 +258,7 @@ test('open file event fired once with item', async () => {
 
     const mockSetFileOpen = jest.fn();
 
-    const {getByText, getByPlaceholderText} = render(<Files setFileOpen={mockSetFileOpen} report={
+    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} setFileOpen={mockSetFileOpen} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -297,7 +297,9 @@ test('file deleted from document', async () => {
         })
         .delete('/API/files/175', 200);
 
-    const {getByText, getByDisplayValue, queryByText, queryByLabelText, queryByDisplayValue} = render(<Files report={
+    const {getByText, getByDisplayValue, queryByText, queryByLabelText, queryByDisplayValue} = render(<Files
+        user={{permission: 0}}
+        report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -340,7 +342,7 @@ test('trims empty string and resets new file field', async () => {
         })
         .delete('/API/files/175', 200);
 
-    const {getByText, getByPlaceholderText} = render(<Files report={
+    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
