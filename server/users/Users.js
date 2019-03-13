@@ -46,11 +46,13 @@ router.post('/signin', (req, res) => {
 
         bcrypt.compare(req.query.password, results[0].password)
             .then((boolean) => {
+
                 if(!boolean){
                     res.send({express: "details incorrect"})
                 }
 
-                res.send({express: "details correct"})
+                res.send({express: {username: results[0].username, permission: results[0].permission,
+                    id: results[0].id}})
             });
     });
 });

@@ -115,7 +115,7 @@ function Reports(props) {
         <nav>
             <button onClick={() => {
                 localStorage.clear();
-                props.setLoggedIn(null)
+                props.setLoggedInUser(null)
             }}>Logout
             </button>
         </nav>

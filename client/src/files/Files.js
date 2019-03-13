@@ -163,6 +163,7 @@ function Files(props) {
             }}>Logout
             </button>
             <button onClick={() => props.setReportOpen("")}>Return</button>
+            {props.user.permission !== 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
         </nav>
 
         <div>

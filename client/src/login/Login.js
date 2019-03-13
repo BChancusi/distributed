@@ -21,17 +21,19 @@ function Login(props) {
             return res.json()
 
         }).then((result) => {
-            if (result.express === "details correct") {
+
+            if (result.express === "details incorrect") {
+                setPassword("");
+                usernameInput.current.style.border = "2px solid red";
+                passwordInput.current.style.border = "2px solid red";
+
+            }else{
                 usernameInput.current.style.border = "";
                 passwordInput.current.style.border = "";
                 setUsername("");
                 setPassword("");
-                props.setLoggedIn("true");
-                localStorage.setItem("loggedIn", "true")
-            } else {
-                setPassword("");
-                usernameInput.current.style.border = "2px solid red";
-                passwordInput.current.style.border = "2px solid red";
+                props.setLoggedInUser(result.express);
+                localStorage.setItem("user", JSON.stringify(result.express))
             }
         }, (error) => {
             throw Error(error)

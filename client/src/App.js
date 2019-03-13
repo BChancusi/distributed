@@ -7,26 +7,32 @@ import Files from "./files/Files";
 import File from './file/File';
 import Admin from './admin/Admin';
 
-
 function App() {
 
-    return <Admin/>
-    // const [loggedIn, setLoggedIn] = useState(localStorage.getItem("loggedIn"));
-    // const [reportOpen, setReportOpen] = useState("");
-    // const [fileOpen, setFileOpen] = useState("");
-    //
-    // if (loggedIn !== "true") {
-    //     return <Login setLoggedIn={setLoggedIn}/>
-    // } else if (reportOpen === "") {
-    //     return  <Reports setLoggedIn={setLoggedIn} setReportOpen={setReportOpen}/>
-    //
-    // } else if (reportOpen !== "" && fileOpen === "") {
-    //     return <Files setLoggedIn={setLoggedIn} setFileOpen={setFileOpen}
-    //                report={reportOpen} setReportOpen={setReportOpen}/>
-    //
-    // } else if (fileOpen !== "") {
-    //     return <File setLoggedIn={setLoggedIn} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}/>
-    // }
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    const [adminOpen, setAdminOpen] = useState(false);
+    const [reportOpen, setReportOpen] = useState("");
+    const [fileOpen, setFileOpen] = useState("");
+
+    if (user == null) {
+        return <Login setLoggedInUser={setUser}/>
+
+    } else if (reportOpen !== "" && adminOpen) {
+        return <Admin setAdminOpen={setAdminOpen} user={user}/>
+
+    } else if (reportOpen === "") {
+        return  <Reports setLoggedInUser={setUser} setReportOpen={setReportOpen}
+                         user={user} setAdminOpen={setAdminOpen}/>
+
+    } else if (reportOpen !== "" && fileOpen === "") {
+        return <Files setLoggedInUser={setUser} setFileOpen={setFileOpen}
+                   report={reportOpen} setReportOpen={setReportOpen} setAdminOpen={setAdminOpen}
+                      user={user}/>
+
+    } else if (fileOpen !== "") {
+        return <File setLoggedInUser={setUser} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}
+                     user={user} setAdminOpen={setAdminOpen}/>
+    }
 }
 
 export default App;
