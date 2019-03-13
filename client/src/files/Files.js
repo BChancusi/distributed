@@ -162,7 +162,7 @@ function Files(props) {
                 props.setLoggedInUser(null)
             }}>Logout
             </button>
-            {props.user.permission !== 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
+            {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
             <button onClick={() => props.setReportOpen("")}>Return</button>
         </nav>
 
