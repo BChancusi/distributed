@@ -19,7 +19,7 @@ router.route("/")
             if (error) throw error;
 
             if (results.length > 0) {
-                res.send({express: "username exists"})
+                return res.send({express: "username exists"})
             }
 
             bcrypt.hash(req.query.password, 8, function (error, hash) {
@@ -41,14 +41,14 @@ router.post('/signin', (req, res) => {
         if (error) throw error;
 
         if (results.length === 0) {
-            res.send({express: "details incorrect"})
+            return res.send({express: "details incorrect"})
         }
 
         bcrypt.compare(req.query.password, results[0].password)
             .then((boolean) => {
 
                 if(!boolean){
-                    res.send({express: "details incorrect"})
+                    return res.send({express: "details incorrect"})
                 }
 
                 res.send({express: {username: results[0].username, permission: results[0].permission,
