@@ -39,3 +39,4 @@ export default App;
 
 //TODO Fix no X created displayed loading, can make a loading text
 //      CSS load first to prevent jaring white screen
+//      Fields are not clearing when changing user etc

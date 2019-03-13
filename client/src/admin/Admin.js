@@ -52,6 +52,8 @@ function Admin(props) {
                 console.debug("error username")
             }
 
+            //TODO clear input
+
             setUsers(users.concat(result.express));
         })
 
@@ -78,7 +80,7 @@ function Admin(props) {
         <nav>
             <button onClick={() => {
                 localStorage.clear();
-                props.setLoggedIn(null)
+                props.setLoggedInUser(null)
             }}>Logout
             </button>
 
@@ -91,6 +93,8 @@ function Admin(props) {
                 <input value={newUsername} onChange={handleChange} name="newUsername" type="text"
                        autoComplete="username"/>
                 {/*TODO generate password*/}
+                {/*TODO allow permission input*/}
+
                 <label>New Password</label>
                 <input value={newPassword} onChange={handleChange} name="newPassword" type="password"
                        autoComplete="current-password"/>
