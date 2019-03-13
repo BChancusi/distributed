@@ -58,7 +58,7 @@ function Admin(props) {
     }
 
     function handleReturn(){
-
+        props.setAdminOpen(false);
     }
 
     function handleChange(event) {
@@ -76,7 +76,13 @@ function Admin(props) {
          </header>
 
         <nav>
-            <button onClick={handleReturn}>Return</button>
+            <button onClick={() => {
+                localStorage.clear();
+                props.setLoggedIn(null)
+            }}>Logout
+            </button>
+
+            <button onClick={handleReturn}>Reports</button>
         </nav>
 
         <div>

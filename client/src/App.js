@@ -17,8 +17,8 @@ function App() {
     if (user == null) {
         return <Login setLoggedInUser={setUser}/>
 
-    } else if (reportOpen !== "" && adminOpen) {
-        return <Admin setAdminOpen={setAdminOpen} user={user}/>
+    } else if (adminOpen) {
+        return <Admin setLoggedInUser={setUser} setAdminOpen={setAdminOpen} user={user}/>
 
     } else if (reportOpen === "") {
         return  <Reports setLoggedInUser={setUser} setReportOpen={setReportOpen}

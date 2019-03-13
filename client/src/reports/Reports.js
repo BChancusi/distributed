@@ -110,7 +110,7 @@ function Reports(props) {
 
     return <>
         <header>
-            <h1 align="CENTER">Reports</h1>
+            <h1>Reports</h1>
         </header>
         <nav>
             <button onClick={() => {
@@ -118,6 +118,7 @@ function Reports(props) {
                 props.setLoggedInUser(null)
             }}>Logout
             </button>
+            {props.user.permission !== 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
         </nav>
         <div>
             <label>New Report Title</label>

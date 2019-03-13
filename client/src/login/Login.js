@@ -52,7 +52,7 @@ function Login(props) {
     return (
         <>
             <header>
-                <h1 align="CENTER">Distributed Budgeting App</h1>
+                <h1>Distributed Budgeting App</h1>
                 <h2>Login Page</h2>
             </header>
             <div id="login">
