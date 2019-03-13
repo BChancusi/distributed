@@ -1,25 +1,15 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 
 function Admin(props) {
 
     const [users, setUsers] = useState([]);
-    const[newUsername, setNewUsername] = useState("");
-    const[newPassword, setNewPassword] = useState("");
+    const [newUsername, setNewUsername] = useState("");
+    const [newPassword, setNewPassword] = useState("");
 
     const controller = new AbortController();
     const signal = controller.signal;
 
     useEffect(() => {
-        getUsers();
-
-
-        return () => {
-            controller.abort();
-        }
-    }, []);
-
-    function getUsers () {
-
         fetch("/API/users", {signal})
             .then((res) => {
 
@@ -34,10 +24,16 @@ function Admin(props) {
             },
             error => {
                 throw Error(error.toString())
-            })
-    }
+            });
 
-    function handlePostUser () {
+        return () => {
+            controller.abort();
+        }
+    }, []);
+
+
+    function handlePostUser (event) {
+        event.preventDefault();
 
         fetch(`API/users?username=${newUsername}&password=${newPassword}`, {
             signal,
@@ -51,12 +47,12 @@ function Admin(props) {
                 return res.json()
 
         }).then(result => {
-            if(result.express === "user already exists"){
+            if(result.express === "username exists"){
                 //TODO throw error, ui change
-
+                console.debug("error username")
             }
 
-            //TODO insert new user into list
+            setUsers(users.concat(result.express));
         })
 
     }
@@ -84,13 +80,17 @@ function Admin(props) {
         </nav>
 
         <div>
-            <label>New username</label>
-            <input value={newUsername} onChange={handleChange} name={"newUsername"} type="text"/>
-            {/*TODO generate password*/}
-            <label>New Password</label>
-            <input value={newPassword} onChange={handleChange} name={"newPassword"} type="password"/>
+            <form onSubmit={handlePostUser}>
+                <label>New username</label>
+                <input value={newUsername} onChange={handleChange} name="newUsername" type="text"
+                       autoComplete="username"/>
+                {/*TODO generate password*/}
+                <label>New Password</label>
+                <input value={newPassword} onChange={handleChange} name="newPassword" type="password"
+                       autoComplete="current-password"/>
 
-            <button onClick={handlePostUser}>Create New User</button>
+                <button>Create New User</button>
+            </form>
         </div>
 
         <div id="users">

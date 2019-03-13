@@ -25,10 +25,11 @@ router.route("/")
             bcrypt.hash(req.query.password, 8, function (error, hash) {
                 if (error) throw error;
 
-                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `, [req.query.username, hash], function (error) {
-                    if (error) throw error;
+                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `,
+                    [req.query.username, hash], function (error, results) {
+                        if (error) throw error;
 
-                    res.send({express: "account created"})
+                        res.send({express: {username : req.query.username, id: results.insertId}})
                 });
             });
         });
