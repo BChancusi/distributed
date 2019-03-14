@@ -173,7 +173,7 @@ function Files(props) {
             <button onClick={handleNewFile}>New File</button>
         </div>
         {files.length > 0 ? (
-            <div id="files">
+            <div className="content" id="files">
                 <ul>
 
                     {
@@ -194,7 +194,7 @@ function Files(props) {
         ) : <h2>No files created</h2>}
 
         {fileFields.length > 0 &&
-        <div id="fields">
+        <div className="content" id="fields">
             <ul>
                 {
                     fileFields.map(value => {

@@ -89,7 +89,7 @@ function Admin(props) {
             <button onClick={handleReturn}>Return</button>
         </nav>
 
-        <div>
+        <div className="options">
             <form onSubmit={handlePostUser}>
                 <label>New username</label>
                 <input value={newUsername} onChange={handleChange} name="newUsername" type="text"
@@ -113,7 +113,7 @@ function Admin(props) {
             </form>
         </div>
 
-        <div id="users">
+        <div className="content" id="users">
             {users.length > 0 ?
                 <ul>
                     {

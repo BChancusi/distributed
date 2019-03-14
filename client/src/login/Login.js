@@ -55,7 +55,7 @@ function Login(props) {
                 <h1>Distributed Budgeting App</h1>
                 <h2>Login Page</h2>
             </header>
-            <div id="login">
+            <div className="content" id="login">
                 <form onSubmit={handleLogin}>
                     <label>Username
                         <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}

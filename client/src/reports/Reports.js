@@ -126,7 +126,7 @@ function Reports(props) {
                    onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
             <button onClick={handleNewReport}>New report</button>
         </div>
-        <div id="reports">
+        <div className="content" id="reports">
             {
                 reports.length > 0 ? (
                     <ul>

@@ -458,7 +458,7 @@ function File(props) {
         </div>
 
         {fields.length > 0 ? (
-            <div id="fields">
+            <div className="content" id="fields">
                 <ul>
                     {
                         fields.map((value, index) => {
