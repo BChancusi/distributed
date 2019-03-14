@@ -5,6 +5,8 @@ function Admin(props) {
     const [users, setUsers] = useState([]);
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
+    const [newPermission, setNewPermission] = useState("0");
+
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -35,7 +37,7 @@ function Admin(props) {
     function handlePostUser (event) {
         event.preventDefault();
 
-        fetch(`API/users?username=${newUsername}&password=${newPassword}`, {
+        fetch(`API/users?username=${newUsername}&password=${newPassword}&permission=${newPermission}`, {
             signal,
             method : "POST",
             }
@@ -69,6 +71,8 @@ function Admin(props) {
             setNewUsername(event.target.value);
         }else if(event.target.name === "newPassword"){
             setNewPassword(event.target.value);
+        }else if(event.target.name === "newPermission"){
+            setNewPermission(event.target.value)
         }
     }
 
@@ -93,11 +97,19 @@ function Admin(props) {
                 <input value={newUsername} onChange={handleChange} name="newUsername" type="text"
                        autoComplete="username"/>
                 {/*TODO generate password*/}
-                {/*TODO allow permission input*/}
 
                 <label>New Password</label>
                 <input value={newPassword} onChange={handleChange} name="newPassword" type="password"
                        autoComplete="current-password"/>
+
+                <label>Permission Level</label>
+                <select value={newPermission} onChange={handleChange} name="newPermission">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
 
                 <button>Create New User</button>
             </form>
