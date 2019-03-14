@@ -7,7 +7,6 @@ function Admin(props) {
     const [newPassword, setNewPassword] = useState("");
     const [newPermission, setNewPermission] = useState("0");
 
-
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -87,7 +86,7 @@ function Admin(props) {
             }}>Logout
             </button>
 
-            <button onClick={handleReturn}>Reports</button>
+            <button onClick={handleReturn}>Return</button>
         </nav>
 
         <div>
@@ -118,8 +117,9 @@ function Admin(props) {
             {users.length > 0 ?
                 <ul>
                     {
+                        // TODO change to table instead of ul
                         users.map(value => {
-                            return <li key={value.id}>{value.username}</li>
+                            return <li key={value.id}>{value.username + " - Permission: " + value.permission}</li>
                         })
                     }
                 </ul>

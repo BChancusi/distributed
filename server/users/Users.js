@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 router.route("/")
     .get((req, res) => {
 
-        pool.query('SELECT username, id FROM users', function (error, results) {
+        pool.query('SELECT username, id, permission FROM users', function (error, results) {
             if (error) throw error;
 
             res.send({express: results});
@@ -33,7 +33,8 @@ router.route("/")
                     [req.query.username, hash, req.query.permission], function (error, results) {
                         if (error) throw error;
 
-                        res.send({express: {username : req.query.username, id: results.insertId}})
+                        res.send({express: {username : req.query.username,
+                                permission: req.query.permission ,  id: results.insertId}})
                 });
             });
         });
