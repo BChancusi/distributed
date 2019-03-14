@@ -37,10 +37,9 @@ function Admin(props) {
     function handlePostUser (event) {
         event.preventDefault();
 
-        fetch(`API/users?username=${newUsername}&password=${newPassword}&permission=${newPermission}`, {
-            signal,
-            method : "POST",
-            }
+        fetch(
+            `API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
+            {signal, method : "POST"}
             ).then(res => {
 
                 if(res.status !== 200){
@@ -49,7 +48,7 @@ function Admin(props) {
                 return res.json()
 
         }).then(result => {
-            if(result.express === "username exists"){
+            if(result.express === "username exists" || result.express === "permission can not be 5"){
                 //TODO throw error, ui change
                 console.debug("error username")
             }

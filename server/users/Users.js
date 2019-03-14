@@ -15,6 +15,10 @@ router.route("/")
     })
     .post((req, res) => {
 
+        if (req.query.permission) {
+            return res.send({express: "permission can not be 5"})
+        }
+
         pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
             if (error) throw error;
 
@@ -25,8 +29,8 @@ router.route("/")
             bcrypt.hash(req.query.password, 8, function (error, hash) {
                 if (error) throw error;
 
-                pool.query(`INSERT INTO users (username, password) VALUES(? , ?) `,
-                    [req.query.username, hash], function (error, results) {
+                pool.query(`INSERT INTO users (username, password, permission) VALUES(? , ? , ?) `,
+                    [req.query.username, hash, req.query.permission], function (error, results) {
                         if (error) throw error;
 
                         res.send({express: {username : req.query.username, id: results.insertId}})
