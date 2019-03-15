@@ -6,6 +6,8 @@ function Admin(props) {
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPermission, setNewPermission] = useState("0");
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -22,7 +24,8 @@ function Admin(props) {
                 throw Error(result.body)
             }
 
-            setUsers(result.express)
+            setUsers(result.express);
+            setIsLoading(false);
         }
 
         fetchUsers().catch(error => console.debug(error));
@@ -108,21 +111,22 @@ function Admin(props) {
                     <option value="4">4</option>
                 </select>
 
-                <button>Create New User</button>
+                <button disabled={isLoading}>Create New User</button>
             </form>
         </div>
 
         <div className="content" id="users">
-            {users.length > 0 ?
-                <ul>
-                    {
-                        // TODO change to table instead of ul
-                        users.map(value => {
-                            return <li key={value.id}>{value.username + " - Permission: " + value.permission}</li>
-                        })
-                    }
-                </ul>
-                : <p>No Users Created</p>
+            {isLoading ? <h2>Loading Content...</h2> :
+                    users.length > 0 ?
+                    <ul>
+                        {
+                            // TODO change to table instead of ul
+                            users.map(value => {
+                                return <li key={value.id}>{value.username + " - Permission: " + value.permission}</li>
+                            })
+                        }
+                    </ul>
+                    : <h2>No Users Created</h2>
             }
         </div>
 

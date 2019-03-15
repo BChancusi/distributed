@@ -432,7 +432,7 @@ function File(props) {
         </div>
         <div className="content">
             <div className="content-wrap">
-                {isLoading ? <h2>Content Loading...</h2> :
+                {isLoading ? <h2>Loading Content...</h2> :
                     fields.length > 0 ? (
                         <div id="fields">
                             <ul>
@@ -489,3 +489,4 @@ export default File;
 //      Deep prevent non number
 //      Prevent merge button being spammed
 //      Clear save conflicts when attempting to merge without confirming
+//      Merge Warning: Each child in a list should have a unique "key" prop.
