@@ -67,28 +67,12 @@ function File(props) {
     };
 
     function handleNewField() {
-        if (newFieldTitle.trim() !== "") {
-            postField()
-                .then(res => {
-
-                    if (res.express === "already exists") {
-                        fieldTitleInput.current.style.border = "2px solid red";
-                    } else {
-                        fieldTitleInput.current.style.border = "";
-                        setFields(fields.concat(res.express));
-                        setNewFieldTitle("");
-                        setNewFieldValue("");
-                    }
-                })
-                .catch(err => console.log(err));
-        } else {
+        if (newFieldTitle.trim() === "") {
             fieldTitleInput.current.style.border = "2px solid red";
+            return;
         }
-    }
-
-    const postField = async () => {
-
-        const response = await fetch('/API/fields', {
+        setIsLoading(true);
+        fetch('/API/fields', {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -98,14 +82,32 @@ function File(props) {
                 "file_id": props.file.id,
                 "branch_title": currentBranch
             })
-        });
-        const body = await response.json();
+        })
+            .then(res => {
 
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body;
-    };
+                if (res.status !== 200) {
+                    throw Error(res.status + "")
+                }
+
+                return res.json();
+            })
+            .then(result => {
+
+                if (result.express === "already exists") {
+                    setIsLoading(false);
+                    fieldTitleInput.current.style.border = "2px solid red";
+                    return;
+                }
+
+                fieldTitleInput.current.style.border = "";
+                setFields(fields.concat(result.express));
+                setNewFieldTitle("");
+                setNewFieldValue("");
+                setIsLoading(false);
+            })
+            .catch(err => console.log(err));
+
+    }
 
 
     function handleFieldChange(event, key) {
@@ -426,7 +428,7 @@ function File(props) {
                     </select>
                     {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                         <>
-                            <button onClick={handleDeleteBranch}>Delete Current Branch</button>
+                            <button disabled={isLoading} onClick={handleDeleteBranch}>Delete Current Branch</button>
                             <label>Merge Branch</label>
                             <select id="selectMerge">
                                 {
@@ -440,7 +442,7 @@ function File(props) {
                                     })
                                 }
                             </select>
-                            <button onClick={handleMergeBranch}>Merge Branch target</button>
+                            <button disabled={isLoading} onClick={handleMergeBranch}>Merge Branch target</button>
                         </>
                         : null}
 
