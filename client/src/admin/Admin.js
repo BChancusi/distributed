@@ -49,7 +49,8 @@ function Admin(props) {
         }).then(result => {
             if(result.express === "username exists" || result.express === "permission can not be 5"){
                 //TODO throw error, ui change
-                console.debug("error username")
+                console.debug("error username");
+                return;
             }
 
             //TODO clear input

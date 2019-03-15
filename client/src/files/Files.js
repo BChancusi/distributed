@@ -194,6 +194,7 @@ function Files(props) {
 
                     </div>
                 ) : <h2>No files created</h2>}
+            </div>
 
                 {fileFields.length > 0 &&
                 <div id="fields">
@@ -213,7 +214,6 @@ function Files(props) {
                     <label>Total = £{parseFloat(total).toFixed(2)}</label>
                 </div>
                 }
-          </div>
         </div>
     </>
 }

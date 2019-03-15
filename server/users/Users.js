@@ -15,7 +15,7 @@ router.route("/")
     })
     .post((req, res) => {
 
-        if (req.query.permission) {
+        if (req.query.permission === 5) {
             return res.send({express: "permission can not be 5"})
         }
 
