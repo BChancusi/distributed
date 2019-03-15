@@ -20,34 +20,31 @@ function Login(props) {
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        fetch(`/API/users/signin?username=${username}&password=${password}`, {
+        const response = await fetch(`/API/users/signin?username=${username}&password=${password}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        }).then(res => {
-            if (res.status !== 200) {
-                throw Error("Fetch error")
-            }
-            return res.json()
-
-        }).then((result) => {
-
-            if (result.express === "details incorrect") {
-                setPassword("");
-                usernameInput.current.style.border = "2px solid red";
-                passwordInput.current.style.border = "2px solid red";
-
-            }else{
-                usernameInput.current.style.border = "";
-                passwordInput.current.style.border = "";
-                setUsername("");
-                setPassword("");
-                props.setLoggedInUser(result.express);
-                localStorage.setItem("user", JSON.stringify(result.express))
-            }
-        }, (error) => {
-            throw Error(error)
         });
+
+        if (response.status !== 200) {
+            throw Error("Fetch error")
+        }
+
+        const result = await response.json();
+
+        if (result.express === "details incorrect") {
+            setPassword("");
+            usernameInput.current.style.border = "2px solid red";
+            passwordInput.current.style.border = "2px solid red";
+
+        }else{
+            usernameInput.current.style.border = "";
+            passwordInput.current.style.border = "";
+            setUsername("");
+            setPassword("");
+            props.setLoggedInUser(result.express);
+            localStorage.setItem("user", JSON.stringify(result.express))
+        }
     };
 
     function handleChange(event) {
