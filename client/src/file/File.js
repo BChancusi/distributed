@@ -71,7 +71,9 @@ function File(props) {
             fieldTitleInput.current.style.border = "2px solid red";
             return;
         }
+
         setIsLoading(true);
+
         fetch('/API/fields', {
             signal,
             method: 'POST',
@@ -178,9 +180,9 @@ function File(props) {
         });
     };
 
-    const handleDeleteBranch = async () => {
+    const handleDeleteBranch =  () => {
 
-        await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
+        fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
             method: 'DELETE',
         }).then(response => {
@@ -201,22 +203,25 @@ function File(props) {
 
         const newBranchTrimmed = newBranchTitle.trim();
 
-        if (newBranchTrimmed !== "") {
-            postBranch(newBranchTrimmed).then(res => {
-
-                if (res.express === "already exists") {
-
-                    branchTitleInput.current.style.border = "2px solid red";
-                } else {
-                    branchTitleInput.current.style.border = "";
-                    setFileTitles(fileTitles.concat(res.express));
-                    setNewBranchTitle("");
-                    setCurrentBranch(newBranchTrimmed);
-                }
-            });
-        } else {
+        if (newBranchTrimmed === "") {
             branchTitleInput.current.style.border = "2px solid red";
         }
+
+        setIsLoading(true);
+        postBranch(newBranchTrimmed).then(res => {
+
+            if (res.express === "already exists") {
+                setIsLoading(false);
+                branchTitleInput.current.style.border = "2px solid red";
+            } else {
+                branchTitleInput.current.style.border = "";
+                setFileTitles(fileTitles.concat(res.express));
+                setNewBranchTitle("");
+                setCurrentBranch(newBranchTrimmed);
+                setIsLoading(false);
+            }
+        });
+
     }
 
     const postBranch = async (newBranchTrimmed) => {
