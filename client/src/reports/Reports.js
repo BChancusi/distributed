@@ -13,27 +13,27 @@ function Reports(props) {
 
     useEffect(() => {
 
-        getReports()
-            .then(res => setReports(res.express))
-            .then(() => setIsLoading(false))
-            .catch(err => console.log(err));
+        async function fetchReports () {
+            const response = await fetch('/API/reports', {signal});
+
+            const result = await response.json();
+
+            if (response.status !== 200) {
+                throw Error(result.message)
+            }
+
+            setReports(result.express);
+            setIsLoading(false)
+        }
+
+        fetchReports()
+            .then(setIsLoading(false));
 
         return () => {
             controller.abort();
         }
 
     }, []);
-
-    const getReports = async () => {
-
-        const response = await fetch('/API/reports', {signal});
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body;
-    };
 
     const handleNewReport = async () => {
 

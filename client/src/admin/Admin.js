@@ -11,21 +11,21 @@ function Admin(props) {
     const signal = controller.signal;
 
     useEffect(() => {
-        fetch("/API/users", {signal})
-            .then((res) => {
 
-                if (res.status !== 200) {
-                    throw Error(res.status + "")
-                }
+        async function fetchUsers() {
 
-                return res.json()
+            const response = await fetch("/API/users", {signal});
 
-            }).then(result => {
-                setUsers(result.express)
-            },
-            error => {
-                throw Error(error.toString())
-            });
+            const result = await response.json();
+
+            if (response.status !== 200) {
+                throw Error(result.body)
+            }
+
+            setUsers(result.express)
+        }
+
+        fetchUsers();
 
         return () => {
             controller.abort();
@@ -33,60 +33,59 @@ function Admin(props) {
     }, []);
 
 
-    function handlePostUser (event) {
+    async function handlePostUser(event) {
         event.preventDefault();
 
-        fetch(
+        const response = await fetch(
             `API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
-            {signal, method : "POST"}
-            ).then(res => {
+            {signal, method: "POST"}
+        );
 
-                if(res.status !== 200){
-                    throw Error(res.status + "")
-                }
-                return res.json()
+        const result = await response.json();
 
-        }).then(result => {
-            if(result.express === "username exists" || result.express === "permission can not be 5"){
-                //TODO throw error, ui change
-                console.debug("error username");
-                return;
-            }
+        if (response.status !== 200) {
+            throw Error(result.body)
+        }
 
-            //TODO clear input
+        if (result.express === "username exists" || result.express === "permission can not be 5") {
+            //TODO throw error, ui change
+            console.debug("error username");
+            return;
+        }
+        //TODO clear input
 
-            setUsers(users.concat(result.express));
-        })
+        setUsers(users.concat(result.express));
+
 
     }
 
-    function handleReturn(){
+    function handleReturn() {
         props.setAdminOpen(false);
     }
 
     function handleChange(event) {
 
-        if(event.target.name === "newUsername"){
+        if (event.target.name === "newUsername") {
             setNewUsername(event.target.value);
-        }else if(event.target.name === "newPassword"){
+        } else if (event.target.name === "newPassword") {
             setNewPassword(event.target.value);
-        }else if(event.target.name === "newPermission"){
+        } else if (event.target.name === "newPermission") {
             setNewPermission(event.target.value)
         }
     }
 
     return <>
-         <header>
+        <header>
             <h1>Admin</h1>
-         </header>
+        </header>
 
         <nav>
-                <button onClick={handleReturn}>Return</button>
-                <button style={{float : "right"}} onClick={() => {
-                    localStorage.clear();
-                    props.setLoggedInUser(null)
-                }}>Logout
-                </button>
+            <button onClick={handleReturn}>Return</button>
+            <button style={{float: "right"}} onClick={() => {
+                localStorage.clear();
+                props.setLoggedInUser(null)
+            }}>Logout
+            </button>
         </nav>
 
         <div className="options">
@@ -125,9 +124,9 @@ function Admin(props) {
                 </ul>
                 : <p>No Users Created</p>
             }
-            </div>
+        </div>
 
-        </>
+    </>
 }
 
 export default Admin;
