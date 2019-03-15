@@ -25,7 +25,7 @@ function Admin(props) {
             setUsers(result.express)
         }
 
-        fetchUsers();
+        fetchUsers().catch(error => console.debug(error));
 
         return () => {
             controller.abort();

@@ -28,19 +28,29 @@ function File(props) {
     const controller = new AbortController();
     const signal = controller.signal;
 
-
     useEffect(() => {
-        setIsLoading(true);
 
-        getFields()
-            .then(res => {
-                setFields(res.fields);
-                setFileTitles(res.fileTitles);
-            })
-            .then(() => setIsLoading(false))
-            .catch(err => console.log(err));
+        async function fetchFields() {
+            setIsLoading(true);
 
-        return () =>{
+            const response = await fetch(encodeURI(`API/fields?report_id=${props.file.report_id}
+            &branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`), {signal});
+
+            const result = await response.json();
+
+            if (response.status !== 200) {
+                throw Error(result.message)
+            }
+
+            setFields(result.fields);
+            setFileTitles(result.fileTitles);
+
+            setIsLoading(false)
+        }
+
+        fetchFields().catch(error => console.debug(error));
+
+        return () => {
             controller.abort();
         }
 
@@ -52,23 +62,6 @@ function File(props) {
         }
 
     }, []);
-
-
-    const getFields = async () => {
-
-        let fetchUrl =
-            `API/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`;
-
-        const response = await fetch(encodeURI(fetchUrl), {signal});
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-
-        return body;
-
-    };
 
     async function handleNewField() {
         if (newFieldTitle.trim() === "") {
@@ -167,26 +160,29 @@ function File(props) {
         }));
     };
 
-    const handleDeleteBranch =  () => {
+    const handleDeleteBranch = async () => {
 
-        fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
+        const response = await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}
+        &file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
             method: 'DELETE',
-        }).then(response => {
-
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
-
-            setFileTitles(fileTitles.filter(value => {
-                return value.branch_title !== currentBranch;
-            }));
-
-            setCurrentBranch("master");
         });
+
+        const result = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(result.body)
+        }
+
+        setFileTitles(fileTitles.filter(value => {
+            return value.branch_title !== currentBranch;
+        }));
+
+        setCurrentBranch("master");
+
     };
 
-    function handleNewBranch() {
+    async function handleNewBranch() {
 
         const newBranchTrimmed = newBranchTitle.trim();
 
@@ -195,26 +191,10 @@ function File(props) {
         }
 
         setIsLoading(true);
-        postBranch(newBranchTrimmed).then(res => {
-
-            if (res.express === "already exists") {
-                setIsLoading(false);
-                branchTitleInput.current.style.border = "2px solid red";
-            } else {
-                branchTitleInput.current.style.border = "";
-                setFileTitles(fileTitles.concat(res.express));
-                setNewBranchTitle("");
-                setCurrentBranch(newBranchTrimmed);
-                setIsLoading(false);
-            }
-        });
-
-    }
-
-    const postBranch = async (newBranchTrimmed) => {
 
         let cloneFields = [...fields];
         cloneFields.push(props.file);
+
 
         const response = await fetch(`/API/fields/branch/${newBranchTrimmed}`, {
             signal,
@@ -223,28 +203,26 @@ function File(props) {
             body: JSON.stringify(cloneFields)
         });
 
-        const body = await response.json();
+        const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(body.message)
+            throw Error(result.message)
         }
-        return body;
-    };
 
-    function handleMergeBranch() {
 
-        postMergeBranch().then(res => {
-
-            if (res.express !== "no conflicts") {
-                setMergeNew(res.conflictsSource);
-                setMergeOld(res.conflictsTarget);
-            }
-        })
-            .catch(err => console.log(err));
-
+        if (response.express === "already exists") {
+            setIsLoading(false);
+            branchTitleInput.current.style.border = "2px solid red";
+        } else {
+            branchTitleInput.current.style.border = "";
+            setFileTitles(fileTitles.concat(response.express));
+            setNewBranchTitle("");
+            setCurrentBranch(newBranchTrimmed);
+            setIsLoading(false);
+        }
     }
 
-    const postMergeBranch = async () => {
+    async function handleMergeBranch() {
 
         const response = await fetch(`/API/fields/mergeBranch/${(document.getElementById("selectMerge").value)}`, {
             signal,
@@ -253,16 +231,19 @@ function File(props) {
             body: JSON.stringify(fields)
         });
 
-        const body = await response.json();
+        const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(body.message)
+            throw Error(result.message)
         }
-        return body;
 
-    };
+        if (response.express !== "no conflicts") {
+            setMergeNew(response.conflictsSource);
+            setMergeOld(response.conflictsTarget);
+        }
+    }
 
-    function handleResolveConflicts() {
+    async function handleResolveConflicts() {
 
         let resolved = [];
 
@@ -304,24 +285,26 @@ function File(props) {
                 resolved.push(cloneFields[i]);
             }
         }
-        postMergeResolved(resolved).then(() => {
-            setMergeOld([]);
-            setMergeNew([]);
-            setMergeResolved([]);
-        })
-    }
 
-    const postMergeResolved = async (mergeResolved) => {
-
-        await fetch(`/API/fields/mergeResolved/${(document.getElementById("selectMerge").value)}`, {
+        const response = await fetch(`/API/fields/mergeResolved/
+                ${(document.getElementById("selectMerge").value)}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(mergeResolved)
+            body: JSON.stringify(resolved)
         });
 
-        return null;
-    };
+        const result = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(result.body)
+        }
+
+        setMergeOld([]);
+        setMergeNew([]);
+        setMergeResolved([]);
+    }
+
 
     function handleCheckbox(event, item) {
 
@@ -359,29 +342,30 @@ function File(props) {
         }
     }
 
-    function handleResolveConflictsCommit() {
-
-        postCommit().then(() => {
-            setCommitOld([]);
-            setCommitNew([]);
-            setCommitResolved([]);
-        })
-    }
-
-    const postCommit = async () => {
+    async function handleResolveConflictsCommit() {
 
         if (commitResolved.length > 0) {
-            await fetch(`/API/fields/commitResolved`, {
+            const response = await fetch(`/API/fields/commitResolved`, {
                 signal,
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(commitResolved)
             });
-        }
 
-        return null;
-    };
+            const result = await response.json();
+
+            if(response.status !== 200){
+                throw Error(result.body)
+            }
+
+            setCommitOld([]);
+            setCommitNew([]);
+            setCommitResolved([]);
+        }
+    }
+
     let total = 0;
+
     return <>
 
         <header>

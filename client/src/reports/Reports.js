@@ -13,7 +13,8 @@ function Reports(props) {
 
     useEffect(() => {
 
-        async function fetchReports () {
+        async function fetchReports() {
+
             const response = await fetch('/API/reports', {signal});
 
             const result = await response.json();
@@ -24,16 +25,17 @@ function Reports(props) {
 
             setReports(result.express);
             setIsLoading(false)
+
         }
 
-        fetchReports()
-            .then(setIsLoading(false));
+        fetchReports().catch(error => console.debug(error));
 
         return () => {
             controller.abort();
         }
 
     }, []);
+
 
     const handleNewReport = async () => {
 
@@ -54,7 +56,7 @@ function Reports(props) {
             body: JSON.stringify({"title": trimmed})
         });
 
-        if(response.status !== 200){
+        if (response.status !== 200) {
             throw Error(response.status + "")
         }
 
@@ -120,38 +122,39 @@ function Reports(props) {
             <button onClick={() => {
                 localStorage.clear();
                 props.setLoggedInUser(null)
-            }}>Logout</button>
+            }}>Logout
+            </button>
         </nav>
-            <div>
-                <label>New Report Title</label>
-                <input type="text" value={newReport} ref={reportInput}
-                       onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
-                <button disabled={isLoading} onClick={handleNewReport}>New report</button>
-            </div>
-            <div className="content" id="reports">
-                <div className="content-wrap">
+        <div>
+            <label>New Report Title</label>
+            <input type="text" value={newReport} ref={reportInput}
+                   onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
+            <button disabled={isLoading} onClick={handleNewReport}>New report</button>
+        </div>
+        <div className="content" id="reports">
+            <div className="content-wrap">
 
-                    {isLoading ? <h2>Content loading....</h2> :
-                        reports.length > 0 ? (
-                            <ul>
-                                {
-                                    reports.map((value, index) => {
-                                        return <li key={value.id}>
-                                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                                            <button onClick={() => props.setReportOpen(value)}>Open Report</button>
-                                            <button
-                                                onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
-                                                report title
-                                            </button>
-                                            <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                                        </li>
-                                    })
-                                }
-                            </ul>
-                        ) : <h2>No reports created</h2>
+                {isLoading ? <h2>Content loading....</h2> :
+                    reports.length > 0 ? (
+                        <ul>
+                            {
+                                reports.map((value, index) => {
+                                    return <li key={value.id}>
+                                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
+                                        <button
+                                            onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
+                                            report title
+                                        </button>
+                                        <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    ) : <h2>No reports created</h2>
                 }
-                </div>
             </div>
+        </div>
     </>
 }
 
