@@ -75,20 +75,19 @@ function Reports(props) {
 
     const handleDeleteReport = async (reportId, key) => {
 
-        await fetch(`/API/reports/${reportId}`, {
+        const response = await fetch(`/API/reports/${reportId}`, {
             signal,
             method: 'DELETE',
-        }).then(response => {
-
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
-
-            setReports(reports.filter((value, index) => {
-
-                return key !== index;
-            }));
         });
+
+        if (response.status !== 200) {
+            throw Error(response.status.toString())
+        }
+
+        setReports(reports.filter((value, index) => {
+
+            return key !== index;
+        }));
     };
 
 
@@ -98,19 +97,18 @@ function Reports(props) {
 
         cloneReports[key].title = value;
 
-        await fetch(`/API/reports/${cloneReports[key].id}`, {
+        const response = await fetch(`/API/reports/${cloneReports[key].id}`, {
             signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": cloneReports[key].title})
-        }).then(response => {
-
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
-
-            setReports(cloneReports)
         });
+
+        if (response.status !== 200) {
+            throw Error(response.status.toString())
+        }
+
+        setReports(cloneReports)
     };
 
     return <>
