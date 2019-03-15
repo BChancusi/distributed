@@ -162,16 +162,13 @@ function File(props) {
 
     const handleDeleteBranch = async () => {
 
-        const response = await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}
-        &file_id=${props.file.id}&title=${props.file.title}`, {
+        const response = await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
             method: 'DELETE',
         });
 
-        const result = await response.json();
-
         if (response.status !== 200) {
-            throw Error(result.body)
+            throw Error(response.status + "")
         }
 
         setFileTitles(fileTitles.filter(value => {
@@ -195,7 +192,6 @@ function File(props) {
         let cloneFields = [...fields];
         cloneFields.push(props.file);
 
-
         const response = await fetch(`/API/fields/branch/${newBranchTrimmed}`, {
             signal,
             method: 'POST',
@@ -209,13 +205,12 @@ function File(props) {
             throw Error(result.message)
         }
 
-
-        if (response.express === "already exists") {
+        if (result.express === "already exists") {
             setIsLoading(false);
             branchTitleInput.current.style.border = "2px solid red";
         } else {
             branchTitleInput.current.style.border = "";
-            setFileTitles(fileTitles.concat(response.express));
+            setFileTitles(fileTitles.concat(result.express));
             setNewBranchTitle("");
             setCurrentBranch(newBranchTrimmed);
             setIsLoading(false);
@@ -237,9 +232,9 @@ function File(props) {
             throw Error(result.message)
         }
 
-        if (response.express !== "no conflicts") {
-            setMergeNew(response.conflictsSource);
-            setMergeOld(response.conflictsTarget);
+        if (result.express !== "no conflicts") {
+            setMergeNew(result.conflictsSource);
+            setMergeOld(result.conflictsTarget);
         }
     }
 
@@ -286,18 +281,15 @@ function File(props) {
             }
         }
 
-        const response = await fetch(`/API/fields/mergeResolved/
-                ${(document.getElementById("selectMerge").value)}`, {
+        const response = await fetch(`/API/fields/mergeResolved/${(document.getElementById("selectMerge").value)}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(resolved)
         });
 
-        const result = await response.json();
-
         if (response.status !== 200) {
-            throw Error(result.body)
+            throw Error(response.status + "")
         }
 
         setMergeOld([]);
@@ -352,10 +344,9 @@ function File(props) {
                 body: JSON.stringify(commitResolved)
             });
 
-            const result = await response.json();
 
             if(response.status !== 200){
-                throw Error(result.body)
+                throw Error(response.status + "")
             }
 
             setCommitOld([]);
@@ -473,20 +464,20 @@ function File(props) {
         </div>
 
         {mergeNew.length > 0 && mergeOld.length > 0 &&
-        <div id="conflictsMerge">
-            <div className="content-wrap">
-                <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-                <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
+            <div id="conflictsMerge">
+                <div className="content-wrap">
+                    <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
+                    <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
+                </div>
             </div>
-        </div>
         }
         {commitNew.length > 0 && commitOld.length > 0 &&
-        <div id="conflictsCommit">
-            <div className="content-wrap">
-                <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
-                <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
+            <div id="conflictsCommit">
+                <div className="content-wrap">
+                    <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
+                    <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
+                </div>
             </div>
-        </div>
         }
     </>
 }
