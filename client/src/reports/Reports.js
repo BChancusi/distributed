@@ -114,11 +114,10 @@ function Reports(props) {
         </header>
         <nav>
             {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
-            <button style={{float : "right"}} onClick={() => {
+            <button onClick={() => {
                 localStorage.clear();
                 props.setLoggedInUser(null)
-            }}>Logout
-            </button>
+            }}>Logout</button>
         </nav>
             <div>
                 <label>New Report Title</label>
