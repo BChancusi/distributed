@@ -79,6 +79,8 @@ test('new report field clears with after fetch', async () => {
 
     await waitForElement(() => getByText("Open Report"));
 
+    //TODO fetch test not functioning ocrrectly still displaying content loading
+
     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
 });
 

@@ -20,6 +20,8 @@ function File(props) {
     const [newFieldValue, setNewFieldValue] = useState("");
     const [newBranchTitle, setNewBranchTitle] = useState("");
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const fieldTitleInput = useRef(null);
     const branchTitleInput = useRef(null);
 
@@ -28,11 +30,14 @@ function File(props) {
 
 
     useEffect(() => {
+        setIsLoading(true);
+
         getFields()
             .then(res => {
                 setFields(res.fields);
                 setFileTitles(res.fileTitles);
             })
+            .then(() => setIsLoading(false))
             .catch(err => console.log(err));
 
     }, [props.file.id, currentBranch]);
@@ -404,7 +409,7 @@ function File(props) {
                     <label>New Branch Title</label>
                     <input type="text" value={newBranchTitle} ref={branchTitleInput}
                            onChange={(event) => setNewBranchTitle(event.target.value)} placeholder="E.g - version 2"/>
-                    <button onClick={handleNewBranch}>New Branch</button>
+                    <button disabled={isLoading} onClick={handleNewBranch}>New Branch</button>
                 </li>
                 <li>
                     <label>Current Branch</label>
@@ -451,38 +456,39 @@ function File(props) {
                     <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
                         setNewFieldValue(event.target.value);
                     }}/>
-                    <button onClick={handleNewField}>New Field</button>
+                    <button disabled={isLoading} onClick={handleNewField}>New Field</button>
                 </li>
 
             </ul>
         </div>
-        <div  className="content">
+        <div className="content">
             <div className="content-wrap">
-                {fields.length > 0 ? (
-                    <div id="fields">
-                        <ul>
-                            {
-                                fields.map((value, index) => {
+                {isLoading ? <h2>Content Loading...</h2> :
+                    fields.length > 0 ? (
+                        <div id="fields">
+                            <ul>
+                                {
+                                    fields.map((value, index) => {
 
-                                    if (!isNaN(parseFloat(value.value))) {
-                                        total += parseFloat(parseFloat(value.value).toFixed(2));
-                                    }
+                                        if (!isNaN(parseFloat(value.value))) {
+                                            total += parseFloat(parseFloat(value.value).toFixed(2));
+                                        }
 
-                                    return <li key={value.id}>
-                                        <input type="text" value={value.title} name="title"
-                                               onChange={(event) => handleFieldChange(event, index)}/>
-                                        <input type="number" value={value.value} name="value"
-                                               onChange={(event) => handleFieldChange(event, index)}/>
-                                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                                    </li>
-                                })
-                            }
-                        </ul>
+                                        return <li key={value.id}>
+                                            <input type="text" value={value.title} name="title"
+                                                   onChange={(event) => handleFieldChange(event, index)}/>
+                                            <input type="number" value={value.value} name="value"
+                                                   onChange={(event) => handleFieldChange(event, index)}/>
+                                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                                        </li>
+                                    })
+                                }
+                            </ul>
 
-                        <label>Total = {parseFloat(total).toFixed(2)}</label>
-                        <button onClick={handlePutFields}>Save Changes</button>
-                    </div>
-                ) : <h2>No fields created</h2>
+                            <label>Total = {parseFloat(total).toFixed(2)}</label>
+                            <button onClick={handlePutFields}>Save Changes</button>
+                        </div>
+                    ) : <h2>No fields created</h2>
 
                 }
             </div>

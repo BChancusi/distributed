@@ -4,6 +4,7 @@ function Reports(props) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     const reportInput = useRef(null);
 
@@ -11,8 +12,10 @@ function Reports(props) {
     const signal = controller.signal;
 
     useEffect(() => {
+
         getReports()
             .then(res => setReports(res.express))
+            .then(() => setIsLoading(false))
             .catch(err => console.log(err));
 
         return () => {
@@ -123,29 +126,29 @@ function Reports(props) {
                 <label>New Report Title</label>
                 <input type="text" value={newReport} ref={reportInput}
                        onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
-                <button onClick={handleNewReport}>New report</button>
+                <button disabled={isLoading} onClick={handleNewReport}>New report</button>
             </div>
             <div className="content" id="reports">
                 <div className="content-wrap">
 
-                {
-                    reports.length > 0 ? (
-                        <ul>
-                            {
-                                reports.map((value, index) => {
-                                    return <li key={value.id}>
-                                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
-                                        <button
-                                            onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
-                                            report title
-                                        </button>
-                                        <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    ) : <h2>No reports created</h2>
+                    {isLoading ? <h2>Content loading....</h2> :
+                        reports.length > 0 ? (
+                            <ul>
+                                {
+                                    reports.map((value, index) => {
+                                        return <li key={value.id}>
+                                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                            <button onClick={() => props.setReportOpen(value)}>Open Report</button>
+                                            <button
+                                                onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
+                                                report title
+                                            </button>
+                                            <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                                        </li>
+                                    })
+                                }
+                            </ul>
+                        ) : <h2>No reports created</h2>
                 }
                 </div>
             </div>

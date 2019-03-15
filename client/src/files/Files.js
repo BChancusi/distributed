@@ -5,6 +5,7 @@ function Files(props) {
     const [files, setFiles] = useState([]);
     const [newFile, setNewFile] = useState("");
     const [fileFields, setFileFields] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fileInput = useRef(null);
 
@@ -25,12 +26,13 @@ function Files(props) {
                     .catch(err => console.log(err));
                 //TODO catch and ignore aborted error
             })
+            .then(()=> setIsLoading(false))
             .catch(err => console.log(err));
 
         return () => {
             controller.abort();
         }
-    }, [props.report.id]);
+    }, []);
 
     const getFields = async (resFiles) => {
 //TODO change +master to query
@@ -170,49 +172,56 @@ function Files(props) {
             <label>New File Title</label>
             <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
                    onChange={(event) => setNewFile(event.target.value)}/>
-            <button onClick={handleNewFile}>New File</button>
+            <button disabled={isLoading} onClick={handleNewFile}>New File</button>
         </div>
         <div  className="content">
             <div className="content-wrap">
-                {files.length > 0 ? (
-                    <div className="content" id="files">
-                        <ul>
+                {isLoading ? <h2>Content Loading...</h2> :
 
-                            {
-                                files.map((value, index) => {
-                                    return <li key={value.id}>
-                                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                                        <button onClick={() => props.setFileOpen(value)}>Open File</button>
-                                        <button onClick={() => handlePutFile(document
-                                            .getElementById(`textInput${value.id}`).value, index)}>Update Title
-                                        </button>
-                                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                                    </li>
-                                })
-                            }
-                        </ul>
+                        files.length > 0 ? (
+                            <div className="content" id="files">
+                                <ul>
 
-                    </div>
-                ) : <h2>No files created</h2>}
+                                    {
+                                        files.map((value, index) => {
+                                            return <li key={value.id}>
+                                                <input type="text" defaultValue={value.title}
+                                                       id={`textInput${value.id}`}/>
+                                                <button onClick={() => props.setFileOpen(value)}>Open File</button>
+                                                <button onClick={() => handlePutFile(document
+                                                    .getElementById(`textInput${value.id}`).value, index)}>Update Title
+                                                </button>
+                                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete
+                                                </button>
+                                            </li>
+                                        })
+                                    }
+                                </ul>
+
+                            </div>
+                        ) : <h2>No files created</h2>
+
+                }
             </div>
 
-                {fileFields.length > 0 &&
-                <div id="fields">
-                    <ul>
-                        {
-                            fileFields.map(value => {
+                {isLoading ? null :
+                        fileFields.length > 0 &&
+                        <div id="fields">
+                            <ul>
+                                {
+                                    fileFields.map(value => {
 
-                                total += value.value;
+                                        total += value.value;
 
-                                return <ul key={value.id}>
-                                    <li>{value.title}</li>
-                                    <li>{value.value}</li>
-                                </ul>
-                            })
-                        }
-                    </ul>
-                    <label>Total = £{parseFloat(total).toFixed(2)}</label>
-                </div>
+                                        return <ul key={value.id}>
+                                            <li>{value.title}</li>
+                                            <li>{value.value}</li>
+                                        </ul>
+                                    })
+                                }
+                            </ul>
+                            <label>Total = £{parseFloat(total).toFixed(2)}</label>
+                        </div>
                 }
         </div>
     </>
