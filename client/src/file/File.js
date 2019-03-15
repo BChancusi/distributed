@@ -40,6 +40,10 @@ function File(props) {
             .then(() => setIsLoading(false))
             .catch(err => console.log(err));
 
+        return () =>{
+            controller.abort();
+        }
+
     }, [props.file.id, currentBranch]);
 
     useEffect(() => {

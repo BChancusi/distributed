@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 
 function Login(props) {
 
@@ -8,10 +8,20 @@ function Login(props) {
     const usernameInput = useRef(null);
     const passwordInput = useRef(null);
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    useEffect(() =>{
+        return () => {
+            controller.abort();
+        }
+    });
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
         fetch(`/API/users/signin?username=${username}&password=${password}`, {
+            signal,
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         }).then(res => {
