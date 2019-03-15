@@ -20,7 +20,8 @@ ul {
 }
 label {
   align-items : center;
-  padding: 0 50px;
+  margin: 10px;
+  display: inline-block;
 }
 
 h1{
@@ -39,7 +40,17 @@ input:focus {
   outline: 1px solid black;
 }
 
+button {
+  margin: 0 10px;
+  padding: 2px;
+}
+
 .content{
   background-color: #5ebeda;
   color: #1e2952;
+}
+
+.content-wrap {
+  max-width: 600px;
+  margin: 0 auto;
 }

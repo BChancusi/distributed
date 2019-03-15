@@ -172,45 +172,49 @@ function Files(props) {
                    onChange={(event) => setNewFile(event.target.value)}/>
             <button onClick={handleNewFile}>New File</button>
         </div>
-        {files.length > 0 ? (
-            <div className="content" id="files">
-                <ul>
+        <div  className="content">
+            <div className="content-wrap">
+                {files.length > 0 ? (
+                    <div className="content" id="files">
+                        <ul>
 
-                    {
-                        files.map((value, index) => {
-                            return <li key={value.id}>
-                                <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                                <button onClick={() => props.setFileOpen(value)}>Open File</button>
-                                <button onClick={() => handlePutFile(document
-                                    .getElementById(`textInput${value.id}`).value, index)}>Update Title
-                                </button>
-                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                            </li>
-                        })
-                    }
-                </ul>
-
-            </div>
-        ) : <h2>No files created</h2>}
-
-        {fileFields.length > 0 &&
-        <div className="content" id="fields">
-            <ul>
-                {
-                    fileFields.map(value => {
-
-                        total += value.value;
-
-                        return <ul key={value.id}>
-                            <li>{value.title}</li>
-                            <li>{value.value}</li>
+                            {
+                                files.map((value, index) => {
+                                    return <li key={value.id}>
+                                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                        <button onClick={() => props.setFileOpen(value)}>Open File</button>
+                                        <button onClick={() => handlePutFile(document
+                                            .getElementById(`textInput${value.id}`).value, index)}>Update Title
+                                        </button>
+                                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                                    </li>
+                                })
+                            }
                         </ul>
-                    })
+
+                    </div>
+                ) : <h2>No files created</h2>}
+
+                {fileFields.length > 0 &&
+                <div id="fields">
+                    <ul>
+                        {
+                            fileFields.map(value => {
+
+                                total += value.value;
+
+                                return <ul key={value.id}>
+                                    <li>{value.title}</li>
+                                    <li>{value.value}</li>
+                                </ul>
+                            })
+                        }
+                    </ul>
+                    <label>Total = £{parseFloat(total).toFixed(2)}</label>
+                </div>
                 }
-            </ul>
-            <label>Total = £{parseFloat(total).toFixed(2)}</label>
+          </div>
         </div>
-        }
     </>
 }
 

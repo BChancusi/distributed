@@ -456,46 +456,52 @@ function File(props) {
 
             </ul>
         </div>
+        <div  className="content">
+            <div className="content-wrap">
+                {fields.length > 0 ? (
+                    <div id="fields">
+                        <ul>
+                            {
+                                fields.map((value, index) => {
 
-        {fields.length > 0 ? (
-            <div className="content" id="fields">
-                <ul>
-                    {
-                        fields.map((value, index) => {
+                                    if (!isNaN(parseFloat(value.value))) {
+                                        total += parseFloat(parseFloat(value.value).toFixed(2));
+                                    }
 
-                            if (!isNaN(parseFloat(value.value))) {
-                                total += parseFloat(parseFloat(value.value).toFixed(2));
+                                    return <li key={value.id}>
+                                        <input type="text" value={value.title} name="title"
+                                               onChange={(event) => handleFieldChange(event, index)}/>
+                                        <input type="number" value={value.value} name="value"
+                                               onChange={(event) => handleFieldChange(event, index)}/>
+                                        <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
+                                    </li>
+                                })
                             }
+                        </ul>
 
-                            return <li key={value.id}>
-                                <input type="text" value={value.title} name="title"
-                                       onChange={(event) => handleFieldChange(event, index)}/>
-                                <input type="number" value={value.value} name="value"
-                                       onChange={(event) => handleFieldChange(event, index)}/>
-                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete</button>
-                            </li>
-                        })
-                    }
-                </ul>
+                        <label>Total = {parseFloat(total).toFixed(2)}</label>
+                        <button onClick={handlePutFields}>Save Changes</button>
+                    </div>
+                ) : <h2>No fields created</h2>
 
-                <label>Total = {parseFloat(total).toFixed(2)}</label>
-                <button onClick={handlePutFields}>Save Changes</button>
+                }
             </div>
-        ) : <h2>No fields created</h2>
+        </div>
 
-        }
         {mergeNew.length > 0 && mergeOld.length > 0 &&
         <div id="conflictsMerge">
-
-            <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-            <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
-
+            <div className="content-wrap">
+                <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
+                <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
+            </div>
         </div>
         }
         {commitNew.length > 0 && commitOld.length > 0 &&
         <div id="conflictsCommit">
-            <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
-            <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
+            <div className="content-wrap">
+                <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
+                <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
+            </div>
         </div>
         }
     </>
