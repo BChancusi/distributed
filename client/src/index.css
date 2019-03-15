@@ -1,6 +1,6 @@
 /* colour pallet
-    dark blue - #5ebeda
-    light blue - #1e2952
+    dark blue - #1e2952
+    light blue - #5ebeda
  */
 
 body {
@@ -14,7 +14,9 @@ body {
   background-color: #1e2952;
   color: #5ebeda;
 }
-
+nav {
+    background-color: #5ebeda;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -41,6 +43,51 @@ label {
   text-transform: capitalize;
 }
 
+button{
+    border: none;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #5ebeda  ;
+    color: #1e2952;
+    border-radius: 25px;
+}
+
+.content button {
+    background-color: #1e2952 ;
+    color: #5ebeda;
+}
+
+button:hover{
+    color: white;
+}
+button:focus{
+    outline: none;
+}
+
+nav button {
+    font-size: 30px;
+}
+input {
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    border-radius: 15px;
+    background-color: #5ebeda  ;
+    color: #1e2952;
+}
+
+.content input  {
+    background-color: #1e2952 ;
+    color: #5ebeda;
+}
+
+input::placeholder {
+    color: #1e2952;
+    font-size: 1.2em;
+    font-style: italic;
+}
+
 input:focus {
   outline: 1px solid black;
 }
@@ -53,6 +100,7 @@ button {
 .content{
   background-color: #5ebeda;
   color: #1e2952;
+  padding: 10px;
 }
 
 .content-wrap {

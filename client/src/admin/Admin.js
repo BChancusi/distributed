@@ -81,13 +81,13 @@ function Admin(props) {
          </header>
 
         <nav>
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedInUser(null)
-            }}>Logout
-            </button>
-
-            <button onClick={handleReturn}>Return</button>
+                <button style={{fontSize : 50}}>DB APP</button>
+                <button onClick={() => {
+                    localStorage.clear();
+                    props.setLoggedInUser(null)
+                }}>Logout
+                </button>
+                <button onClick={handleReturn}>Return</button>
         </nav>
 
         <div className="options">
