@@ -66,7 +66,7 @@ function Login(props) {
                                ref={passwordInput}
                                autoComplete="current-password" data-testid="password-text"/>
                     </label>
-                    <input type="submit" value="Login"/>
+                    <button>Login</button>
                 </form>
             </div>
         </>

@@ -89,7 +89,8 @@ input::placeholder {
 }
 
 input:focus {
-  outline: 1px solid black;
+  outline: none;
+  background-color: white;
 }
 
 button {
@@ -106,4 +107,22 @@ button {
 .content-wrap {
   max-width: 600px;
   margin: 0 auto;
+}
+
+@media only screen and (max-width:641px) {
+    button{
+        display: block;
+    }
+
+    h1{
+        font-size: 20px;
+    }
+
+    nav button {
+        font-size: 14px;
+    }
+    label{
+        font-size: 10px;
+    }
+
 }
