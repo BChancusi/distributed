@@ -23,7 +23,7 @@ function Files(props) {
 
                 getFields(resFiles)
                     .then(res => setFileFields(res.express))
-                    .then(()=> setIsLoading(false))
+                    .then(() => setIsLoading(false))
                     .catch(err => console.log(err));
                 //TODO catch and ignore aborted error
             })
@@ -157,29 +157,30 @@ function Files(props) {
 
     let total = 0.00;
 
-    return <>
-        <header>
-            <h1>{props.report.title}</h1>
-        </header>
-        <nav>
-            {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
-            <button onClick={() => props.setReportOpen("")}>Return</button>
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedInUser(null)
-            }}>Logout
-            </button>
-        </nav>
+    return (
+        <>
+            <header>
+                <h1>{props.report.title}</h1>
+            </header>
+            <nav>
+                {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
+                <button onClick={() => props.setReportOpen("")}>Return</button>
+                <button onClick={() => {
+                    localStorage.clear();
+                    props.setLoggedInUser(null)
+                }}>Logout
+                </button>
+            </nav>
 
-        <div>
-            <label>New File Title</label>
-            <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
-                   onChange={(event) => setNewFile(event.target.value)}/>
-            <button disabled={isLoading} onClick={handleNewFile}>New File</button>
-        </div>
-        <div  className="content">
-            <div className="content-wrap">
-                {isLoading ? <h2>Loading Content...</h2> :
+            <div>
+                <label>New File Title</label>
+                <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
+                       onChange={(event) => setNewFile(event.target.value)}/>
+                <button disabled={isLoading} onClick={handleNewFile}>New File</button>
+            </div>
+            <div className="content">
+                <div className="content-wrap">
+                    {isLoading ? <h2>Loading Content...</h2> :
 
                         files.length > 0 ? (
                             <div className="content" id="files">
@@ -204,30 +205,31 @@ function Files(props) {
                             </div>
                         ) : <h2>No files created</h2>
 
-                }
-            </div>
+                    }
+                </div>
 
                 {isLoading ? null :
-                        fileFields.length > 0 &&
-                        <div id="fields">
-                            <ul>
-                                {
-                                    fileFields.map(value => {
+                    fileFields.length > 0 &&
+                    <div id="fields">
+                        <ul>
+                            {
+                                fileFields.map(value => {
 
-                                        total += value.value;
+                                    total += value.value;
 
-                                        return <ul key={value.id}>
-                                            <li>{value.title}</li>
-                                            <li>{value.value}</li>
-                                        </ul>
-                                    })
-                                }
-                            </ul>
-                            <label>Total = £{parseFloat(total).toFixed(2)}</label>
-                        </div>
+                                    return <ul key={value.id}>
+                                        <li>{value.title}</li>
+                                        <li>{value.value}</li>
+                                    </ul>
+                                })
+                            }
+                        </ul>
+                        <label>Total = £{parseFloat(total).toFixed(2)}</label>
+                    </div>
                 }
-        </div>
-    </>
+            </div>
+        </>
+    )
 }
 
 export default Files;

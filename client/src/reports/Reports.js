@@ -113,49 +113,51 @@ function Reports(props) {
         setReports(cloneReports)
     };
 
-    return <>
-        <header>
-            <h1>Reports</h1>
-        </header>
-        <nav>
-            {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
-            <button onClick={() => {
-                localStorage.clear();
-                props.setLoggedInUser(null)
-            }}>Logout
-            </button>
-        </nav>
-        <div>
-            <label>New Report Title</label>
-            <input type="text" value={newReport} ref={reportInput}
-                   onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
-            <button disabled={isLoading} onClick={handleNewReport}>New report</button>
-        </div>
-        <div className="content" id="reports">
-            <div className="content-wrap">
-
-                {isLoading ? <h2>Loading Content...</h2> :
-                    reports.length > 0 ? (
-                        <ul>
-                            {
-                                reports.map((value, index) => {
-                                    return <li key={value.id}>
-                                        <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
-                                        <button onClick={() => props.setReportOpen(value)}>Open Report</button>
-                                        <button
-                                            onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
-                                            report title
-                                        </button>
-                                        <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    ) : <h2>No reports created</h2>
-                }
+    return (
+        <>
+            <header>
+                <h1>Reports</h1>
+            </header>
+            <nav>
+                {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
+                <button onClick={() => {
+                    localStorage.clear();
+                    props.setLoggedInUser(null)
+                }}>Logout
+                </button>
+            </nav>
+            <div>
+                <label>New Report Title</label>
+                <input type="text" value={newReport} ref={reportInput}
+                       onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
+                <button disabled={isLoading} onClick={handleNewReport}>New report</button>
             </div>
-        </div>
-    </>
+            <div className="content" id="reports">
+                <div className="content-wrap">
+
+                    {isLoading ? <h2>Loading Content...</h2> :
+                        reports.length > 0 ? (
+                            <ul>
+                                {
+                                    reports.map((value, index) => {
+                                        return <li key={value.id}>
+                                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                            <button onClick={() => props.setReportOpen(value)}>Open Report</button>
+                                            <button
+                                                onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update
+                                                report title
+                                            </button>
+                                            <button onClick={() => handleDeleteReport(value.id, index)}>Delete</button>
+                                        </li>
+                                    })
+                                }
+                            </ul>
+                        ) : <h2>No reports created</h2>
+                    }
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default Reports;

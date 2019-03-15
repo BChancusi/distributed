@@ -39,4 +39,6 @@ export default App;
 
 //TODO Fix no X created displayed loading, can make a loading text
 //      CSS load first to prevent jaring white screen
-//      Fields are not clearing when changing user etc
+//      Fields are not clearing when changing user etc#
+//      !!!!!!! STATE NOT BEING CLEARED ON COMPONENT UNMOUNT. ADMIN CAN LOGOUT ON ADMIN SCREEN THEN ANOTHER USER WILL
+//      LOG INTO ADMIN SCREEN!!!!!!!!!!!!!!!!!!!!!!
