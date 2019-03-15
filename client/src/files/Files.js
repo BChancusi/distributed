@@ -23,10 +23,10 @@ function Files(props) {
 
                 getFields(resFiles)
                     .then(res => setFileFields(res.express))
+                    .then(()=> setIsLoading(false))
                     .catch(err => console.log(err));
                 //TODO catch and ignore aborted error
             })
-            .then(()=> setIsLoading(false))
             .catch(err => console.log(err));
 
         return () => {
