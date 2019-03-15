@@ -70,7 +70,7 @@ function File(props) {
 
     };
 
-    function handleNewField() {
+    async function handleNewField() {
         if (newFieldTitle.trim() === "") {
             fieldTitleInput.current.style.border = "2px solid red";
             return;
@@ -78,7 +78,7 @@ function File(props) {
 
         setIsLoading(true);
 
-        fetch('/API/fields', {
+        const response = await fetch('/API/fields', {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -88,31 +88,25 @@ function File(props) {
                 "file_id": props.file.id,
                 "branch_title": currentBranch
             })
-        })
-            .then(res => {
+        });
 
-                if (res.status !== 200) {
-                    throw Error(res.status + "")
-                }
+        const result = await response.json();
 
-                return res.json();
-            })
-            .then(result => {
+        if (response.status !== 200) {
+            throw Error(result.body)
+        }
 
-                if (result.express === "already exists") {
-                    setIsLoading(false);
-                    fieldTitleInput.current.style.border = "2px solid red";
-                    return;
-                }
+        if (result.express === "already exists") {
+            setIsLoading(false);
+            fieldTitleInput.current.style.border = "2px solid red";
+            return;
+        }
 
-                fieldTitleInput.current.style.border = "";
-                setFields(fields.concat(result.express));
-                setNewFieldTitle("");
-                setNewFieldValue("");
-                setIsLoading(false);
-            })
-            .catch(err => console.log(err));
-
+        fieldTitleInput.current.style.border = "";
+        setFields(fields.concat(result.express));
+        setNewFieldTitle("");
+        setNewFieldValue("");
+        setIsLoading(false);
     }
 
 
@@ -136,20 +130,7 @@ function File(props) {
         }
     }
 
-    function handlePutFields() {
-
-        putFields(fields)
-            .then(res => {
-                if (res.express !== "no conflicts") {
-                    setCommitNew(res.conflictsNew);
-                    setCommitOld(res.conflictsOld);
-                }
-            })
-            .catch(err => console.log(err));
-
-    }
-
-    const putFields = async () => {
+    async function handlePutFields() {
 
         const response = await fetch(`/API/fields`, {
             method: 'PUT',
@@ -157,31 +138,33 @@ function File(props) {
             body: JSON.stringify(fields)
         });
 
-        const body = await response.json();
+        const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(body.message)
+            throw Error(result.message)
         }
 
-        return body;
-    };
+        if (result.express !== "no conflicts") {
+            setCommitNew(result.conflictsNew);
+            setCommitOld(result.conflictsOld);
+        }
+    }
 
     const handleDeleteFile = async (fieldId, key) => {
 
-        await fetch(`/API/fields/${fieldId}`, {
+        const response = await fetch(`/API/fields/${fieldId}`, {
             signal,
             method: 'DELETE',
-        }).then(response => {
-
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
-
-            setFields(fields.filter((value, index) => {
-
-                return key !== index;
-            }));
         });
+
+        if (response.status !== 200) {
+            throw Error(response.status.toString())
+        }
+
+        setFields(fields.filter((value, index) => {
+
+            return key !== index;
+        }));
     };
 
     const handleDeleteBranch =  () => {

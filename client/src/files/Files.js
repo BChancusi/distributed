@@ -76,6 +76,7 @@ function Files(props) {
     const handleNewFile = async () => {
 
         const fileTrimmed = newFile.trim();
+
         if (fileTrimmed === "") {
             setNewFile("");
             fileInput.current.style.border = "2px solid red";
@@ -84,7 +85,6 @@ function Files(props) {
 
         setIsLoading(true);
 
-
         const response = await fetch('/API/files', {
             signal,
             method: 'POST',
@@ -92,49 +92,47 @@ function Files(props) {
             body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
         });
 
-        await response.json().then(body => {
+        const result = await response.json();
 
-            if (response.status !== 200) {
-                throw Error(body.message)
-            }
+        if (response.status !== 200) {
+            throw Error(result.message)
+        }
 
-            if (body.express === "already exists") {
-                setIsLoading(false);
-                fileInput.current.style.border = "2px solid red";
-            } else {
+        if (result.express === "already exists") {
+            setIsLoading(false);
+            fileInput.current.style.border = "2px solid red";
 
-                fileInput.current.style.border = "";
-                setFiles(files.concat(body.express));
-                setNewFile("");
-                setIsLoading(false);
-            }
-        });
+        } else {
 
+            fileInput.current.style.border = "";
+            setFiles(files.concat(result.express));
+            setNewFile("");
+            setIsLoading(false);
+        }
     };
 
 
     const handleDeleteFile = async (fileId, key) => {
 
-        await fetch(`/API/files/${fileId}`, {
+        const response = await fetch(`/API/files/${fileId}`, {
             signal,
             method: 'DELETE',
-        }).then(response => {
-
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
-
-            setFiles(files.filter((value, index) => {
-
-                return key !== index;
-            }));
-
-
-            setFileFields(fileFields.filter(value => {
-
-                return value.file_Id !== fileId;
-            }))
         });
+
+        if (response.status !== 200) {
+            throw Error(response.status.toString())
+        }
+
+        setFiles(files.filter((value, index) => {
+
+            return key !== index;
+        }));
+
+
+        setFileFields(fileFields.filter(value => {
+
+            return value.file_Id !== fileId;
+        }))
     };
 
     const handlePutFile = async (value, key) => {
@@ -143,19 +141,18 @@ function Files(props) {
 
         cloneFiles[key].title = value;
 
-        await fetch(`/API/files/${cloneFiles[key].id}`, {
+        const response = await fetch(`/API/files/${cloneFiles[key].id}`, {
             signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": cloneFiles[key].title})
-        }).then(response => {
+        });
 
-            if (response.status !== 200) {
-                throw Error(response.status.toString())
-            }
+        if (response.status !== 200) {
+            throw Error(response.status.toString())
+        }
 
-            setFiles(cloneFiles)
-        }).catch(err => console.log(err));
+        setFiles(cloneFiles)
     };
 
     let total = 0.00;
