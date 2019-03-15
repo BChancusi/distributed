@@ -76,34 +76,40 @@ function Files(props) {
     const handleNewFile = async () => {
 
         const fileTrimmed = newFile.trim();
-        if (fileTrimmed !== "") {
-
-            const response = await fetch('/API/files', {
-                signal,
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
-            });
-
-            await response.json().then(body => {
-
-                if (response.status !== 200) {
-                    throw Error(body.message)
-                }
-
-                if (body.express === "already exists") {
-                    fileInput.current.style.border = "2px solid red";
-                } else {
-
-                    fileInput.current.style.border = "";
-                    setFiles(files.concat(body.express));
-                    setNewFile("");
-                }
-            });
-        } else {
+        if (fileTrimmed === "") {
             setNewFile("");
             fileInput.current.style.border = "2px solid red";
+            return
         }
+
+        setIsLoading(true);
+
+
+        const response = await fetch('/API/files', {
+            signal,
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": fileTrimmed, "report_id": props.report.id})
+        });
+
+        await response.json().then(body => {
+
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+
+            if (body.express === "already exists") {
+                setIsLoading(false);
+                fileInput.current.style.border = "2px solid red";
+            } else {
+
+                fileInput.current.style.border = "";
+                setFiles(files.concat(body.express));
+                setNewFile("");
+                setIsLoading(false);
+            }
+        });
+
     };
 
 

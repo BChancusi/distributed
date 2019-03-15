@@ -35,39 +35,47 @@ function Reports(props) {
         return body;
     };
 
-    const handleNewReport = async () => {
+    const handleNewReport = () => {
 
         const trimmed = newReport.trim();
-        if (trimmed !== "") {
 
-            const response = await fetch('/API/reports', {
-                signal,
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({"title": trimmed})
-            });
-
-            await response.json().then(body => {
-
-                if (response.status !== 200) {
-                    throw Error(body.message)
-                }
-
-                if (body.express === "already exists") {
-                    reportInput.current.style.border = "2px solid red";
-
-                } else {
-
-                    reportInput.current.style.border = "";
-                    setReports(reports.concat(body.express));
-                    setNewReport("")
-                }
-            });
-        } else {
-
+        if (trimmed === "") {
             setNewReport("");
             reportInput.current.style.border = "2px solid red";
+            return;
         }
+
+        setIsLoading(true);
+
+        fetch('/API/reports', {
+            signal,
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({"title": trimmed})
+        })
+            .then(res => {
+                if (res.status !== 200) {
+                    throw Error(res.status + "")
+                }
+
+                return res.json();
+            })
+            .then(body => {
+
+            if (body.express === "already exists") {
+                setIsLoading(false);
+                reportInput.current.style.border = "2px solid red";
+
+
+            } else {
+
+                reportInput.current.style.border = "";
+                setReports(reports.concat(body.express));
+                setNewReport("");
+                setIsLoading(false);
+
+            }
+        });
     };
 
 
