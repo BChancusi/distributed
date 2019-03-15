@@ -35,7 +35,7 @@ function Reports(props) {
         return body;
     };
 
-    const handleNewReport = () => {
+    const handleNewReport = async () => {
 
         const trimmed = newReport.trim();
 
@@ -47,35 +47,29 @@ function Reports(props) {
 
         setIsLoading(true);
 
-        fetch('/API/reports', {
+        const response = await fetch('/API/reports', {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": trimmed})
-        })
-            .then(res => {
-                if (res.status !== 200) {
-                    throw Error(res.status + "")
-                }
-
-                return res.json();
-            })
-            .then(body => {
-
-            if (body.express === "already exists") {
-                setIsLoading(false);
-                reportInput.current.style.border = "2px solid red";
-
-
-            } else {
-
-                reportInput.current.style.border = "";
-                setReports(reports.concat(body.express));
-                setNewReport("");
-                setIsLoading(false);
-
-            }
         });
+
+        if(response.status !== 200){
+            throw Error(response.status + "")
+        }
+
+        const result = await response.json();
+
+        if (result.express === "already exists") {
+            setIsLoading(false);
+            reportInput.current.style.border = "2px solid red";
+            return;
+        }
+
+        reportInput.current.style.border = "";
+        setReports(reports.concat(result.express));
+        setNewReport("");
+        setIsLoading(false);
     };
 
 

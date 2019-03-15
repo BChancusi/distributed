@@ -529,3 +529,5 @@ export default File;
 //TODO  If old values are selected replace fields with old values
 //      MERGING branch doesnt save fields as well on current branch
 //      Deep prevent non number
+//      Prevent merge button being spammed
+//      Clear save conflicts when attempting to merge without confirming
