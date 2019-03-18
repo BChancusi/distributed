@@ -143,7 +143,7 @@ function File(props) {
         }
     }
 
-    const handleDeleteFile = async (fieldId, key) => {
+    async function handleDeleteFile(fieldId, key) {
 
         const response = await fetch(`/API/fields/${fieldId}`, {
             signal,
@@ -158,9 +158,9 @@ function File(props) {
 
             return key !== index;
         }));
-    };
+    }
 
-    const handleDeleteBranch = async () => {
+    async function handleDeleteBranch() {
 
         const response = await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
@@ -177,7 +177,7 @@ function File(props) {
 
         setCurrentBranch("master");
 
-    };
+    }
 
     async function handleNewBranch() {
 
@@ -494,3 +494,4 @@ export default File;
 //      Prevent merge button being spammed
 //      Clear save conflicts when attempting to merge without confirming
 //      Merge Warning: Each child in a list should have a unique "key" prop.
+//      Confirm conflicts button not working if no values selected

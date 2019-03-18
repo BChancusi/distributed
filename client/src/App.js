@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Reports from "./reports/Reports";
 import Login from "./login/Login";
@@ -14,7 +14,16 @@ function App() {
     const [reportOpen, setReportOpen] = useState("");
     const [fileOpen, setFileOpen] = useState("");
 
+    // useEffect(() => {
+    //     console.debug("running effect app")
+    //     setReportOpen("");
+    //     setFileOpen("");
+    //     setAdminOpen(false);
+    //
+    // }, [localStorage.getItem("user")]);
+
     if (user == null) {
+
         return <Login setLoggedInUser={setUser}/>
 
     } else if (adminOpen) {
@@ -40,5 +49,5 @@ export default App;
 //TODO Fix no X created displayed loading, can make a loading text
 //      CSS load first to prevent jaring white screen
 //      Fields are not clearing when changing user etc#
-//      !!!!!!! STATE NOT BEING CLEARED ON COMPONENT UNMOUNT. ADMIN CAN LOGOUT ON ADMIN SCREEN THEN ANOTHER USER WILL
-//      LOG INTO ADMIN SCREEN!!!!!!!!!!!!!!!!!!!!!!
+//      React security
+//      Set report and file to null when user logs out to prevent other users logging in to same location

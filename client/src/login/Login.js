@@ -63,18 +63,20 @@ function Login(props) {
                 <h2>Please Login</h2>
             </header>
             <div className="content" id="login">
-                <form onSubmit={handleLogin}>
-                    <label>Username
-                        <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
-                               autoComplete="username" data-testid="username-text"/>
-                    </label>
-                    <label>Password
-                        <input value={password} onChange={handleChange} type="password" name="password"
-                               ref={passwordInput}
-                               autoComplete="current-password" data-testid="password-text"/>
-                    </label>
-                    <button>Login</button>
-                </form>
+                <div className="content-wrap">
+                    <form onSubmit={handleLogin}>
+                        <label>Username
+                            <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
+                                   autoComplete="username" data-testid="username-text"/>
+                        </label>
+                        <label>Password
+                            <input value={password} onChange={handleChange} type="password" name="password"
+                                   ref={passwordInput}
+                                   autoComplete="current-password" data-testid="password-text"/>
+                        </label>
+                        <button>Login</button>
+                    </form>
+                </div>
             </div>
         </>
     )
