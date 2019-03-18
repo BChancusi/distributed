@@ -62,6 +62,11 @@ test('new created report in document', async () => {
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
 
+    await waitForElement(() => getByText("Loading Content..."));
+
+    await waitForElement(() => getByText("Loading Content..."));
+
+
     await waitForElement(() => getByText("Open Report"));
 
     expect(getByText("Open Report")).toBeInTheDocument();

@@ -55,7 +55,7 @@ router.route('/')
                         res.send({express: results});
                     });
                 });
-            }else{
+            } else {
                 res.send({express: "already exists"})
             }
         });
@@ -230,9 +230,6 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
 
         req.body.forEach((value, index) => {
 
-            delete value.id;
-            delete value.timestamp;
-
             value.branch_title = req.params.mergeBranch;
 
             query.push(Object.values(value));
@@ -270,21 +267,26 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                 let boolean = true;
                 for (let i = 0; i < deleteTitles.length; i++) {
 
+                    //value[3] is title index of value
                     if (value[3] === deleteTitles[i]) {
 
                         boolean = false;
                         break;
                     }
                 }
+
+                value.pop();
+                value.shift();
+
                 return boolean;
             });
 
-
             if (query.length > 0) {
-                pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
-                    if (error) throw error;
+                pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`,
+                    [query], function (error) {
+                        if (error) throw error;
 
-                });
+                    });
             }
 
             res.send({express: "no conflicts"});

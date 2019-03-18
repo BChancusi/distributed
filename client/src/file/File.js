@@ -470,7 +470,7 @@ function File(props) {
             <div id="conflictsMerge">
                 <div className="content-wrap">
                     <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-                    <button onClick={handleResolveConflicts}>Confirm Merge Changes</button>
+                    <button onClick={handleResolveConflicts}>Confirm Field Replacement</button>
                 </div>
             </div>
             }
