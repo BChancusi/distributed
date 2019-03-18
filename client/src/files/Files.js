@@ -180,7 +180,7 @@ function Files(props) {
             </div>
             <div className="content">
                 <div className="content-wrap">
-                    {isLoading ? <h2>Loading Content...</h2> :
+                    {isLoading ? <h2>Loading...</h2> :
 
                         files.length > 0 ? (
                             <div className="content" id="files">

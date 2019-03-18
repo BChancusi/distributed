@@ -141,6 +141,7 @@ function File(props) {
             setCommitNew(result.conflictsNew);
             setCommitOld(result.conflictsOld);
         }
+
     }
 
     async function handleDeleteFile(fieldId, key) {
@@ -219,6 +220,8 @@ function File(props) {
 
     async function handleMergeBranch() {
 
+        setIsLoading(true);
+
         const response = await fetch(`/API/fields/mergeBranch/${(document.getElementById("selectMerge").value)}`, {
             signal,
             method: 'POST',
@@ -236,6 +239,9 @@ function File(props) {
             setMergeNew(result.conflictsSource);
             setMergeOld(result.conflictsTarget);
         }
+
+        setIsLoading(false);
+
     }
 
     async function handleResolveConflicts() {
@@ -434,7 +440,7 @@ function File(props) {
             </div>
             <div className="content">
                 <div className="content-wrap">
-                    {isLoading ? <h2>Loading Content...</h2> :
+                    {isLoading ? <h2>Loading...</h2> :
                         fields.length > 0 ? (
                             <div id="fields">
                                 <ul>
