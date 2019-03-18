@@ -34,7 +34,7 @@ function Files(props) {
         }
     }, []);
 
-    const getFields = async (resFiles) => {
+    async function getFields(resFiles) {
 //TODO change +master to query
 
         let idsURL = "";
@@ -59,9 +59,9 @@ function Files(props) {
 
         return body;
 
-    };
+    }
 
-    const getFiles = async (reportId) => {
+    async function getFiles(reportId) {
 
         const response = await fetch(encodeURI(`/API/files/branch?report_id=${reportId}&branch_title=master`), {signal});
         const body = await response.json();
@@ -71,9 +71,9 @@ function Files(props) {
         }
 
         return body;
-    };
+    }
 
-    const handleNewFile = async () => {
+    async function handleNewFile() {
 
         const fileTrimmed = newFile.trim();
 
@@ -109,10 +109,10 @@ function Files(props) {
             setNewFile("");
             setIsLoading(false);
         }
-    };
+    }
 
 
-    const handleDeleteFile = async (fileId, key) => {
+    async function handleDeleteFile(fileId, key) {
 
         const response = await fetch(`/API/files/${fileId}`, {
             signal,
@@ -133,9 +133,9 @@ function Files(props) {
 
             return value.file_Id !== fileId;
         }))
-    };
+    }
 
-    const handlePutFile = async (value, key) => {
+    async function handlePutFile(value, key) {
 
         let cloneFiles = [...files];
 
@@ -153,7 +153,7 @@ function Files(props) {
         }
 
         setFiles(cloneFiles)
-    };
+    }
 
     let total = 0.00;
 

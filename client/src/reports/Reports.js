@@ -37,7 +37,7 @@ function Reports(props) {
     }, []);
 
 
-    const handleNewReport = async () => {
+    async function handleNewReport() {
 
         const trimmed = newReport.trim();
 
@@ -72,10 +72,10 @@ function Reports(props) {
         setReports(reports.concat(result.express));
         setNewReport("");
         setIsLoading(false);
-    };
+    }
 
 
-    const handleDeleteReport = async (reportId, key) => {
+    async function handleDeleteReport(reportId, key) {
 
         const response = await fetch(`/API/reports/${reportId}`, {
             signal,
@@ -90,10 +90,10 @@ function Reports(props) {
 
             return key !== index;
         }));
-    };
+    }
 
 
-    const handlePutReport = async (value, key) => {
+    async function handlePutReport(value, key) {
 
         let cloneReports = [...reports];
 
@@ -111,7 +111,7 @@ function Reports(props) {
         }
 
         setReports(cloneReports)
-    };
+    }
 
     return (
         <>

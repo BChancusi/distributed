@@ -17,7 +17,7 @@ function Login(props) {
         }
     });
 
-    const handleLogin = async (event) => {
+    async function handleLogin (event) {
         event.preventDefault();
 
         const response = await fetch(`/API/users/signin?username=${username}&password=${password}`, {
@@ -45,7 +45,7 @@ function Login(props) {
             props.setLoggedInUser(result.express);
             localStorage.setItem("user", JSON.stringify(result.express))
         }
-    };
+    }
 
     function handleChange(event) {
 
