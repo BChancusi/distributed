@@ -125,6 +125,8 @@ function File(props) {
 
     async function handlePutFields() {
 
+        setIsLoading(true);
+
         const response = await fetch(`/API/fields`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
@@ -142,6 +144,7 @@ function File(props) {
             setCommitOld(result.conflictsOld);
         }
 
+        setIsLoading(false);
     }
 
     async function handleDeleteFile(fieldId, key) {
@@ -163,6 +166,8 @@ function File(props) {
 
     async function handleDeleteBranch() {
 
+        setIsLoading(true);
+
         const response = await fetch(`/API/fields/deleteBranch/query?branch_title=${currentBranch}&file_id=${props.file.id}&title=${props.file.title}`, {
             signal,
             method: 'DELETE',
@@ -175,6 +180,8 @@ function File(props) {
         setFileTitles(fileTitles.filter(value => {
             return value.branch_title !== currentBranch;
         }));
+
+        setIsLoading(false);
 
         setCurrentBranch("master");
 
@@ -246,6 +253,9 @@ function File(props) {
 
     async function handleResolveConflicts() {
 
+        setIsLoading(true);
+
+
         let resolved = [];
 
         let cloneMerge = [...mergeResolved];
@@ -301,6 +311,8 @@ function File(props) {
         setMergeOld([]);
         setMergeNew([]);
         setMergeResolved([]);
+
+        setIsLoading(false);
     }
 
 
@@ -343,6 +355,9 @@ function File(props) {
     async function handleResolveConflictsCommit() {
 
         if (commitResolved.length > 0) {
+
+            setIsLoading(true);
+
             const response = await fetch(`/API/fields/commitResolved`, {
                 signal,
                 method: 'PUT',
@@ -358,6 +373,8 @@ function File(props) {
             setCommitOld([]);
             setCommitNew([]);
             setCommitResolved([]);
+
+            setIsLoading(false);
         }
     }
 
@@ -476,7 +493,7 @@ function File(props) {
             <div id="conflictsMerge">
                 <div className="content-wrap">
                     <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-                    <button onClick={handleResolveConflicts}>Confirm Field Replacement</button>
+                    <button disabled={isLoading} onClick={handleResolveConflicts}>Confirm Field Replacement</button>
                 </div>
             </div>
             }
@@ -484,7 +501,7 @@ function File(props) {
             <div id="conflictsCommit">
                 <div className="content-wrap">
                     <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
-                    <button onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
+                    <button disabled={isLoading} onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
                 </div>
             </div>
             }
