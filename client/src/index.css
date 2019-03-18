@@ -119,8 +119,12 @@ footer {
 }
 
 @media only screen and (max-width:641px) {
+
     button{
         display: block;
+        padding: 10px;
+        margin: 10px;
+
     }
 
     h1{
@@ -137,5 +141,4 @@ footer {
     label{
         font-size: 10px;
     }
-
 }
