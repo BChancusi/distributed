@@ -46,8 +46,7 @@ function App() {
 
 export default App;
 
-//TODO Fix no X created displayed loading, can make a loading text
-//      CSS load first to prevent jaring white screen
+//TODO  CSS load first to prevent jaring white screen
 //      Fields are not clearing when changing user etc#
 //      React security
 //      Set report and file to null when user logs out to prevent other users logging in to same location
