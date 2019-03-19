@@ -64,7 +64,6 @@ router.get('/branch', (req, res) => {
             return res.send({data: {files: [], fields: []}})
         }
         const ids = await resultsFiles.map(value => {
-
             return value.id;
         });
 
