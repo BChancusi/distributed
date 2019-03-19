@@ -18,20 +18,19 @@ router.route('/')
         pool.query(`SELECT * FROM files WHERE title = ? AND report_id = ? `, [req.body.title, req.body.report_id], function (error, results) {
             if (error) throw error;
 
-            if (results.length === 0) {
+            if (results.length > 0) {
+                return res.send({express: "already exists"})
+            }
 
-                pool.query(`INSERT INTO files SET ?`, req.body, function (error, results) {
+            pool.query(`INSERT INTO files SET ?`, req.body, function (error, results) {
+                if (error) throw error;
+
+                pool.query('SELECT * FROM files WHERE id = ?', [results.insertId], function (error, results) {
                     if (error) throw error;
 
-                    pool.query('SELECT * FROM files WHERE id = ?', [results.insertId], function (error, results) {
-                        if (error) throw error;
-
-                        res.send({express: results});
-                    });
+                    res.send({express: results});
                 });
-            }else{
-                res.send({express: "already exists"})
-            }
+            });
         });
     });
 router.route('/:fileId')
@@ -58,12 +57,24 @@ router.route('/:fileId')
 
 router.get('/branch', (req, res) => {
 
-    pool.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = ?`, [req.query.report_id, req.query.branch_title], function (error, results) {
+    pool.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = 'master'`, [req.query.report_id], async function (error, resultsFiles) {
         if (error) throw error;
 
-        res.send({express: results});
-    });
+        if(resultsFiles.length === 0){
+            return res.send({data: {files: [], fields: []}})
+        }
+        const ids = await resultsFiles.map(value => {
 
+            return value.id;
+        });
+
+        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = "master"', [ids], function (error, results) {
+            if (error) throw error;
+
+            res.send({data: {files: resultsFiles, fields: results}});
+        });
+
+    });
 });
 
 module.exports = router;

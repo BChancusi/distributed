@@ -13,65 +13,39 @@ function Files(props) {
     const signal = controller.signal;
 
     useEffect(() => {
-        getFiles(props.report.id)
-            .then(res => {
 
-                setFiles(res.express);
-                return res.express
-            })
-            .then((resFiles) => {
+        async function fetchFilesAndFields (){
 
-                getFields(resFiles)
-                    .then(res => setFileFields(res.express))
-                    .then(() => setIsLoading(false))
-                    .catch(err => console.log(err));
-                //TODO catch and ignore aborted error
-            })
-            .catch(err => console.log(err));
+            const response = await fetch(`/API/files/branch?report_id=${props.report.id}`, {signal});
+            const result = await response.json();
+
+            if (response.status !== 200) {
+                throw Error(result.message)
+            }
+
+            if(result.data.files.length === 0){
+                setIsLoading(false);
+                return;
+            }
+
+            setFiles(result.data.files);
+
+            if(result.data.fields.length === 0){
+                setIsLoading(false);
+                return
+            }
+            setFileFields(result.data.fields);
+
+            setIsLoading(false);
+        }
+
+        fetchFilesAndFields().catch(error => console.log(error));
 
         return () => {
             controller.abort();
         }
     }, []);
 
-    async function getFields(resFiles) {
-//TODO change +master to query
-
-        let idsURL = "";
-
-        resFiles.forEach(value => {
-            idsURL += value.id + "+"
-        });
-
-        if (idsURL === "") {
-            idsURL += "+master";
-        } else {
-            idsURL += "master";
-        }
-
-        const response = await fetch(`/API/fields/file/${idsURL}`, {signal});
-
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-
-        return body;
-
-    }
-
-    async function getFiles(reportId) {
-
-        const response = await fetch(encodeURI(`/API/files/branch?report_id=${reportId}&branch_title=master`), {signal});
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-
-        return body;
-    }
 
     async function handleNewFile() {
 

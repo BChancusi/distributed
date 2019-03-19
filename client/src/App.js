@@ -50,3 +50,4 @@ export default App;
 //      Fields are not clearing when changing user etc#
 //      React security
 //      Set report and file to null when user logs out to prevent other users logging in to same location
+//      Set isloading to false on error and display error

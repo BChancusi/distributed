@@ -14,29 +14,6 @@ router.route('/:fileBranch')
 
     });
 
-router.get('/file/:fileIds', (req, res) => {
-
-    let promise = new Promise((resolve, reject) => {
-
-        const ids = req.params.fileIds;
-        let queryIds = ids.split("+");
-
-        resolve(queryIds)
-    });
-
-
-    promise.then(query => {
-
-        const masterBranch = query.pop();
-
-        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = ?', [query, masterBranch], function (error, results) {
-            if (error) throw error;
-
-            res.send({express: results});
-        });
-
-    });
-});
 
 router.route('/')
     .post((req, res) => {
