@@ -136,7 +136,8 @@ function Files(props) {
     return (
         <>
             <header>
-                <h1>Path: {props.report.title}</h1>
+                <h1>Distributed Budgeting App</h1>
+                <h3>File Path: {props.report.title}</h3>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
