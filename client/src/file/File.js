@@ -389,7 +389,7 @@ function File(props) {
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setFileOpen("")}>Return</button>
-                <button onClick={() => {
+                <button  className="nav-button" onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)
                 }}>Logout
@@ -398,13 +398,7 @@ function File(props) {
 
             <div id="options">
                 <ul>
-                    <li>
-                        <label>New Branch Title</label>
-                        <input type="text" value={newBranchTitle} ref={branchTitleInput}
-                               onChange={(event) => setNewBranchTitle(event.target.value)}
-                               placeholder="E.g - version 2"/>
-                        <button disabled={isLoading} onClick={handleNewBranch}>New Branch</button>
-                    </li>
+
                     <li>
                         <label>Current Branch</label>
                         <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
@@ -421,7 +415,7 @@ function File(props) {
                         {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                             <>
                                 <button disabled={isLoading} onClick={handleDeleteBranch}>Delete Current Branch</button>
-                                <label>Merge Branch</label>
+                                <label>Merge current branch with</label>
                                 <select id="selectMerge">
                                     {
                                         fileTitles.map(value => {
@@ -434,11 +428,20 @@ function File(props) {
                                         })
                                     }
                                 </select>
-                                <button disabled={isLoading} onClick={handleMergeBranch}>Merge Branch target</button>
+                                <button disabled={isLoading} onClick={handleMergeBranch}>Merge</button>
                             </>
                             : null}
 
                     </li>
+
+                    <li>
+                        <label>New Branch Title</label>
+                        <input type="text" value={newBranchTitle} ref={branchTitleInput}
+                               onChange={(event) => setNewBranchTitle(event.target.value)}
+                               placeholder="E.g - version 2"/>
+                        <button disabled={isLoading} onClick={handleNewBranch}>New Branch</button>
+                    </li>
+
 
                     <li>
 
@@ -516,3 +519,4 @@ export default File;
 //      Deep prevent non number
 //      Clear save conflicts when attempting to merge without confirming
 //      Confirm conflicts button not working if no values selected
+//      Display fields based on files - File - fields - file - more fields etc to make fields more in line with file

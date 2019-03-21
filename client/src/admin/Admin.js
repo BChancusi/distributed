@@ -85,7 +85,7 @@ function Admin(props) {
 
             <nav>
                 <button onClick={handleReturn}>Return</button>
-                <button style={{float: "right"}} onClick={() => {
+                <button className="nav-button" onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)
                 }}>Logout

@@ -51,3 +51,4 @@ export default App;
 //      React security
 //      Set report and file to null when user logs out to prevent other users logging in to same location
 //      Set isloading to false on error and display error
+//      Report/file/fields when massive amount need search or another way to navigate
