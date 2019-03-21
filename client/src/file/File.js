@@ -391,7 +391,7 @@ function File(props) {
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
-                <button onClick={() => props.setFileOpen("")}>Return</button>
+                <button onClick={() => props.setFileOpen("")}>Files</button>
                 <button  className="nav-button" onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)

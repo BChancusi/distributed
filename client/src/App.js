@@ -14,13 +14,12 @@ function App() {
     const [reportOpen, setReportOpen] = useState("");
     const [fileOpen, setFileOpen] = useState("");
 
-    // useEffect(() => {
-    //     console.debug("running effect app")
-    //     setReportOpen("");
-    //     setFileOpen("");
-    //     setAdminOpen(false);
-    //
-    // }, [localStorage.getItem("user")]);
+    useEffect(() => {
+        setReportOpen("");
+        setFileOpen("");
+        setAdminOpen(false);
+
+    }, [user]);
 
     if (user == null) {
 
@@ -47,7 +46,6 @@ function App() {
 export default App;
 
 //TODO  CSS load first to prevent jaring white screen
-//      Set report and file to null when user logs out to prevent other users logging in to same location
 //      Set isloading to false on error and display error
 //      Report/file/fields when massive amount need search or another way to navigate
 //      Stop is loading showing if on submit, or make it so only shows a snippet
