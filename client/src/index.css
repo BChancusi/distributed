@@ -48,6 +48,34 @@ h2{
   font-size: 40px;
   color: #1e2952;
 }
+
+/*
+TABLES
+ */
+
+table {
+    width: 100%;
+}
+
+th {
+    height: 50px;
+    border-bottom: 1px solid #1e2952;
+}
+
+td {
+    text-align: center;
+    height: 20px;
+
+}
+
+
+tr:nth-child(even) {
+    background-color: #1e2952;
+    color: #5ebeda;
+}
+
+/*******************/
+
 button{
     border: none;
     padding: 10px;
