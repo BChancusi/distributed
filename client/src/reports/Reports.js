@@ -71,7 +71,7 @@ function Reports(props) {
 
         const result = await response.json();
 
-        if (result.express === "already exists") {
+        if (result.express === "already exists" || result.express === "length exceeds 50") {
             setIsLoading(false);
             reportInput.current.style.border = "2px solid red";
             return;

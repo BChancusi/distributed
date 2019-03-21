@@ -15,6 +15,9 @@ router.route('/')
     })
     .post((req, res) => {
 
+        if(req.body.title.length > 50) {
+            return res.send({express: "length exceeds 50"})
+        }
 
         pool.query(`SELECT * FROM reports WHERE title = ?`, [req.body.title], function (error, results) {
             if (error) throw error;
