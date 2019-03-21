@@ -384,7 +384,7 @@ function File(props) {
         <>
 
             <header>
-                <h1>{props.report.title + "\\" + props.file.title + "\\" + currentBranch}</h1>
+                <h1>Path: {props.report.title + " \\ " + props.file.title + " \\ " + currentBranch}</h1>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
@@ -436,7 +436,7 @@ function File(props) {
 
                     <li>
                         <label>New Branch Title</label>
-                        <input type="text" value={newBranchTitle} ref={branchTitleInput}
+                        <input className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
                                onChange={(event) => setNewBranchTitle(event.target.value)}
                                placeholder="E.g - version 2"/>
                         <button disabled={isLoading} onClick={handleNewBranch}>New Branch</button>
@@ -446,11 +446,11 @@ function File(props) {
                     <li>
 
                         <label>New Field Title</label>
-                        <input type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
+                        <input className="input-options" type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
                                value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
                         <label>New Field Amount </label>
-                        <input type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
+                        <input className="input-options" type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
                             setNewFieldValue(event.target.value);
                         }}/>
                         <button disabled={isLoading} onClick={handleNewField}>New Field</button>
@@ -463,6 +463,7 @@ function File(props) {
                     {isLoading ? <h2>Loading...</h2> :
                         fields.length > 0 ? (
                             <div id="fields">
+                                <label className="total-available-label"> Total Available = £{parseFloat(total).toFixed(2)}</label>
                                 <ul>
                                     {
                                         fields.map((value, index) => {
@@ -482,8 +483,6 @@ function File(props) {
                                         })
                                     }
                                 </ul>
-
-                                <label>Total = {parseFloat(total).toFixed(2)}</label>
                                 <button onClick={handlePutFields}>Save Changes</button>
                             </div>
                         ) : <h2>No fields created</h2>

@@ -134,7 +134,7 @@ function Files(props) {
     return (
         <>
             <header>
-                <h1>{props.report.title}</h1>
+                <h1>Path: {props.report.title}</h1>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
@@ -148,7 +148,7 @@ function Files(props) {
 
             <div>
                 <label>New File Title</label>
-                <input type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
+                <input className="input-options" type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
                        onChange={(event) => setNewFile(event.target.value)}/>
                 <button disabled={isLoading} onClick={handleNewFile}>New File</button>
             </div>
@@ -198,7 +198,7 @@ function Files(props) {
                                 })
                             }
                         </ul>
-                        <label>Total = £{parseFloat(total).toFixed(2)}</label>
+                        <label className="total-available-label" >Total Available = £{parseFloat(total).toFixed(2)}</label>
                     </div>
                 }
             </div>

@@ -128,7 +128,7 @@ function Reports(props) {
             </nav>
             <div>
                 <label>New Report Title</label>
-                <input type="text" value={newReport} ref={reportInput}
+                <input className="input-options" type="text" value={newReport} ref={reportInput}
                        onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
                 <button disabled={isLoading} onClick={handleNewReport}>New report</button>
             </div>
