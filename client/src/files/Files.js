@@ -3,8 +3,9 @@ import React, {useState, useEffect, useRef} from 'react';
 function Files(props) {
 
     const [files, setFiles] = useState([]);
-    const [newFile, setNewFile] = useState("");
     const [fileFields, setFileFields] = useState([]);
+
+    const [newFile, setNewFile] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     const fileInput = useRef(null);

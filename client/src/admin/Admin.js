@@ -39,6 +39,11 @@ function Admin(props) {
     async function handlePostUser(event) {
         event.preventDefault();
 
+        if(newPassword.trim() === "" || newUsername.trim() === ""){
+            console.debug("error username");
+            return;
+        }
+
         const response = await fetch(
             `API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
             {signal, method: "POST"}
@@ -95,12 +100,12 @@ function Admin(props) {
             <div className="options">
                 <form onSubmit={handlePostUser}>
                     <label>New username</label>
-                    <input value={newUsername} onChange={handleChange} name="newUsername" type="text"
+                    <input className="input-options" value={newUsername} onChange={handleChange} name="newUsername" type="text"
                            autoComplete="username"/>
                     {/*TODO generate password*/}
 
                     <label>New Password</label>
-                    <input value={newPassword} onChange={handleChange} name="newPassword" type="password"
+                    <input className="input-options" value={newPassword} onChange={handleChange} name="newPassword" type="password"
                            autoComplete="current-password"/>
 
                     <label>Permission Level</label>

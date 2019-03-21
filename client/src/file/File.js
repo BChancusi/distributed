@@ -463,7 +463,6 @@ function File(props) {
                     {isLoading ? <h2>Loading...</h2> :
                         fields.length > 0 ? (
                             <div id="fields">
-                                <label className="total-available-label"> Total Available = £{parseFloat(total).toFixed(2)}</label>
                                 <ul>
                                     {
                                         fields.map((value, index) => {
@@ -483,6 +482,7 @@ function File(props) {
                                         })
                                     }
                                 </ul>
+                                <label className="total-available-label"> Total = £{parseFloat(total).toFixed(2)}</label>
                                 <button onClick={handlePutFields}>Save Changes</button>
                             </div>
                         ) : <h2>No fields created</h2>
