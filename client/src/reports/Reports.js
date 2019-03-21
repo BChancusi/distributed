@@ -37,6 +37,14 @@ function Reports(props) {
     }, []);
 
 
+    function handleTitleChange(event){
+
+        if(event.target.value.length > event.target.maxLength){
+            setNewReport(event.target.value.slice(0, event.target.maxLength))
+        }else{
+            setNewReport(event.target.value)
+        }
+    }
     async function handleNewReport(event) {
         event.preventDefault();
 
@@ -132,7 +140,7 @@ function Reports(props) {
                 <form onSubmit={handleNewReport}>
                     <label>New Report Title</label>
                     <input className="input-options" maxLength="50" type="text" value={newReport} ref={reportInput}
-                           onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
+                           onChange={handleTitleChange} placeholder="E.g - Report 2019"/>
                     <button disabled={isLoading}>New report</button>
                 </form>
             </div>
