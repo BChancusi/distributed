@@ -121,7 +121,7 @@ function Reports(props) {
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
-                <button  className="nav-button" onClick={() => {
+                <button  onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)
                 }}>Logout
