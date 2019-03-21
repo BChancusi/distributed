@@ -57,8 +57,11 @@ h2 {
 
 h3 {
     font-size: 30px;
-    display: inline;
+    /*display: inline;*/
     padding: 20px;
+    width: 100%;
+    max-width: 90%;
+    overflow: auto;
 }
 
 /*
@@ -195,6 +198,11 @@ footer {
 .content .button-admin-table {
     background-color: #5ebeda;
     color: #1e2952
+}
+
+select {
+    width: 100%;
+    max-width: 10%;
 }
 
 @media only screen and (max-width: 641px) {

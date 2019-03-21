@@ -131,7 +131,7 @@ function Reports(props) {
             <div>
                 <form onSubmit={handleNewReport}>
                     <label>New Report Title</label>
-                    <input className="input-options" type="text" value={newReport} ref={reportInput}
+                    <input className="input-options" maxLength="50" type="text" value={newReport} ref={reportInput}
                            onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
                     <button disabled={isLoading}>New report</button>
                 </form>
@@ -145,7 +145,7 @@ function Reports(props) {
                                 {
                                     reports.map((value, index) => {
                                         return <li key={value.id}>
-                                            <input type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
+                                            <input maxLength="50" type="text" defaultValue={value.title} id={`textInput${value.id}`}/>
                                             <button onClick={() => props.setReportOpen(value)}>Open Report</button>
                                             <button
                                                 onClick={() => handlePutReport(document.getElementById(`textInput${value.id}`).value, index)}>Update

@@ -66,11 +66,11 @@ function Login(props) {
                 <div className="content-wrap">
                     <form onSubmit={handleLogin}>
                         <label>Username
-                            <input value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
+                            <input maxLength="50" value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
                                    autoComplete="username" data-testid="username-text"/>
                         </label>
                         <label>Password
-                            <input value={password} onChange={handleChange} type="password" name="password"
+                            <input maxLength="50" value={password} onChange={handleChange} type="password" name="password"
                                    ref={passwordInput}
                                    autoComplete="current-password" data-testid="password-text"/>
                         </label>

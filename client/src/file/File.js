@@ -127,8 +127,11 @@ function File(props) {
 
             let cloneFields = [...fields];
 
-            cloneFields[key].value = event.target.value;
-
+            if(event.target.value.length > event.target.max.length) {
+                cloneFields[key].value = event.target.value.slice(0, event.target.max.length)
+            }else{
+                cloneFields[key].value = event.target.value;
+            }
             setFields(cloneFields);
         }
     }
@@ -462,7 +465,7 @@ function File(props) {
                     <li>
                         <form onSubmit={handleNewBranch}>
                             <label>New version Title</label>
-                            <input className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
+                            <input maxLength="50" className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
                                    onChange={(event) => setNewBranchTitle(event.target.value)}
                                    placeholder="E.g - version 2"/>
                             <button disabled={isLoading}>New Branch</button>
@@ -474,14 +477,20 @@ function File(props) {
                         <form onSubmit={handleNewField}>
 
                             <label>New Field Title</label>
-                            <input className="input-options" type="text" ref={fieldTitleInput}
+                            <input maxLength="50" className="input-options" type="text" ref={fieldTitleInput}
                                    placeholder="E.g computer equipment"
                                    value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
                             <label>New Field Amount </label>
-                            <input className="input-options" type="number" value={newFieldValue}
+                            <input min="-9999999999" max="9999999999" className="input-options" type="number" value={newFieldValue}
                                    placeholder="E.g 1250.99" onChange={(event) => {
-                                setNewFieldValue(event.target.value);
+
+                                if(event.target.value.length > event.target.max.length) {
+                                    setNewFieldValue(event.target.value.slice(0, event.target.max.length))
+                                }else{
+                                    setNewFieldValue(event.target.value);
+                                }
+
                             }}/>
                             <button disabled={isLoading}>New Field</button>
                         </form>
@@ -503,9 +512,9 @@ function File(props) {
                                             }
 
                                             return <li key={value.id}>
-                                                <input type="text" value={value.title} name="title"
+                                                <input maxLength="50" type="text" value={value.title} name="title"
                                                        onChange={(event) => handleFieldChange(event, index)}/>
-                                                <input type="number" value={value.value} name="value"
+                                                <input min="-9999999999" max="9999999999" type="number" value={value.value} name="value"
                                                        onChange={(event) => handleFieldChange(event, index)}/>
                                                 <button onClick={() => handleDeleteFile(value.id, index)}>Delete
                                                 </button>
@@ -547,3 +556,4 @@ export default File;
 
 //TODO
 // Deep prevent non number
+// negative numbers trimmed one extra due to minus sign. Pos Parse float first

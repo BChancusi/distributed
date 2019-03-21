@@ -152,7 +152,7 @@ function Files(props) {
             <div>
                 <form onSubmit={handleNewFile}>
                     <label>New File Title</label>
-                    <input className="input-options" type="text" value={newFile} ref={fileInput}
+                    <input className="input-options" maxLength="50" type="text" value={newFile} ref={fileInput}
                            placeholder="E.g - Contract one"
                            onChange={(event) => setNewFile(event.target.value)}/>
                     <button disabled={isLoading}>New File</button>
@@ -170,7 +170,7 @@ function Files(props) {
                                         files.map((value, index) => {
                                             return <li key={value.id}>
                                                 <input type="text" defaultValue={value.title}
-                                                       id={`textInput${value.id}`}/>
+                                                       id={`textInput${value.id}`} maxLength="50"/>
                                                 <button onClick={() => props.setFileOpen(value)}>Open File</button>
                                                 <button onClick={() => handlePutFile(document
                                                     .getElementById(`textInput${value.id}`).value, index)}>Update Title
