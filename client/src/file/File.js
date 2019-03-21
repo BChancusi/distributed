@@ -545,6 +545,4 @@ function File(props) {
 export default File;
 
 //TODO
-// MERGING branch doesnt save fields as well on current branch
 // Deep prevent non number
-// Clear save conflicts when attempting to merge without confirming

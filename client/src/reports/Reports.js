@@ -138,7 +138,7 @@ function Reports(props) {
             <div className="content" id="reports">
                 <div className="content-wrap">
 
-                    {isLoading ? <h2>Loading...</h2> :
+                    {isLoading && reports.length === 0 ? <h2>Loading...</h2> :
                         reports.length > 0 ? (
                             <ul>
                                 {
