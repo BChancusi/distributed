@@ -328,36 +328,43 @@ function File(props) {
 
                 cloneResolved.push(item);
                 setMergeResolved(cloneResolved)
-
-            } else {
-
-                setMergeResolved(mergeResolved.filter(filterItem => {
-
-                    return filterItem !== item
-                }))
-
+                return;
             }
 
-        } else {
-            if (event.target.checked === true) {
+            setMergeResolved(mergeResolved.filter(filterItem => {
 
-                let cloneResolved = [...commitResolved];
+                return filterItem !== item
+            }));
 
-                cloneResolved.push(item);
-                setCommitResolved(cloneResolved)
-
-            } else {
-
-                setCommitResolved(commitResolved.filter(filterItem => {
-                    return filterItem !== item
-                }))
-            }
+            return;
         }
+
+        if (event.target.checked === true) {
+
+            let cloneResolved = [...commitResolved];
+
+            cloneResolved.push(item);
+            setCommitResolved(cloneResolved);
+
+            return;
+
+        }
+
+        setCommitResolved(commitResolved.filter(filterItem => {
+            return filterItem !== item
+        }))
+
+
     }
 
     async function handleResolveConflictsCommit() {
 
-        if (commitResolved.length > 0) {
+        if (commitResolved.length === 0) {
+            setCommitOld([]);
+            setCommitNew([]);
+
+            return;
+        }
 
             setIsLoading(true);
 
@@ -378,7 +385,7 @@ function File(props) {
             setCommitResolved([]);
 
             setIsLoading(false);
-        }
+
     }
 
     let total = 0;
@@ -520,9 +527,6 @@ function File(props) {
 
 export default File;
 
-//TODO  If old values are selected replace fields with old values
-//      MERGING branch doesnt save fields as well on current branch
+//TODO  MERGING branch doesnt save fields as well on current branch
 //      Deep prevent non number
 //      Clear save conflicts when attempting to merge without confirming
-//      Confirm conflicts button not working if no values selected
-//      Display fields based on files - File - fields - file - more fields etc to make fields more in line with file
