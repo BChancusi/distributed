@@ -53,6 +53,7 @@ h2{
 TABLES
  */
 
+
 table {
     width: 100%;
 }
@@ -176,6 +177,10 @@ footer {
     color: white;
 }
 
+.content .button-admin-table{
+    background-color: #5ebeda;
+    color:  #1e2952
+}
 @media only screen and (max-width:641px) {
 
     button{

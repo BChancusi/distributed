@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 router.route("/")
     .get((req, res) => {
 
-        pool.query('SELECT username, id, permission FROM users', function (error, results) {
+        pool.query('SELECT username, id, permission FROM users ORDER BY permission DESC', function (error, results) {
             if (error) throw error;
 
             res.send({express: results});
@@ -62,10 +62,12 @@ router.post('/signin', (req, res) => {
     });
 });
 
-router.delete('/users/:userId', (req) => {
+router.delete('/:userId', (req, res) => {
 
-    pool.query(`DELETE FROM users WHERE username = ?`, [req.body.username], function (error) {
+    pool.query(`DELETE FROM users WHERE id = ?`, [req.params.userId], function (error) {
         if (error) throw error;
+
+        res.sendStatus(200)
     });
 });
 

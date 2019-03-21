@@ -84,6 +84,24 @@ function Admin(props) {
         }
     }
 
+    async function handleDeleteUser(id) {
+
+        const response = await fetch(`API/users/${id}`, {
+            signal,
+            method: "DELETE"
+        });
+
+        if (response.status !== 200) {
+            throw Error(response.status + "")
+        }
+
+        setUsers(users.filter(value => {
+
+            return value.id !== id;
+        }))
+
+    }
+
     return (
         <>
             <header>
@@ -138,10 +156,17 @@ function Admin(props) {
                                 </thead>
                                 <tbody>
                                 {
-                                    users.map(value => {
+                                    users.map((value, index) => {
                                         return <tr key={value.id}>
                                             <td>{value.username}</td>
                                             <td>{value.permission}</td>
+                                            {value.username !== "admin" ?
+                                                <td>
+                                                    <button className={index % 2 === 0 ? "button-admin-table" : null}
+                                                            onClick={() => handleDeleteUser(value.id)}>Delete User
+                                                    </button>
+                                                </td>
+                                                : null}
                                         </tr>
                                     })
                                 }
