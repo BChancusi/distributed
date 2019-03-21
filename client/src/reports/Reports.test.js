@@ -42,51 +42,61 @@ test('text when no reports in document', async () => {
 
 test('trims empty string and resets field', async () => {
 
-    const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
-    await waitForElement(() => getByPlaceholderText("E.g - Report 2019"));
+    fetchMock
+        .get('/API/reports', {express: []});
+
+    const {getByPlaceholderText, getByText } = render(<Reports user={{permission: 0}}/>);
+
+    await waitForElement(() => getByText("No reports created"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: '     '}});
     fireEvent.click(getByText("New report"));
-
-    await waitForElement(() => getByPlaceholderText("E.g - Report 2019"));
 
     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
 });
 
 test('new created report in document', async () => {
-    fetchMock.get('/API/reports', {express: []})
+    // fetchMock.get('/API/reports', {express: [{id: 112, title: "Report 2019", timestamp: "2019-02-28T21:25:08.000Z"}]})
+    fetchMock.config.overwriteRoutes = false;
+
+    fetchMock
+        .get('/API/reports', {express: []})
         .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
     const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 
+    await waitForElement(() => getByText("No reports created"));
+
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
-
-    await waitForElement(() => getByText("Loading Content..."));
-
-    await waitForElement(() => getByText("Loading Content..."));
-
 
     await waitForElement(() => getByText("Open Report"));
 
     expect(getByText("Open Report")).toBeInTheDocument();
+
+    fetchMock.config.overwriteRoutes = true;
+
 });
 
 test('new report field clears with after fetch', async () => {
-    //TODO see why fetch does not match
+    fetchMock.config.overwriteRoutes = false;
+
     fetchMock.get('/API/reports', {express: []})
         .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
 
     const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
+
+    await waitForElement(() => getByText("No reports created"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
 
     await waitForElement(() => getByText("Open Report"));
 
-    //TODO fetch test not functioning ocrrectly still displaying content loading
-
     expect(getByPlaceholderText("E.g - Report 2019").value).toBe("");
+
+    fetchMock.config.overwriteRoutes = true;
+
 });
 
 test('PUT field title fetch options', async () => {

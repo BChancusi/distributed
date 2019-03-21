@@ -74,7 +74,7 @@ describe('login faliure', () => {
         fireEvent.change(passwordField, {target: {value: 'password'}});
         fireEvent.click(loginButton);
 
-        await waitForElement(() => usernameField);
+        await wait();
         await waitForElement(() => passwordField);
 
         expect(passwordField.value).toBe("");
@@ -95,7 +95,7 @@ describe('login faliure', () => {
         fireEvent.change(passwordField, {target: {value: 'password'}});
         fireEvent.click(loginButton);
 
-        await waitForElement(() => usernameField);
+        await wait();
         await waitForElement(() => passwordField);
 
         expect(fetchMock.done()).toBe(true);
@@ -167,8 +167,7 @@ test('login button calls fetch', async () => {
     fireEvent.change(passwordField, {target: {value: 'password'}});
     fireEvent.click(loginButton);
 
-    await waitForElement(() => usernameField);
-    await waitForElement(() => passwordField);
+    await wait();
 
     expect(usernameField).toHaveStyle(`background-color: white`);
     expect(mockSetLoggedInUser).toHaveBeenCalledTimes(1);
@@ -193,8 +192,7 @@ test('CSS turn red then white after failure/success', async () => {
     fireEvent.change(passwordField, {target: {value: 'password111'}});
     fireEvent.click(loginButton);
 
-    await waitForElement(() => usernameField);
-    await waitForElement(() => passwordField);
+    await wait();
 
     expect(usernameField).toHaveStyle(`border : 2px solid red`);
     expect(usernameField.value).toBe("username111");
@@ -206,8 +204,7 @@ test('CSS turn red then white after failure/success', async () => {
     fireEvent.change(passwordField, {target: {value: 'password'}});
     fireEvent.click(loginButton);
 
-    await waitForElement(() => usernameField);
-    await waitForElement(() => passwordField);
+    await wait();
 
     expect(usernameField).not.toHaveStyle(`border : 2px solid red`);
     expect(usernameField.value).toBe("");

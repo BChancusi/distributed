@@ -24,25 +24,27 @@ test('renders without crashing', () => {
 
 test('files in document from fetch', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [
-            {
-                branch_title: "master",
-                id: 175,
-                report_id: 115,
-                timestamp: "2019-03-05T05:13:01.000Z",
-                title: "Contract one"
-            },
-            {
-                branch_title: "master",
-                id: 176,
-                report_id: 115,
-                timestamp: "2019-03-05T05:13:05.000Z",
-                title: "Contract two"
-            }]
-    }).get('/API/fields/file/175+176+master', {express: []});
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {
+            files: [
+                {
+                    branch_title: "master",
+                    id: 175,
+                    report_id: 115,
+                    timestamp: "2019-03-05T05:13:01.000Z",
+                    title: "Contract one"
+                },
+                {
+                    branch_title: "master",
+                    id: 176,
+                    report_id: 115,
+                    timestamp: "2019-03-05T05:13:05.000Z",
+                    title: "Contract two"
+                }], fields: []
+        }
+    });
 
-    const {getByDisplayValue} = render(<Files user={{permission: 0}} report={
+    const {getByDisplayValue, getByText} = render(<Files user={{permission: 0}} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
@@ -59,32 +61,32 @@ test('files in document from fetch', async () => {
 
 test('field from files in document from fetch', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [
-            {
-                branch_title: "master",
-                id: 175,
-                report_id: 115,
-                timestamp: "2019-03-05T05:13:01.000Z",
-                title: "Contract one"
-            },
-            {
-                branch_title: "master",
-                id: 176,
-                report_id: 115,
-                timestamp: "2019-03-05T05:13:05.000Z",
-                title: "Contract two"
-            }]
-    }).get('/API/fields/file/175+176+master', {
-        express: [{
-            branch_title: "master", file_Id: 175, id: 910,
-            timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
-        },
-            {
-                branch_title: "master", file_Id: 176, id: 911,
-                timestamp: "2019-03-05T05:13:21.000Z", title: "Cba", value: 2
-            }]
-    });
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {
+            files: [
+                {
+                    branch_title: "master",
+                    id: 175,
+                    report_id: 115,
+                    timestamp: "2019-03-05T05:13:01.000Z",
+                    title: "Contract one"
+                },
+                {
+                    branch_title: "master",
+                    id: 176,
+                    report_id: 115,
+                    timestamp: "2019-03-05T05:13:05.000Z",
+                    title: "Contract two"
+                }], fields: [
+                {
+                    branch_title: "master", file_Id: 175, id: 910,
+                    timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
+                },
+                {
+                    branch_title: "master", file_Id: 176, id: 911,
+                    timestamp: "2019-03-05T05:13:21.000Z", title: "Cba", value: 2
+                }]}
+        });
 
     const {getByDisplayValue, getByText} = render(<Files user={{permission: 0}} report={
         {
@@ -109,8 +111,8 @@ test('field from files in document from fetch', async () => {
 
 test('Total amount in document with 2 decimal point', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files : [
             {
                 branch_title: "master",
                 id: 175,
@@ -124,16 +126,14 @@ test('Total amount in document with 2 decimal point', async () => {
                 report_id: 115,
                 timestamp: "2019-03-05T05:13:05.000Z",
                 title: "Contract two"
-            }]
-    }).get('/API/fields/file/175+176+master', {
-        express: [{
-            branch_title: "master", file_Id: 175, id: 910,
-            timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
-        },
-            {
-                branch_title: "master", file_Id: 176, id: 911,
-                timestamp: "2019-03-05T05:13:21.000Z", title: "Cba", value: 2
-            }]
+            }], fields : [{
+                branch_title: "master", file_Id: 175, id: 910,
+                timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
+            },
+                {
+                    branch_title: "master", file_Id: 176, id: 911,
+                    timestamp: "2019-03-05T05:13:21.000Z", title: "Cba", value: 2
+                }]}
     });
 
     const {getByText} = render(<Files user={{permission: 0}} report={
@@ -144,17 +144,17 @@ test('Total amount in document with 2 decimal point', async () => {
         }
     }/>);
 
-    await waitForElement(() => getByText("Total = £22325.00"));
+    await waitForElement(() => getByText("Total Available = £22325.00"));
 
-    expect(getByText("Total = £22325.00")).toBeInTheDocument();
+    expect(getByText("Total Available = £22325.00")).toBeInTheDocument();
 });
 
 
 test('text when no reports in document', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: []
-    }).get('/API/fields/file/+master', {express: []});
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files : [], fields: []}
+    });
 
     const {getByText} = render(<Files user={{permission: 0}} report={
         {
@@ -168,11 +168,11 @@ test('text when no reports in document', async () => {
     expect(getByText("No files created")).toBeInTheDocument();
 });
 
-test('new file inserted into document with empty new field', async () => {
+test('new file inserted into document', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: []
-    }).get('/API/fields/file/+master', {express: []})
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files: [], fields: []}
+    })
         .post("/API/files", {
             express: {
                 branch_title: "master", id: 179, report_id: 115,
@@ -187,7 +187,9 @@ test('new file inserted into document with empty new field', async () => {
             title: "New report"
         }
     }/>);
-    await waitForElement(() => getByText("New File"));
+
+    await waitForElement(() => getByText("No files created"));
+
 
     fireEvent.change(getByPlaceholderText("E.g - Contract one"), {target: {value: 'Contract two 2017'}});
     fireEvent.click(getByText("New File"));
@@ -195,18 +197,17 @@ test('new file inserted into document with empty new field', async () => {
     await waitForElement(() => getByText("Open File"));
 
     expect(getByText("Open File")).toBeInTheDocument();
-    expect(getByPlaceholderText("E.g - Contract one").value).toBe("");
 
 });
 
 test('duplicate file error', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [{
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files: [{
             branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
-        }]
-    }).get('/API/fields/file/179+master', {express: []}).post("/API/files", {express: "already exists"});
+        }], fields:[] }
+    }).post("/API/files", {express: "already exists"});
 
     const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
         {
@@ -215,6 +216,7 @@ test('duplicate file error', async () => {
             title: "New report"
         }
     }/>);
+
     await waitForElement(() => getByText("Open File"));
 
     fireEvent.change(getByPlaceholderText("E.g - Contract one"), {target: {value: 'Contract one'}});
@@ -228,43 +230,44 @@ test('duplicate file error', async () => {
 
 test('header matches opened file', async () => {
 
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [{
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files: [{
             branch_title: "master", id: 179, report_id: 115,
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
-        }]
-    }).get('/API/fields/file/179+master', {express: []});
+        }], fields: []}
+    });
 
     const {getByText} = render(<Files user={{permission: 0}} report={
-        {
-            id: 115,
-            timestamp: "2019-03-05T05:12:22.000Z",
-            title: "Path: New report"
-        }
-    }/>);
-
-    expect(getByText("New report")).toBeInTheDocument();
-
-});
-
-test('open file event fired once with item', async () => {
-
-    fetchMock.get('/API/files/branch?report_id=115&branch_title=master', {
-        express: [{
-            branch_title: "master", id: 179, report_id: 115,
-            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
-        }]
-    }).get('/API/fields/file/179+master', {express: []});
-
-    const mockSetFileOpen = jest.fn();
-
-    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} setFileOpen={mockSetFileOpen} report={
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
             title: "New report"
         }
     }/>);
+
+    expect(getByText("Path: New report")).toBeInTheDocument();
+
+});
+
+test('open file event fired once with item', async () => {
+
+    fetchMock.get('/API/files/branch?report_id=115', {
+        data: {files: [{
+            branch_title: "master", id: 179, report_id: 115,
+            timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
+        }], fields : []}
+    });
+
+    const mockSetFileOpen = jest.fn();
+
+    const {getByText} = render(<Files user={{permission: 0}} setFileOpen={mockSetFileOpen}
+                                                            report={
+                                                                {
+                                                                    id: 115,
+                                                                    timestamp: "2019-03-05T05:12:22.000Z",
+                                                                    title: "New report"
+                                                                }
+                                                            }/>);
 
     await waitForElement(() => getByText("Open File"));
 
@@ -279,33 +282,30 @@ test('open file event fired once with item', async () => {
 test('file deleted from document', async () => {
 
     fetchMock
-        .get('/API/files/branch?report_id=115&branch_title=master', {
-            express: [
+        .get('/API/files/branch?report_id=115', {
+            data: {files: [
                 {
                     branch_title: "master",
                     id: 175,
                     report_id: 115,
                     timestamp: "2019-03-05T05:13:01.000Z",
                     title: "Contract one"
-                }]
-        })
-        .get('/API/fields/file/175+master', {
-            express: [{
-                branch_title: "master", file_Id: 175, id: 910,
-                timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
-            }]
+                }], fields: [{
+                    branch_title: "master", file_Id: 175, id: 910,
+                    timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
+                }]}
         })
         .delete('/API/files/175', 200);
 
     const {getByText, getByDisplayValue, queryByText, queryByLabelText, queryByDisplayValue} = render(<Files
         user={{permission: 0}}
         report={
-        {
-            id: 115,
-            timestamp: "2019-03-05T05:12:22.000Z",
-            title: "New report"
-        }
-    }/>);
+            {
+                id: 115,
+                timestamp: "2019-03-05T05:12:22.000Z",
+                title: "New report"
+            }
+        }/>);
 
     await waitForElement(() => getByDisplayValue("Contract one"));
 
@@ -324,23 +324,19 @@ test('file deleted from document', async () => {
 test('trims empty string and resets new file field', async () => {
 
     fetchMock
-        .get('/API/files/branch?report_id=115&branch_title=master', {
-            express: [
+        .get('/API/files/branch?report_id=115', {
+            data: {files: [
                 {
                     branch_title: "master",
                     id: 175,
                     report_id: 115,
                     timestamp: "2019-03-05T05:13:01.000Z",
                     title: "Contract one"
-                }]
-        })
-        .get('/API/fields/file/175+master', {
-            express: [{
-                branch_title: "master", file_Id: 175, id: 910,
-                timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
-            }]
-        })
-        .delete('/API/files/175', 200);
+                }], fields: [{
+                    branch_title: "master", file_Id: 175, id: 910,
+                    timestamp: "2019-03-05T05:13:21.000Z", title: "Abc", value: 22323
+                }]}
+        });
 
     const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
         {
@@ -350,7 +346,8 @@ test('trims empty string and resets new file field', async () => {
         }
     }/>);
 
-    await waitForElement(() => getByPlaceholderText("E.g - Contract one"));
+
+    await waitForElement(() => getByText("Open File"));
 
     fireEvent.change(getByPlaceholderText("E.g - Contract one"), {target: {value: '     '}});
     fireEvent.click(getByText("New File"));

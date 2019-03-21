@@ -151,7 +151,6 @@ function Admin(props) {
                     }
                 </div>
             </div>
-
         </>
     )
 }

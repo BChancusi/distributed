@@ -49,7 +49,6 @@ function Files(props) {
 
 
     async function handleNewFile(event) {
-
         event.preventDefault();
 
         const fileTrimmed = newFile.trim();
