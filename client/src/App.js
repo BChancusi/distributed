@@ -47,8 +47,7 @@ function App() {
 export default App;
 
 //TODO  CSS load first to prevent jaring white screen
-//      Fields are not clearing when changing user etc#
-//      React security
 //      Set report and file to null when user logs out to prevent other users logging in to same location
 //      Set isloading to false on error and display error
 //      Report/file/fields when massive amount need search or another way to navigate
+//      Stop is loading showing if on submit, or make it so only shows a snippet

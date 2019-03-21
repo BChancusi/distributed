@@ -35,6 +35,8 @@ label {
   align-items : center;
   margin: 10px;
   display: inline-block;
+  border-radius: 4px;
+
 }
 
 h1{
@@ -44,6 +46,7 @@ h1{
 h2{
   text-align: center;
   font-size: 40px;
+  color: #1e2952;
 }
 button{
     border: none;
@@ -52,7 +55,7 @@ button{
     text-decoration: none;
     background-color: #1e2952  ;
     color: #5ebeda;
-    border-radius: 5px;
+    border-radius: 4px;
     margin: 0 10px;
 }
 
@@ -81,7 +84,7 @@ input {
     padding: 10px;
     margin: 5px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     background-color: #1e2952  ;
     color: #5ebeda;
 }
@@ -138,20 +141,23 @@ footer {
 }
 
 .input-options:focus::placeholder {
-    color: #1e2952;
+     color: #1e2952;
+ }
+
+.input-options:hover::placeholder {
+    color: white;
 }
 
 @media only screen and (max-width:641px) {
 
     button{
-        display: block;
         padding: 10px;
-        margin: 10px;
+        margin: 2px;
 
     }
 
     h1{
-        font-size: 20px;
+        font-size: 25px;
     }
 
     h2{
@@ -159,9 +165,9 @@ footer {
     }
 
     nav button {
-        font-size: 14px;
+        font-size: 20px;
     }
     label{
-        font-size: 10px;
+        font-size: 15px;
     }
 }

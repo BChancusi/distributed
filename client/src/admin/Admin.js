@@ -39,10 +39,12 @@ function Admin(props) {
     async function handlePostUser(event) {
         event.preventDefault();
 
-        if(newPassword.trim() === "" || newUsername.trim() === ""){
+        if (newPassword.trim() === "" || newUsername.trim() === "") {
             console.debug("error username");
             return;
         }
+
+        setIsLoading(true);
 
         const response = await fetch(
             `API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
@@ -64,7 +66,7 @@ function Admin(props) {
 
         setUsers(users.concat(result.express));
 
-
+        setIsLoading(false);
     }
 
     function handleReturn() {
@@ -100,12 +102,13 @@ function Admin(props) {
             <div className="options">
                 <form onSubmit={handlePostUser}>
                     <label>New username</label>
-                    <input className="input-options" value={newUsername} onChange={handleChange} name="newUsername" type="text"
+                    <input className="input-options" value={newUsername} onChange={handleChange} name="newUsername"
+                           type="text"
                            autoComplete="username"/>
-                    {/*TODO generate password*/}
 
                     <label>New Password</label>
-                    <input className="input-options" value={newPassword} onChange={handleChange} name="newPassword" type="password"
+                    <input className="input-options" value={newPassword} onChange={handleChange} name="newPassword"
+                           type="password"
                            autoComplete="current-password"/>
 
                     <label>Permission Level</label>
@@ -122,19 +125,31 @@ function Admin(props) {
             </div>
 
             <div className="content" id="users">
-                {isLoading ? <h2>Loading Content...</h2> :
-                    users.length > 0 ?
-                        <ul>
-                            {
-                                // TODO change to table instead of ul
-                                users.map(value => {
-                                    return <li
-                                        key={value.id}>{value.username + " - Permission: " + value.permission}</li>
-                                })
-                            }
-                        </ul>
-                        : <h2>No Users Created</h2>
-                }
+                <div className="content-wrap">
+                    {isLoading ? <h2>Loading Content...</h2> :
+                        users.length > 0 ?
+
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Permissions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    users.map(value => {
+                                        return <tr key={value.id}>
+                                            <td>{value.username}</td>
+                                            <td>{value.permission}</td>
+                                        </tr>
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                            : <h2>No Users Created</h2>
+                    }
+                </div>
             </div>
 
         </>

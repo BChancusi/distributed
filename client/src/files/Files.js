@@ -15,7 +15,7 @@ function Files(props) {
 
     useEffect(() => {
 
-        async function fetchFilesAndFields (){
+        async function fetchFilesAndFields() {
 
             const response = await fetch(`/API/files/branch?report_id=${props.report.id}`, {signal});
             const result = await response.json();
@@ -24,14 +24,14 @@ function Files(props) {
                 throw Error(result.message)
             }
 
-            if(result.data.files.length === 0){
+            if (result.data.files.length === 0) {
                 setIsLoading(false);
                 return;
             }
 
             setFiles(result.data.files);
 
-            if(result.data.fields.length === 0){
+            if (result.data.fields.length === 0) {
                 setIsLoading(false);
                 return
             }
@@ -48,7 +48,9 @@ function Files(props) {
     }, []);
 
 
-    async function handleNewFile() {
+    async function handleNewFile(event) {
+
+        event.preventDefault();
 
         const fileTrimmed = newFile.trim();
 
@@ -140,7 +142,7 @@ function Files(props) {
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setReportOpen("")}>Return</button>
-                <button  className="nav-button" onClick={() => {
+                <button className="nav-button" onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)
                 }}>Logout
@@ -148,10 +150,13 @@ function Files(props) {
             </nav>
 
             <div>
-                <label>New File Title</label>
-                <input className="input-options" type="text" value={newFile} ref={fileInput} placeholder="E.g - Contract one"
-                       onChange={(event) => setNewFile(event.target.value)}/>
-                <button disabled={isLoading} onClick={handleNewFile}>New File</button>
+                <form onSubmit={handleNewFile}>
+                    <label>New File Title</label>
+                    <input className="input-options" type="text" value={newFile} ref={fileInput}
+                           placeholder="E.g - Contract one"
+                           onChange={(event) => setNewFile(event.target.value)}/>
+                    <button disabled={isLoading}>New File</button>
+                </form>
             </div>
             <div className="content">
                 <div className="content-wrap">
@@ -186,20 +191,32 @@ function Files(props) {
                 {isLoading ? null :
                     fileFields.length > 0 &&
                     <div id="fields">
-                        <ul>
-                            {
-                                fileFields.map(value => {
+                        <div className="content-wrap">
 
-                                    total += value.value;
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    fileFields.map(value => {
+                                        total += value.value;
 
-                                    return <ul key={value.id}>
-                                        <li>{value.title}</li>
-                                        <li>{value.value}</li>
-                                    </ul>
-                                })
-                            }
-                        </ul>
-                        <label className="total-available-label" >Total Available = £{parseFloat(total).toFixed(2)}</label>
+                                        return <tr key={value.id}>
+                                            <td>{value.title}</td>
+                                            <td>{value.value}</td>
+                                        </tr>
+                                    })
+                                }
+                                </tbody>
+                            </table>
+
+                            <label className="total-available-label">Total Available =
+                                £{parseFloat(total).toFixed(2)}</label>
+                        </div>
                     </div>
                 }
             </div>

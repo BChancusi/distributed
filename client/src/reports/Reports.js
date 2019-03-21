@@ -37,7 +37,8 @@ function Reports(props) {
     }, []);
 
 
-    async function handleNewReport() {
+    async function handleNewReport(event) {
+        event.preventDefault();
 
         const trimmed = newReport.trim();
 
@@ -127,10 +128,12 @@ function Reports(props) {
                 </button>
             </nav>
             <div>
-                <label>New Report Title</label>
-                <input className="input-options" type="text" value={newReport} ref={reportInput}
-                       onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
-                <button disabled={isLoading} onClick={handleNewReport}>New report</button>
+                <form onSubmit={handleNewReport}>
+                    <label>New Report Title</label>
+                    <input className="input-options" type="text" value={newReport} ref={reportInput}
+                           onChange={(event) => setNewReport(event.target.value)} placeholder="E.g - Report 2019"/>
+                    <button disabled={isLoading}>New report</button>
+                </form>
             </div>
             <div className="content" id="reports">
                 <div className="content-wrap">

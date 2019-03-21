@@ -63,7 +63,9 @@ function File(props) {
 
     }, []);
 
-    async function handleNewField() {
+    async function handleNewField(event) {
+        event.preventDefault();
+
         if (newFieldTitle.trim() === "") {
             fieldTitleInput.current.style.border = "2px solid red";
             return;
@@ -187,7 +189,8 @@ function File(props) {
 
     }
 
-    async function handleNewBranch() {
+    async function handleNewBranch(event) {
+        event.preventDefault();
 
         const newBranchTrimmed = newBranchTitle.trim();
 
@@ -400,7 +403,7 @@ function File(props) {
                 <ul>
 
                     <li>
-                        <label>Current Branch</label>
+                        <label>Current version</label>
                         <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
                             {
                                 Array.isArray(fileTitles) ?
@@ -415,7 +418,7 @@ function File(props) {
                         {Array.isArray(fileTitles) && fileTitles.length > 1 && currentBranch !== "master" ?
                             <>
                                 <button disabled={isLoading} onClick={handleDeleteBranch}>Delete Current Branch</button>
-                                <label>Merge current branch with</label>
+                                <label>Merge current version with</label>
                                 <select id="selectMerge">
                                     {
                                         fileTitles.map(value => {
@@ -435,25 +438,29 @@ function File(props) {
                     </li>
 
                     <li>
-                        <label>New Branch Title</label>
-                        <input className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
-                               onChange={(event) => setNewBranchTitle(event.target.value)}
-                               placeholder="E.g - version 2"/>
-                        <button disabled={isLoading} onClick={handleNewBranch}>New Branch</button>
+                        <form onSubmit={handleNewBranch}>
+                            <label>New version Title</label>
+                            <input className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
+                                   onChange={(event) => setNewBranchTitle(event.target.value)}
+                                   placeholder="E.g - version 2"/>
+                            <button disabled={isLoading}>New Branch</button>
+                        </form>
                     </li>
 
 
                     <li>
+                        <form onSubmit={handleNewField}>
 
-                        <label>New Field Title</label>
-                        <input className="input-options" type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
-                               value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
+                            <label>New Field Title</label>
+                            <input className="input-options" type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
+                                   value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
-                        <label>New Field Amount </label>
-                        <input className="input-options" type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
-                            setNewFieldValue(event.target.value);
-                        }}/>
-                        <button disabled={isLoading} onClick={handleNewField}>New Field</button>
+                            <label>New Field Amount </label>
+                            <input className="input-options" type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
+                                setNewFieldValue(event.target.value);
+                            }}/>
+                            <button disabled={isLoading}>New Field</button>
+                        </form>
                     </li>
 
                 </ul>
