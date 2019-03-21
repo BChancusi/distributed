@@ -239,7 +239,7 @@ test('header matches opened file', async () => {
         {
             id: 115,
             timestamp: "2019-03-05T05:12:22.000Z",
-            title: "New report"
+            title: "Path: New report"
         }
     }/>);
 

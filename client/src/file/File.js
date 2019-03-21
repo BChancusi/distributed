@@ -52,6 +52,14 @@ function File(props) {
 
         return () => {
             controller.abort();
+
+            setMergeNew([]);
+            setMergeOld([]);
+            setMergeResolved([]);
+
+            setCommitResolved([]);
+            setCommitNew([]);
+            setCommitOld([]);
         }
 
     }, [props.file.id, currentBranch]);
@@ -256,6 +264,14 @@ function File(props) {
 
     async function handleResolveConflicts() {
 
+        if (mergeResolved.length === 0) {
+            console.log("error merge resolved");
+
+            setMergeNew([]);
+            setMergeOld([]);
+            return;
+        }
+
         setIsLoading(true);
 
 
@@ -327,7 +343,7 @@ function File(props) {
                 let cloneResolved = [...mergeResolved];
 
                 cloneResolved.push(item);
-                setMergeResolved(cloneResolved)
+                setMergeResolved(cloneResolved);
                 return;
             }
 
@@ -353,8 +369,6 @@ function File(props) {
         setCommitResolved(commitResolved.filter(filterItem => {
             return filterItem !== item
         }))
-
-
     }
 
     async function handleResolveConflictsCommit() {
@@ -366,25 +380,25 @@ function File(props) {
             return;
         }
 
-            setIsLoading(true);
+        setIsLoading(true);
 
-            const response = await fetch(`/API/fields/commitResolved`, {
-                signal,
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(commitResolved)
-            });
+        const response = await fetch(`/API/fields/commitResolved`, {
+            signal,
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(commitResolved)
+        });
 
 
-            if (response.status !== 200) {
-                throw Error(response.status + "")
-            }
+        if (response.status !== 200) {
+            throw Error(response.status + "")
+        }
 
-            setCommitOld([]);
-            setCommitNew([]);
-            setCommitResolved([]);
+        setCommitOld([]);
+        setCommitNew([]);
+        setCommitResolved([]);
 
-            setIsLoading(false);
+        setIsLoading(false);
 
     }
 
@@ -399,7 +413,7 @@ function File(props) {
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setFileOpen("")}>Files</button>
-                <button  className="nav-button" onClick={() => {
+                <button className="nav-button" onClick={() => {
                     localStorage.clear();
                     props.setLoggedInUser(null)
                 }}>Logout
@@ -459,11 +473,13 @@ function File(props) {
                         <form onSubmit={handleNewField}>
 
                             <label>New Field Title</label>
-                            <input className="input-options" type="text" ref={fieldTitleInput} placeholder="E.g computer equipment"
+                            <input className="input-options" type="text" ref={fieldTitleInput}
+                                   placeholder="E.g computer equipment"
                                    value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
                             <label>New Field Amount </label>
-                            <input className="input-options" type="number" value={newFieldValue} placeholder="E.g 1250.99" onChange={(event) => {
+                            <input className="input-options" type="number" value={newFieldValue}
+                                   placeholder="E.g 1250.99" onChange={(event) => {
                                 setNewFieldValue(event.target.value);
                             }}/>
                             <button disabled={isLoading}>New Field</button>
@@ -496,7 +512,8 @@ function File(props) {
                                         })
                                     }
                                 </ul>
-                                <label className="total-available-label"> Total = £{parseFloat(total).toFixed(2)}</label>
+                                <label className="total-available-label"> Total =
+                                    £{parseFloat(total).toFixed(2)}</label>
                                 <button onClick={handlePutFields}>Save Changes</button>
                             </div>
                         ) : <h2>No fields created</h2>
@@ -509,7 +526,7 @@ function File(props) {
             <div id="conflictsMerge">
                 <div className="content-wrap">
                     <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
-                    <button disabled={isLoading} onClick={handleResolveConflicts}>Confirm Field Replacement</button>
+                    <button disabled={isLoading} onClick={handleResolveConflicts}>Confirm Merge Replacements</button>
                 </div>
             </div>
             }
@@ -527,6 +544,7 @@ function File(props) {
 
 export default File;
 
-//TODO  MERGING branch doesnt save fields as well on current branch
-//      Deep prevent non number
-//      Clear save conflicts when attempting to merge without confirming
+//TODO
+// MERGING branch doesnt save fields as well on current branch
+// Deep prevent non number
+// Clear save conflicts when attempting to merge without confirming

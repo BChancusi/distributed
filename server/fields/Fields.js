@@ -364,9 +364,8 @@ router.put('/commitResolved', (req, res) => {
 
 module.exports = router;
 
-//TODO  change new field saves from post on new field to post on save
-//      Field title change still matching id changes
-//      only push check on merge/commit if timestamps dont match#
-//      Only return actual conflicts, post/insert rest of fields??
-//      Stream query tows?
-//      Merge branch pushing same fields again
+//TODO
+// change new field saves from post on new field to post on save
+// Field title change still matching id changes
+// only push check on merge/commit if timestamps dont match#
+// Only return actual conflicts, post/insert rest of fields??
