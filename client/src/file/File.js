@@ -465,7 +465,7 @@ function File(props) {
                     <li>
                         <form onSubmit={handleNewBranch}>
                             <label>New version Title</label>
-                            <input maxLength="50" className="input-options" type="text" value={newBranchTitle} ref={branchTitleInput}
+                            <input className="input-options" maxLength="50"  type="text" value={newBranchTitle} ref={branchTitleInput}
                                    onChange={(event) => setNewBranchTitle(event.target.value)}
                                    placeholder="E.g - version 2"/>
                             <button disabled={isLoading}>New Branch</button>
@@ -477,7 +477,7 @@ function File(props) {
                         <form onSubmit={handleNewField}>
 
                             <label>New Field Title</label>
-                            <input maxLength="50" className="input-options" type="text" ref={fieldTitleInput}
+                            <input className="input-options" maxLength="50"  type="text" ref={fieldTitleInput}
                                    placeholder="E.g computer equipment"
                                    value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 

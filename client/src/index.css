@@ -197,7 +197,8 @@ footer {
 
 .content .button-admin-table {
     background-color: #5ebeda;
-    color: #1e2952
+    color: #1e2952;
+    padding: 100px 10px;
 }
 
 select {
@@ -205,6 +206,24 @@ select {
     max-width: 10%;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #1e2952;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #5ebeda;
+}
 @media only screen and (max-width: 641px) {
 
     button {

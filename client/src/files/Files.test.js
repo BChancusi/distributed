@@ -245,7 +245,7 @@ test('header matches opened file', async () => {
         }
     }/>);
 
-    expect(getByText("Path: New report")).toBeInTheDocument();
+    expect(getByText("File Path: New report")).toBeInTheDocument();
 
 });
 

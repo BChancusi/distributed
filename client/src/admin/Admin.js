@@ -144,7 +144,7 @@ function Admin(props) {
 
             <div className="content" id="users">
                 <div className="content-wrap">
-                    {isLoading && users.length === 0? <h2>Loading Content...</h2> :
+                    {isLoading && users.length === 0? <h2>Loading...</h2> :
                         users.length > 0 ?
 
                             <table>

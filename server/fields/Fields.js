@@ -20,23 +20,23 @@ router.route('/')
 
         pool.query(`SELECT * FROM fields WHERE title = ? AND branch_title = ? AND file_id = ?`,
             [req.body.title, req.body.branch_title, req.body.file_id], function (error, results) {
-            if (error) throw error;
-
-            if (results.length !== 0) {
-                return res.send({express: "already exists"})
-            }
-
-            pool.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
                 if (error) throw error;
 
-                pool.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+                if (results.length !== 0) {
+                    return res.send({express: "already exists"})
+                }
+
+                pool.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
                     if (error) throw error;
 
-                    res.send({express: results});
-                });
-            });
+                    pool.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+                        if (error) throw error;
 
-        });
+                        res.send({express: results});
+                    });
+                });
+
+            });
     })
     .get((req, res) => {
 
@@ -262,10 +262,10 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         });
 
         if (query.length > 0) {
-            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`,[query], function (error) {
-                    if (error) throw error;
+            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`, [query], function (error) {
+                if (error) throw error;
 
-                });
+            });
         }
 
         res.send({express: "no conflicts"});
