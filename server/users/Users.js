@@ -33,32 +33,41 @@ router.route("/")
                     [req.query.username, hash, req.query.permission], function (error, results) {
                         if (error) throw error;
 
-                        res.send({express: {username : req.query.username,
-                                permission: req.query.permission ,  id: results.insertId}})
-                });
+                        res.send({
+                            express: {
+                                username: req.query.username,
+                                permission: req.query.permission,
+                                id: results.insertId
+                            }
+                        })
+                    });
             });
         });
     });
 
 router.post('/signin', (req, res) => {
 
-    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
+    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], async function (error, results) {
         if (error) throw error;
 
         if (results.length === 0) {
             return res.send({express: "details incorrect"})
         }
 
-        bcrypt.compare(req.query.password, results[0].password)
-            .then((boolean) => {
+        const passwordCompare = await bcrypt.compare(req.query.password, results[0].password);
 
-                if(!boolean){
-                    return res.send({express: "details incorrect"})
-                }
+        if (!passwordCompare) {
+            return res.send({express: "details incorrect"})
+        }
 
-                res.send({express: {username: results[0].username, permission: results[0].permission,
-                    id: results[0].id}})
-            });
+        res.send({
+            express: {
+                username: results[0].username,
+                permission: results[0].permission,
+                id: results[0].id
+            }
+        })
+
     });
 });
 
