@@ -19,17 +19,17 @@ router.route('/')
             return res.send({express: "length exceeds 50"})
         }
 
-        pool.query(`SELECT * FROM reports WHERE title = ?`, [req.body.title], function (error, results) {
+        pool.query(`SELECT * FROM reports WHERE title = ?`, req.body.title, function (error, results) {
             if (error) throw error;
 
             if (results.length > 0) {
                 return res.send({express: "already exists"})
             }
 
-            pool.query(`INSERT INTO reports SET ?`, [req.body], function (error, results) {
+            pool.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
                 if (error) throw error;
 
-                pool.query('SELECT * FROM reports WHERE id = ?', [results.insertId], function (error, results) {
+                pool.query('SELECT * FROM reports WHERE id = ?', results.insertId, function (error, results) {
                     if (error) throw error;
 
                     res.send({express: results});
@@ -43,7 +43,7 @@ router.route('/')
 router.route('/:reportId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM reports WHERE id = ?`, [req.params.reportId], function (error) {
+        pool.query(`DELETE FROM reports WHERE id = ?`, req.params.reportId, function (error) {
             if (error) throw error;
 
             res.sendStatus(200)

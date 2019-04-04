@@ -6,7 +6,7 @@ const format = require('date-fns/format');
 router.route('/:fileBranch')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM fields WHERE id = ?`, [req.params.fileBranch], function (error) {
+        pool.query(`DELETE FROM fields WHERE id = ?`, req.params.fileBranch, function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
@@ -26,10 +26,10 @@ router.route('/')
                     return res.send({express: "already exists"})
                 }
 
-                pool.query(`INSERT INTO fields SET ?`, [req.body], function (error, results) {
+                pool.query(`INSERT INTO fields SET ?`, req.body, function (error, results) {
                     if (error) throw error;
 
-                    pool.query('SELECT * FROM fields WHERE id = ?', [results.insertId], function (error, results) {
+                    pool.query('SELECT * FROM fields WHERE id = ?', results.insertId, function (error, results) {
                         if (error) throw error;
 
                         res.send({express: results});
@@ -65,7 +65,7 @@ router.route('/')
             query.push(value.id);
         });
 
-        pool.query(`SELECT * FROM fields WHERE id IN (?)`, [query], function (error, results) {
+        pool.query(`SELECT * FROM fields WHERE id IN (?)`, query, function (error, results) {
             if (error) throw error;
 
 
@@ -151,7 +151,7 @@ router.post('/branch/:branchTitle', (req, res) => {
             return res.send({express: "already exists"});
         }
 
-        pool.query(`INSERT INTO files SET ?`, [fileValue], function (error, results) {
+        pool.query(`INSERT INTO files SET ?`, fileValue, function (error, results) {
             if (error) throw error;
 
             if (req.body.length > 0) {
@@ -170,7 +170,7 @@ router.post('/branch/:branchTitle', (req, res) => {
                 pool.query(`INSERT INTO fields (??) VALUES ?`, [Object.keys(req.body[0]), query], function (error) {
                     if (error) throw error;
 
-                    pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                    pool.query(`SELECT * FROM files WHERE id= ?`, results.insertId, function (error, resultsSelect) {
                         if (error) throw error;
 
                         res.send({express: resultsSelect});
@@ -178,7 +178,7 @@ router.post('/branch/:branchTitle', (req, res) => {
 
                 });
             } else {
-                pool.query(`SELECT * FROM files WHERE id= ?`, [results.insertId], function (error, resultsSelect) {
+                pool.query(`SELECT * FROM files WHERE id= ?`, results.insertId, function (error, resultsSelect) {
                     if (error) throw error;
 
                     res.send({express: resultsSelect});
@@ -262,7 +262,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         });
 
         if (query.length > 0) {
-            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`, [query], function (error) {
+            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`, query, function (error) {
                 if (error) throw error;
 
             });

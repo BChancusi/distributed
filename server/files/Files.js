@@ -25,7 +25,7 @@ router.route('/')
             pool.query(`INSERT INTO files SET ?`, req.body, function (error, results) {
                 if (error) throw error;
 
-                pool.query('SELECT * FROM files WHERE id = ?', [results.insertId], function (error, results) {
+                pool.query('SELECT * FROM files WHERE id = ?', results.insertId, function (error, results) {
                     if (error) throw error;
 
                     res.send({express: results});
@@ -36,7 +36,7 @@ router.route('/')
 router.route('/:fileId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
+        pool.query(`DELETE FROM files WHERE id =?`, req.params.fileId, function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
@@ -55,7 +55,7 @@ router.route('/:fileId')
 
 router.get('/branch', (req, res) => {
 
-    pool.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = 'master'`, [req.query.report_id], async function (error, resultsFiles) {
+    pool.query(`SELECT * FROM files WHERE report_Id = ? AND branch_title = 'master'`, req.query.report_id, async function (error, resultsFiles) {
         if (error) throw error;
 
         if(resultsFiles.length === 0){
@@ -65,7 +65,7 @@ router.get('/branch', (req, res) => {
             return value.id;
         });
 
-        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = "master" ORDER BY value DESC', [ids], function (error, results) {
+        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = "master" ORDER BY value DESC', ids, function (error, results) {
             if (error) throw error;
 
             res.send({data: {files: resultsFiles, fields: results}});

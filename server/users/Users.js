@@ -19,35 +19,33 @@ router.route("/")
             return res.send({express: "permission can not be 5"})
         }
 
-        pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], function (error, results) {
+        pool.query(`SELECT * FROM users WHERE username = ?`, req.query.username, async function (error, results) {
             if (error) throw error;
 
             if (results.length > 0) {
                 return res.send({express: "username exists"})
             }
 
-            bcrypt.hash(req.query.password, 8, function (error, hash) {
-                if (error) throw error;
+            const hash = await bcrypt.hash(req.query.password, 8);
 
-                pool.query(`INSERT INTO users (username, password, permission) VALUES(? , ? , ?) `,
-                    [req.query.username, hash, req.query.permission], function (error, results) {
-                        if (error) throw error;
+            pool.query(`INSERT INTO users (username, password, permission) VALUES(? , ? , ?) `,
+                [req.query.username, hash, req.query.permission], function (error, results) {
+                    if (error) throw error;
 
-                        res.send({
-                            express: {
-                                username: req.query.username,
-                                permission: req.query.permission,
-                                id: results.insertId
-                            }
-                        })
-                    });
-            });
+                    res.send({
+                        express: {
+                            username: req.query.username,
+                            permission: req.query.permission,
+                            id: results.insertId
+                        }
+                    })
+                });
         });
     });
 
 router.post('/signin', (req, res) => {
 
-    pool.query(`SELECT * FROM users WHERE username = ?`, [req.query.username], async function (error, results) {
+    pool.query(`SELECT * FROM users WHERE username = ?`, req.query.username, async function (error, results) {
         if (error) throw error;
 
         if (results.length === 0) {
@@ -73,7 +71,7 @@ router.post('/signin', (req, res) => {
 
 router.delete('/:userId', (req, res) => {
 
-    pool.query(`DELETE FROM users WHERE id = ?`, [req.params.userId], function (error) {
+    pool.query(`DELETE FROM users WHERE id = ?`, req.params.userId, function (error) {
         if (error) throw error;
 
         res.sendStatus(200)
