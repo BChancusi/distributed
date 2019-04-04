@@ -333,15 +333,11 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
 router.delete('/deleteBranch/query', (req, res) => {
 
-    pool.query(`DELETE FROM fields WHERE file_id = ? AND branch_title=?`, [req.query.file_id, req.query.branch_title], function (error) {
-        if (error) throw error;
-
         pool.query(`DELETE FROM files WHERE title = ? AND branch_title=?`, [req.query.title, req.query.branch_title], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
         });
-    });
 });
 
 router.put('/commitResolved', (req, res) => {

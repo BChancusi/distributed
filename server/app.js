@@ -27,3 +27,6 @@ if (process.env.NODE_ENV === 'production') {
 
 
 module.exports = app;
+
+//TODO delete file is inconsistent with branches. Two different reports can have same names and if matching to id
+//      branches wont match.
