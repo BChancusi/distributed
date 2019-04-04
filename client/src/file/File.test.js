@@ -38,7 +38,7 @@ test('header path correct', async () => {
                                          title: "New report"}}
     />);
 
-    expect(getByText("Path: New report \\ Contract one \\ master")).toBeInTheDocument();
+    expect(getByText("File Path: New report\\Contract one\\master")).toBeInTheDocument();
 
 });
 
