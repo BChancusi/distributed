@@ -36,15 +36,13 @@ router.route('/')
 router.route('/:fileId')
     .delete((req, res) => {
 
-        pool.query(`DELETE FROM fields WHERE file_Id =?`, [req.params.fileId], function (error) {
+        pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
             if (error) throw error;
 
-            pool.query(`DELETE FROM files WHERE id =?`, [req.params.fileId], function (error) {
-                if (error) throw error;
-
-                res.sendStatus(200)
-            });
+            res.sendStatus(200)
         });
+
+        //TODO doesnt delete new branch as on different id
     })
     .put((req, res) => {
 
