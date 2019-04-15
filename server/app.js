@@ -11,12 +11,17 @@ const session = require('express-session');
 const isAuthenticated = require('./isAuthenticated.js');
 require('dotenv').config();
 
-app.use(session({
-    secret: process.env.SESSION_PASSWORD,
-    resave: true,
-    saveUninitialized: true
-}));
+let sess = {
+    secret:  process.env.SESSION_PASSWORD,
+    cookie: {}
+};
 
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1) ;
+    sess.cookie.secure = true;
+}
+
+app.use(session(sess));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
