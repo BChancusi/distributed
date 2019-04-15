@@ -1,6 +1,6 @@
 import React from 'react';
 import Reports from './Reports';
-import {render, fireEvent, cleanup, wait, waitForElement} from 'react-testing-library'
+import {render, fireEvent, cleanup, waitForElement} from 'react-testing-library'
 import 'jest-dom/extend-expect'
 
 const fetchMock = require('fetch-mock/es5/client');
@@ -42,8 +42,7 @@ test('text when no reports in document', async () => {
 
 test('trims empty string and resets field', async () => {
 
-    fetchMock
-        .get('/API/reports', {express: []});
+    fetchMock.get('/API/reports', {express: []});
 
     const {getByPlaceholderText, getByText } = render(<Reports user={{permission: 0}}/>);
 

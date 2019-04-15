@@ -100,39 +100,38 @@ router.route('/')
             });
 
             if (conflictsNew.length > 0 && conflictsOld.length > 0) {
-                res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
+               return res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
 
-            } else {
-
-
-                req.body = req.body.filter(value => {
-
-                    let boolean = true;
-                    for (let i = 0; i < deleteIds.length; i++) {
-                        if (value.id === deleteIds[i]) {
-                            boolean = false;
-                            break;
-                        }
-                    }
-
-                    return boolean;
-                });
-
-                req.body.forEach(value => {
-
-                    value.timestamp = format(
-                        new Date(),
-                        'YYYY-MM-DD HH:mm:ss'
-                    );
-
-                    pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
-                        if (error) throw error;
-
-                    });
-                });
-
-                res.send({express: "no conflicts"});
             }
+
+            req.body = req.body.filter(value => {
+
+                let boolean = true;
+                for (let i = 0; i < deleteIds.length; i++) {
+                    if (value.id === deleteIds[i]) {
+                        boolean = false;
+                        break;
+                    }
+                }
+
+                return boolean;
+            });
+
+            req.body.forEach(value => {
+
+                value.timestamp = format(
+                    new Date(),
+                    'YYYY-MM-DD HH:mm:ss'
+                );
+
+                pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
+                    if (error) throw error;
+
+                });
+            });
+
+            res.send({express: "no conflicts"});
+
         });
     });
 
