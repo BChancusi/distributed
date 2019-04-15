@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Logout from "../Logout";
 
 function Admin(props) {
 
@@ -109,11 +110,7 @@ function Admin(props) {
 
             <nav>
                 <button onClick={handleReturn}>Return</button>
-                <button className="nav-button" onClick={() => {
-                    localStorage.clear();
-                    props.setLoggedInUser(null)
-                }}>Logout
-                </button>
+                <Logout setLoggedInUser={props.setLoggedInUser}/>
             </nav>
 
             <div className="options">

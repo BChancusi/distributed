@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import Logout from "../Logout";
 
 function Files(props) {
 
@@ -142,11 +143,7 @@ function Files(props) {
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setReportOpen("")}>Reports</button>
-                <button className="nav-button" onClick={() => {
-                    localStorage.clear();
-                    props.setLoggedInUser(null)
-                }}>Logout
-                </button>
+                <Logout setLoggedInUser={props.setLoggedInUser}/>
             </nav>
 
             <div>

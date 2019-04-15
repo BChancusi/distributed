@@ -40,7 +40,7 @@ function Login(props) {
             return;
         }
 
-        const response = await fetch(`/API/users/signin?username=${username}&password=${password}`, {
+        const response = await fetch(`/API/users/login?username=${username}&password=${password}`, {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},

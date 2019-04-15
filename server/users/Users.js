@@ -78,7 +78,7 @@ router.route("/")
         });
     });
 
-router.post('/signin', function (req, res, next) {
+router.post('/login', function (req, res, next) {
 
     passport.authenticate('local', function (err, user, info) {
         if (err) {
@@ -105,7 +105,7 @@ router.delete('/:userId', isAuthenticated, (req, res) => {
     });
 });
 
-router.get('/logout', isAuthenticated, function (req, res) {
+router.get('/logout', function (req, res) {
     req.logout();
     res.send({express: "logged out"});
 });

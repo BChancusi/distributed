@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Conflicts from "./Conflicts";
 
+import Logout from '../Logout.js';
+
+
 function File(props) {
 
     const [fields, setFields] = useState([]);
@@ -422,11 +425,7 @@ function File(props) {
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setFileOpen("")}>Files</button>
-                <button className="nav-button" onClick={() => {
-                    localStorage.clear();
-                    props.setLoggedInUser(null)
-                }}>Logout
-                </button>
+                <Logout setLoggedInUser={props.setLoggedInUser}/>
             </nav>
 
             <div id="options">
