@@ -17,8 +17,27 @@ function Login(props) {
         }
     });
 
+    function validateLogin(){
+        const usernameTrimmed = username.trim();
+        const passwordTrimmed = username.trim();
+
+        if (usernameTrimmed === "" || passwordTrimmed === "" ) {
+            setUsername(usernameTrimmed);
+            setPassword(passwordTrimmed);
+
+            return false;
+        }
+
+        return true;
+    }
     async function handleLogin (event) {
         event.preventDefault();
+
+        if(!validateLogin()){
+            usernameInput.current.style.border = "2px solid red";
+            passwordInput.current.style.border = "2px solid red";
+            return;
+        }
 
         const response = await fetch(`/API/users/signin?username=${username}&password=${password}`, {
             signal,
