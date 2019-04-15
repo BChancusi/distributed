@@ -20,7 +20,7 @@ function Reports(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                console.debug(result.message);
+               return console.error(result);
             }
 
             setReports(result.express);
@@ -68,7 +68,7 @@ function Reports(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            console.debug(result.message);
+            return console.debug(result);
 
         }
 
@@ -94,7 +94,7 @@ function Reports(props) {
         });
 
         if (response.status !== 200) {
-            console.debug(response.statusText);
+           return console.debug (response.statusText);
         }
 
         setReports(reports.filter((value, index) => {
@@ -118,7 +118,7 @@ function Reports(props) {
         });
 
         if (response.status !== 200) {
-            console.debug(response.statusText)
+           return  console.debug(response.statusText)
         }
 
         setReports(cloneReports)

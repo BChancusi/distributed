@@ -20,7 +20,7 @@ function Admin(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                console.debug(result.message)
+                return console.debug(result)
             }
 
             setUsers(result.express);
@@ -39,8 +39,7 @@ function Admin(props) {
         event.preventDefault();
 
         if (newPassword.trim() === "" || newUsername.trim() === "") {
-            console.debug("error username");
-            return;
+            return console.debug("error username");
         }
 
         setIsLoading(true);
@@ -53,7 +52,7 @@ function Admin(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            console.debug(result.message)
+            return console.debug(result)
         }
 
         if (result.express === "username exists" || result.express === "permission can not be 5") {

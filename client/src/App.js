@@ -20,25 +20,29 @@ function App() {
 
     }, [user]);
 
-    if (user == null) {
+    try {
+        if (user == null) {
 
-        return <Login setLoggedInUser={setUser}/>
+            return <Login setLoggedInUser={setUser}/>
 
-    } else if (adminOpen) {
-        return <Admin setLoggedInUser={setUser} setAdminOpen={setAdminOpen} user={user}/>
+        } else if (adminOpen) {
+            return <Admin setLoggedInUser={setUser} setAdminOpen={setAdminOpen} user={user}/>
 
-    } else if (reportOpen === "") {
-        return  <Reports setLoggedInUser={setUser} setReportOpen={setReportOpen}
+        } else if (reportOpen === "") {
+            return <Reports setLoggedInUser={setUser} setReportOpen={setReportOpen}
+                            user={user} setAdminOpen={setAdminOpen}/>
+
+        } else if (reportOpen !== "" && fileOpen === "") {
+            return <Files setLoggedInUser={setUser} setFileOpen={setFileOpen}
+                          report={reportOpen} setReportOpen={setReportOpen} setAdminOpen={setAdminOpen}
+                          user={user}/>
+
+        } else if (fileOpen !== "") {
+            return <File setLoggedInUser={setUser} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}
                          user={user} setAdminOpen={setAdminOpen}/>
-
-    } else if (reportOpen !== "" && fileOpen === "") {
-        return <Files setLoggedInUser={setUser} setFileOpen={setFileOpen}
-                   report={reportOpen} setReportOpen={setReportOpen} setAdminOpen={setAdminOpen}
-                      user={user}/>
-
-    } else if (fileOpen !== "") {
-        return <File setLoggedInUser={setUser} report={reportOpen} file={fileOpen} setFileOpen={setFileOpen}
-                     user={user} setAdminOpen={setAdminOpen}/>
+        }
+    }catch (error) {
+        console.error(error)
     }
 }
 
