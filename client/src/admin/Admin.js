@@ -20,7 +20,7 @@ function Admin(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                throw Error(result.body)
+                console.debug(result.message)
             }
 
             setUsers(result.express);
@@ -53,7 +53,7 @@ function Admin(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.body)
+            console.debug(result.message)
         }
 
         if (result.express === "username exists" || result.express === "permission can not be 5") {
@@ -92,7 +92,7 @@ function Admin(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status + "")
+            console.debug(response.statusText)
         }
 
         setUsers(users.filter(value => {

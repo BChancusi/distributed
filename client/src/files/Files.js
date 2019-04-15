@@ -21,7 +21,7 @@ function Files(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                throw Error(result.message)
+                console.debug(result.message)
             }
 
             if (result.data.files.length === 0) {
@@ -71,7 +71,7 @@ function Files(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.message)
+            console.debug(result.message)
         }
 
         if (result.express === "already exists") {
@@ -96,7 +96,7 @@ function Files(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status.toString())
+            console.debug(response.statusText)
         }
 
         setFiles(files.filter((value, index) => {
@@ -125,7 +125,7 @@ function Files(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status.toString())
+            console.debug(response.statusText)
         }
 
         setFiles(cloneFiles)

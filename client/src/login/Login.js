@@ -6,7 +6,6 @@ function Login(props) {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
 
-
     const usernameInput = useRef(null);
     const passwordInput = useRef(null);
 
@@ -100,8 +99,7 @@ function Login(props) {
                     </form>
                 </div>
             </div>
-            {console.log(!errors.length)}
-            {!errors.length ? false :
+            {errors ? false :
                 <div>
                     <h2>Errors</h2>
                     {errors.map(value => {

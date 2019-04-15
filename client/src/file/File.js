@@ -39,7 +39,7 @@ function File(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                throw Error(result.message)
+                console.debug(result.message)
             }
 
             setFields(result.fields);
@@ -96,7 +96,7 @@ function File(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.body)
+            console.debug(result.message)
         }
 
         if (result.express === "already exists") {
@@ -149,7 +149,7 @@ function File(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.message)
+            console.debug(result.message)
         }
 
         if (result.express !== "no conflicts") {
@@ -168,7 +168,7 @@ function File(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status.toString())
+            console.debug(response.statusText)
         }
 
         setFields(fields.filter((value, index) => {
@@ -187,7 +187,7 @@ function File(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status + "")
+            console.debug(response.statusText)
         }
 
         setFileTitles(fileTitles.filter(value => {
@@ -224,7 +224,7 @@ function File(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.message)
+            console.debug(result.message)
         }
 
         if (result.express === "already exists") {
@@ -253,7 +253,7 @@ function File(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-            throw Error(result.message)
+            console.debug(result.message)
         }
 
         if (result.express !== "no conflicts") {
@@ -327,7 +327,7 @@ function File(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status + "")
+            console.debug(response.statusText)
         }
 
         setMergeOld([]);
@@ -394,7 +394,7 @@ function File(props) {
 
 
         if (response.status !== 200) {
-            throw Error(response.status + "")
+            console.debug(response.statusText)
         }
 
         setCommitOld([]);

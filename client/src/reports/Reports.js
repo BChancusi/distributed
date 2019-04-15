@@ -20,7 +20,7 @@ function Reports(props) {
             const result = await response.json();
 
             if (response.status !== 200) {
-                throw Error(result.message)
+                console.debug(result.message);
             }
 
             setReports(result.express);
@@ -65,11 +65,13 @@ function Reports(props) {
             body: JSON.stringify({"title": trimmed})
         });
 
+        const result = await response.json();
+
         if (response.status !== 200) {
-            throw Error(response.status + "")
+            console.debug(result.message);
+
         }
 
-        const result = await response.json();
 
         if (result.express === "already exists" || result.express === "length exceeds 50") {
             setIsLoading(false);
@@ -92,7 +94,7 @@ function Reports(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status.toString())
+            console.debug(response.statusText);
         }
 
         setReports(reports.filter((value, index) => {
@@ -116,7 +118,7 @@ function Reports(props) {
         });
 
         if (response.status !== 200) {
-            throw Error(response.status.toString())
+            console.debug(response.statusText)
         }
 
         setReports(cloneReports)
