@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 const bcrypt = require('bcryptjs');
-
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
 const isAuthenticated = require('../isAuthenticated.js');
 
 
@@ -31,10 +29,10 @@ passport.use(new LocalStrategy(
     }
 ));
 
-passport.serializeUser(function(user, done){
+passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
-passport.deserializeUser(function(id, done){
+passport.deserializeUser(function (id, done) {
     pool.query('SELECT * FROM users WHERE id = ?', id, function (error, results) {
         if (error) throw error;
 
@@ -81,12 +79,23 @@ router.route("/")
         });
     });
 
+router.post('/signin', function (req, res, next) {
 
-router.post('/signin',
-    passport.authenticate('local', { failureRedirect: '/login' }),
-    function(req, res) {
-        res.send({express: {id: req.user.id, username: req.user.username, permission: req.user.permission}});
-    });
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.send({express: "details incorrect"})
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err)
+            }
+            return res.send({express: {id: req.user.id, username: req.user.username, permission: req.user.permission}});
+        });
+    })(req, res, next);
+});
 
 router.delete('/:userId', isAuthenticated, (req, res) => {
 
@@ -95,6 +104,11 @@ router.delete('/:userId', isAuthenticated, (req, res) => {
 
         res.sendStatus(200)
     });
+});
+
+router.get('/logout', isAuthenticated, function (req, res) {
+    req.logout();
+    res.send({express: "logged out"});
 });
 
 module.exports = router;

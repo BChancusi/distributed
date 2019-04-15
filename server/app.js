@@ -13,6 +13,8 @@ require('dotenv').config();
 
 let sess = {
     secret:  process.env.SESSION_PASSWORD,
+    resave: true,
+    saveUninitialized: true,
     cookie: {}
 };
 
