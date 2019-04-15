@@ -21,6 +21,12 @@ router.route('/:fileBranch')
 router.route('/')
     .post((req, res) => {
 
+        if(Number.isNaN(req.body.value)){
+
+            return res.send({express: "invalid value"})
+
+        }
+
         pool.query(`SELECT * FROM fields WHERE title = ? AND branch_title = ? AND file_id = ?`,
             [req.body.title, req.body.branch_title, req.body.file_id], function (error, results) {
                 if (error) throw error;

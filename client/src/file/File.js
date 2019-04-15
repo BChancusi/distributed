@@ -105,6 +105,11 @@ function File(props) {
             return;
         }
 
+        if (result.express === "invalid value") {
+            setIsLoading(false);
+            return;
+        }
+
         fieldTitleInput.current.style.border = "";
         setFields(fields.concat(result.express));
         setNewFieldTitle("");
