@@ -8,7 +8,6 @@ function Admin(props) {
     const [newPermission, setNewPermission] = useState("0");
     const [isLoading, setIsLoading] = useState(true);
 
-
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -58,11 +57,12 @@ function Admin(props) {
         }
 
         if (result.express === "username exists" || result.express === "permission can not be 5") {
-            //TODO throw error, ui change
-            console.debug("error username");
             return;
         }
-        //TODO clear input
+
+        setNewUsername("");
+        setNewPassword("");
+        setNewPermission("0");
 
         setUsers(users.concat(result.express));
 
