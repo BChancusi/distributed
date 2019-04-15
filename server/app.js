@@ -44,6 +44,14 @@ if (process.env.NODE_ENV === 'production') {
 
     app.use(express.static('client/build'));
 
+    app.get('/favicon.ico', (req, res) => {
+        res.sendFile(path.resolve('client', 'build', 'favicon.ico'));
+    });
+
+    app.get('/manifest.json', (req, res) => {
+        res.sendFile(path.resolve('client', 'build', 'manifest.json'));
+    });
+
     app.get('/*', (req, res) => {
         res.sendFile(path.resolve('client', 'build', 'index.html'));
     });
