@@ -4,6 +4,8 @@ function Login(props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState([]);
+
 
     const usernameInput = useRef(null);
     const passwordInput = useRef(null);
@@ -46,10 +48,11 @@ function Login(props) {
         });
 
         if (response.status !== 200) {
-            throw Error("Fetch error")
+            setErrors(errors.concat(response.statusText))
         }
 
         const result = await response.json();
+
 
         if (result.express === "details incorrect") {
             setPassword("");
@@ -97,6 +100,15 @@ function Login(props) {
                     </form>
                 </div>
             </div>
+            {console.log(!errors.length)}
+            {!errors.length ? false :
+                <div>
+                    <h2>Errors</h2>
+                    {errors.map(value => {
+                        return <p key={value}>{value}</p>
+                    })}
+                </div>
+            }
         </>
     )
 }
