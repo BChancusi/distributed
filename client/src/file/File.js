@@ -34,7 +34,7 @@ function File(props) {
             setIsLoading(true);
 
             const response = await fetch(encodeURI(
-                `API/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`), {signal});
+                `/API/fields?report_id=${props.file.report_id}&branch_title=${currentBranch}&title=${props.file.title}&file_id=${props.file.id}`), {signal});
 
             const result = await response.json();
 

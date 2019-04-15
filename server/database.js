@@ -3,13 +3,14 @@ const mysql = require('mysql');
 if (process.env.NODE_ENV === 'production') {
     module.exports = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 }else{
-    const config = require('./config');
+
+    require('dotenv').config();
 
     const connection = mysql.createPool({
-        host     : config.host,
-        user     : config.user,
-        password : config.password,
-        database : config.database,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE
     });
 
     connection.on('acquire', function (connection) {

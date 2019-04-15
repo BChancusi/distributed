@@ -3,9 +3,47 @@ const router = express.Router();
 const pool = require('../database');
 const bcrypt = require('bcryptjs');
 
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+const isAuthenticated = require('../isAuthenticated.js');
+
+
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+
+        pool.query(`SELECT * FROM users WHERE username = ?`, username, async function (error, results) {
+            if (error) return done(error);
+
+            if (results.length === 0) {
+                return done(null, false);
+            }
+
+            const passwordCompare = await bcrypt.compare(password, results[0].password);
+
+            if (!passwordCompare) {
+                return done(null, false);
+            }
+
+            return done(null, results[0]);
+
+        });
+    }
+));
+
+passport.serializeUser(function(user, done){
+    done(null, user.id);
+});
+passport.deserializeUser(function(id, done){
+    pool.query('SELECT * FROM users WHERE id = ?', id, function (error, results) {
+        if (error) throw error;
+
+        done(error, results[0]);
+    });
+});
 
 router.route("/")
-    .get((req, res) => {
+    .get(isAuthenticated, (req, res) => {
 
         pool.query('SELECT username, id, permission FROM users ORDER BY permission DESC', function (error, results) {
             if (error) throw error;
@@ -13,7 +51,7 @@ router.route("/")
             res.send({express: results});
         });
     })
-    .post((req, res) => {
+    .post(isAuthenticated, (req, res) => {
 
         if (req.query.permission === 5) {
             return res.send({express: "permission can not be 5"})
@@ -43,33 +81,14 @@ router.route("/")
         });
     });
 
-router.post('/signin', (req, res) => {
 
-    pool.query(`SELECT * FROM users WHERE username = ?`, req.query.username, async function (error, results) {
-        if (error) throw error;
-
-        if (results.length === 0) {
-            return res.send({express: "details incorrect"})
-        }
-
-        const passwordCompare = await bcrypt.compare(req.query.password, results[0].password);
-
-        if (!passwordCompare) {
-            return res.send({express: "details incorrect"})
-        }
-
-        res.send({
-            express: {
-                username: results[0].username,
-                permission: results[0].permission,
-                id: results[0].id
-            }
-        })
-
+router.post('/signin',
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+        res.send({express: {id: req.user.id, username: req.user.username, permission: req.user.permission}});
     });
-});
 
-router.delete('/:userId', (req, res) => {
+router.delete('/:userId', isAuthenticated, (req, res) => {
 
     pool.query(`DELETE FROM users WHERE id = ?`, req.params.userId, function (error) {
         if (error) throw error;

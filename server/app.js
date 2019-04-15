@@ -4,18 +4,34 @@ const files = require('./files/Files');
 const fields = require('./fields/Fields');
 const users = require('./users/Users');
 const path = require('path');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const app = express();
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const isAuthenticated = require('./isAuthenticated.js');
+require('dotenv').config();
 
+app.use(session({
+    secret: process.env.SESSION_PASSWORD,
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 
+app.use('/API/users', users);
+
+app.use(isAuthenticated);
+
 app.use('/API/reports', reports);
 app.use('/API/files', files);
 app.use('/API/fields', fields);
-app.use('/API/users', users);
+
 
 if (process.env.NODE_ENV === 'production') {
 

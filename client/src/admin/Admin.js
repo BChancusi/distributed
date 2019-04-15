@@ -47,7 +47,7 @@ function Admin(props) {
         setIsLoading(true);
 
         const response = await fetch(
-            `API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
+            `/API/users?username=${newUsername}&password=${newPassword}&permission=${parseInt(newPermission)}`,
             {signal, method: "POST"}
         );
 
@@ -86,7 +86,7 @@ function Admin(props) {
 
     async function handleDeleteUser(id) {
 
-        const response = await fetch(`API/users/${id}`, {
+        const response = await fetch(`/API/users/${id}`, {
             signal,
             method: "DELETE"
         });

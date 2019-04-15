@@ -8,7 +8,6 @@ import File from './file/File';
 import Admin from './admin/Admin';
 
 function App() {
-
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
     const [adminOpen, setAdminOpen] = useState(false);
     const [reportOpen, setReportOpen] = useState("");
