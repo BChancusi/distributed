@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
+const isAuthenticated = require('../isAuthenticated.js');
 
+router.use(isAuthenticated);
 
 router.route('/')
     .get((req, res) => {

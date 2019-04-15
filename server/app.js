@@ -8,7 +8,6 @@ const app = express();
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const isAuthenticated = require('./isAuthenticated.js');
 require('dotenv').config();
 
 let sess = {
@@ -32,9 +31,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 
 app.use('/API/users', users);
-
-app.use(isAuthenticated);
-
 app.use('/API/reports', reports);
 app.use('/API/files', files);
 app.use('/API/fields', fields);

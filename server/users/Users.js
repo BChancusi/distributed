@@ -6,7 +6,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const isAuthenticated = require('../isAuthenticated.js');
 
-
 passport.use(new LocalStrategy(
     function (username, password, done) {
 
