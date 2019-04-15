@@ -62,7 +62,7 @@ describe('username and password fields', () => {
 describe('login faliure', () => {
 
     test('password field clears', async () => {
-        fetchMock.mock('/API/users/signin?username=username&password=password', {express: 'details incorrect'});
+        fetchMock.mock('/API/users/login?username=username&password=password', {express: 'details incorrect'});
 
         const {getByText, getByTestId} = render(<Login/>);
 
@@ -83,7 +83,7 @@ describe('login faliure', () => {
 
 
     test('style set to red', async () => {
-        fetchMock.mock('/API/users/signin?username=username&password=password', {express: 'details incorrect'});
+        fetchMock.mock('/API/users/login?username=username&password=password', {express: 'details incorrect'});
 
         const {getByText, getByTestId} = render(<Login/>);
 
@@ -154,7 +154,7 @@ test('login button calls fetch', async () => {
 
     const mockSetLoggedInUser = jest.fn();
 
-    fetchMock.mock('/API/users/signin?username=username&password=password',
+    fetchMock.mock('/API/users/login?username=username&password=password',
         {express: {username: "username", permission: 0}});
 
     const {getByText, getByTestId} = render(<Login setLoggedInUser={mockSetLoggedInUser}/>);
@@ -179,7 +179,7 @@ test('CSS turn red then white after failure/success', async () => {
 
     const mockSetLoggedInUser = jest.fn();
 
-    fetchMock.mock('/API/users/signin?username=username111&password=password111', {express: 'details incorrect'});
+    fetchMock.mock('/API/users/login?username=username111&password=password111', {express: 'details incorrect'});
 
     const {getByText, getByTestId} = render(<Login setLoggedInUser={mockSetLoggedInUser}/>);
 
@@ -198,7 +198,7 @@ test('CSS turn red then white after failure/success', async () => {
     expect(usernameField.value).toBe("username111");
     expect(passwordField.value).toBe("");
 
-    fetchMock.mock('/API/users/signin?username=username&password=password', {express: 'details correct'});
+    fetchMock.mock('/API/users/login?username=username&password=password', {express: 'details correct'});
 
     fireEvent.change(usernameField, {target: {value: 'username'}});
     fireEvent.change(passwordField, {target: {value: 'password'}});
