@@ -31,20 +31,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use('/API/users', users);
 
-
-app.use(function isAuthenticated(req, res, next) {
-    if (!req.isAuthenticated()) {
-        return res.status(403).send({express: "not authenticated"})
-    }
-
-    next()
-});
-
-app.use('/API/reports', reports);
-app.use('/API/files', files);
-app.use('/API/fields', fields);
-
-
 if (process.env.NODE_ENV === 'production') {
 
     app.use(express.static('client/build'));
@@ -61,6 +47,21 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve('client', 'build', 'index.html'));
     });
 }
+
+app.use(function isAuthenticated(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(403).send({express: "not authenticated"})
+    }
+
+    next()
+});
+
+app.use('/API/reports', reports);
+app.use('/API/files', files);
+app.use('/API/fields', fields);
+
+
+
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);
