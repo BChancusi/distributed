@@ -29,6 +29,7 @@ function Reports(props) {
                 return;
             }
             if (response.status !== 200) {
+                console.error(response);
                return console.error(result);
             }
 
