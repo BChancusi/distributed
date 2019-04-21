@@ -29,8 +29,17 @@ app.use(passport.session());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-
 app.use('/API/users', users);
+
+
+app.use(function isAuthenticated(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(403).send({express: "not authenticated"})
+    }
+
+    next()
+});
+
 app.use('/API/reports', reports);
 app.use('/API/files', files);
 app.use('/API/fields', fields);

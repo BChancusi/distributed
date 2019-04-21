@@ -559,5 +559,4 @@ function File(props) {
 export default File;
 
 //TODO
-// Deep prevent non number
 // negative numbers trimmed one extra due to minus sign. Pos Parse float first

@@ -4,7 +4,6 @@ const pool = require('../database');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const isAuthenticated = require('../isAuthenticated.js');
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
@@ -39,8 +38,16 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
+function isAuthenticatedAdmin(req, res, next) {
+    if (!req.isAuthenticated() || req.user.permission < 5) {
+        return res.status(403).send({express: "not authenticated"})
+    }
+
+    next()
+}
+
 router.route("/")
-    .get(isAuthenticated, (req, res) => {
+    .get(isAuthenticatedAdmin, (req, res) => {
 
         pool.query('SELECT username, id, permission FROM users ORDER BY permission DESC', function (error, results) {
             if (error) throw error;
@@ -48,7 +55,7 @@ router.route("/")
             res.send({express: results});
         });
     })
-    .post(isAuthenticated, (req, res) => {
+    .post(isAuthenticatedAdmin, (req, res) => {
 
         if (req.query.permission === 5) {
             return res.send({express: "permission can not be 5"})
@@ -78,6 +85,14 @@ router.route("/")
         });
     });
 
+router.delete('/:userId', isAuthenticatedAdmin, (req, res) => {
+
+    pool.query(`DELETE FROM users WHERE id = ?`, req.params.userId, function (error) {
+        if (error) throw error;
+
+        res.sendStatus(200)
+    });
+});
 router.post('/login', function (req, res, next) {
 
     passport.authenticate('local', function (err, user, info) {
@@ -96,14 +111,7 @@ router.post('/login', function (req, res, next) {
     })(req, res, next);
 });
 
-router.delete('/:userId', isAuthenticated, (req, res) => {
 
-    pool.query(`DELETE FROM users WHERE id = ?`, req.params.userId, function (error) {
-        if (error) throw error;
-
-        res.sendStatus(200)
-    });
-});
 
 router.get('/logout', function (req, res) {
     req.logout();

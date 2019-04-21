@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 const format = require('date-fns/format');
-const isAuthenticated = require('../isAuthenticated.js');
-
-router.use(isAuthenticated);
 
 router.route('/:fileBranch')
     .delete((req, res) => {
