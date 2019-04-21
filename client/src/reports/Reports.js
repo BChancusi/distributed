@@ -6,6 +6,8 @@ function Reports(props) {
 
     const [reports, setReports] = useState([]);
     const [newReport, setNewReport] = useState("");
+    const [newReportPermission, setNewReportPermission] = useState("0");
+
     const [isLoading, setIsLoading] = useState(true);
 
     const reportInput = useRef(null);
@@ -21,6 +23,11 @@ function Reports(props) {
 
             const result = await response.json();
 
+            if (response.status === 403) {
+                props.setLoggedInUser(null);
+                localStorage.clear();
+                return;
+            }
             if (response.status !== 200) {
                return console.error(result);
             }
@@ -47,6 +54,11 @@ function Reports(props) {
             setNewReport(event.target.value)
         }
     }
+
+    function handlePermissionChange(event) {
+        setNewReportPermission(event.target.value);
+    }
+
     async function handleNewReport(event) {
         event.preventDefault();
 
@@ -64,7 +76,7 @@ function Reports(props) {
             signal,
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"title": trimmed})
+            body: JSON.stringify({title: trimmed, permission: newReportPermission})
         });
 
         const result = await response.json();
@@ -126,6 +138,13 @@ function Reports(props) {
         setReports(cloneReports)
     }
 
+    function populatePermission() {
+        let selectLevels = [];
+        for (let i = 0; i <= props.user.permission; i++) {
+            selectLevels.push(<option key={i} value={i}>{i}</option>)
+        }
+        return selectLevels;
+    }
     return (
         <>
             <header>
@@ -141,6 +160,10 @@ function Reports(props) {
                     <label>New Report Title</label>
                     <input className="input-options" maxLength="50" type="text" value={newReport} ref={reportInput}
                            onChange={handleTitleChange} placeholder="E.g - Report 2019"/>
+                    <label>New Report Permission Level</label>
+                    <select onChange={handlePermissionChange}>
+                        {populatePermission()}
+                    </select>
                     <button disabled={isLoading}>New report</button>
                 </form>
             </div>

@@ -8,7 +8,7 @@ router.use(isAuthenticated);
 router.route('/')
     .get((req, res) => {
 
-        pool.query('SELECT * FROM reports', function (error, results) {
+        pool.query('SELECT * FROM reports WHERE permission <= ? ', req.user.permission, function (error, results) {
             if (error) throw error;
 
             res.send({express: results});
