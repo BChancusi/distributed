@@ -29,7 +29,6 @@ function Reports(props) {
                 return;
             }
             if (response.status !== 200) {
-                console.error(response);
                return console.error(result);
             }
 
@@ -38,7 +37,7 @@ function Reports(props) {
 
         }
 
-        fetchReports().catch(error => console.debug(error));
+        fetchReports().catch(error => console.error(error));
 
         return () => {
             controller.abort();
