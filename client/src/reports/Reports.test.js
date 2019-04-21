@@ -60,7 +60,7 @@ test('new created report in document', async () => {
 
     fetchMock
         .get('/API/reports', {express: []})
-        .post('/API/reports',{express : [{id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}]});
+        .post('/API/reports', {express: {id: 114, title: "Report 2019", timestamp: "2019-03-05T02:56:15.000Z"}});
 
     const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 

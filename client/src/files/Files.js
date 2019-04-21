@@ -21,6 +21,12 @@ function Files(props) {
             const response = await fetch(`/API/files/branch?report_id=${props.report.id}`, {signal});
             const result = await response.json();
 
+            if (response.status === 403) {
+                props.setLoggedInUser(null);
+                localStorage.clear();
+                return;
+            }
+
             if (response.status !== 200) {
                 return console.debug(result)
             }
