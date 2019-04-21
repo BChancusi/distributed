@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
+const format = require('date-fns/format');
 
 router.route('/')
     .get((req, res) => {
@@ -25,14 +26,17 @@ router.route('/')
                 return res.send({express: "already exists"})
             }
 
+            req.body.timestamp = format(
+                new Date(),
+                'YYYY-MM-DD HH:mm:ss'
+            );
             pool.query(`INSERT INTO reports SET ?`, req.body, function (error, results) {
                 if (error) throw error;
 
-                pool.query('SELECT * FROM reports WHERE id = ?', results.insertId, function (error, results) {
-                    if (error) throw error;
 
-                    res.send({express: results});
-                });
+                req.body.id = results.insertId;
+
+                res.send({express: req.body});
             });
 
         });

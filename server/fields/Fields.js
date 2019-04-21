@@ -234,7 +234,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
                 conflictsSource.push(req.body[sourceGet]);
                 conflictsTarget.push(results[i]);
 
-            } else if (parseFloat(req.body[sourceGet].value) === results[i].value) {
+            } else if (parseFloat(req.body[sourceGet].value) === results[i].value && conflictsSource.length === 0) {
 
                 deleteTitles.push(req.body[sourceGet].title)
             }
