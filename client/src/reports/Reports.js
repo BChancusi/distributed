@@ -187,7 +187,7 @@ function Reports(props) {
                                     })
                                 }
                             </ul>
-                        ) : <h2>No reports created</h2>
+                        ) : <h2>No Reports Available</h2>
                     }
                 </div>
             </div>

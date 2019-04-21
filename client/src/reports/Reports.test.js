@@ -34,9 +34,9 @@ test('text when no reports in document', async () => {
     fetchMock.get('/API/reports', {express: []});
 
     const {getByText} = render(<Reports user={{permission: 0}}/>);
-    await waitForElement(() => getByText("No reports created"));
+    await waitForElement(() => getByText("No Reports Available"));
 
-    expect(getByText("No reports created")).toBeInTheDocument();
+    expect(getByText("No Reports Available")).toBeInTheDocument();
 });
 
 
@@ -46,7 +46,7 @@ test('trims empty string and resets field', async () => {
 
     const {getByPlaceholderText, getByText } = render(<Reports user={{permission: 0}}/>);
 
-    await waitForElement(() => getByText("No reports created"));
+    await waitForElement(() => getByText("No Reports Available"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: '     '}});
     fireEvent.click(getByText("New report"));
@@ -64,7 +64,7 @@ test('new created report in document', async () => {
 
     const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 
-    await waitForElement(() => getByText("No reports created"));
+    await waitForElement(() => getByText("No Reports Available"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
@@ -85,7 +85,7 @@ test('new report field clears with after fetch', async () => {
 
     const {getByPlaceholderText, getByText} = render(<Reports user={{permission: 0}}/>);
 
-    await waitForElement(() => getByText("No reports created"));
+    await waitForElement(() => getByText("No Reports Available"));
 
     fireEvent.change(getByPlaceholderText("E.g - Report 2019"), {target: {value: 'Report 2019'}});
     fireEvent.click(getByText("New report"));
@@ -134,7 +134,7 @@ test('report deleted from document', async () => {
 
     fireEvent.click(getByText("Delete"));
 
-    await waitForElement(() => getByText("No reports created"));
+    await waitForElement(() => getByText("No Reports Available"));
 
     expect(queryByText("Report 2019")).not.toBeInTheDocument();
     expect(fetchMock.lastUrl()).toBe("/API/reports/112")
