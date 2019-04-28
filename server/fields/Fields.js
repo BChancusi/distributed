@@ -46,7 +46,7 @@ router.route('/')
     })
     .get((req, res) => {
 
-        pool.query('SELECT * FROM fields WHERE branch_title = ? AND file_id =?', [req.query.branch_title, req.query.file_id], function (error, results) {
+        pool.query('SELECT * FROM fields WHERE branch_title = ? AND file_id = ?', [req.query.branch_title, req.query.file_id], function (error, results) {
             if (error) throw error;
 
             pool.query('SELECT * FROM files WHERE title = ? AND report_id= ?', [req.query.title, req.query.report_id], function (error, resultsTitles) {
@@ -71,7 +71,7 @@ router.route('/')
             query.push(value.id);
         });
 
-        pool.query(`SELECT * FROM fields WHERE id IN (?)`, query, function (error, results) {
+        pool.query(`SELECT * FROM fields WHERE id IN (?)`, [query], function (error, results) {
             if (error) throw error;
 
 
@@ -88,7 +88,6 @@ router.route('/')
             results.forEach(value => {
 
                 const sourceGet = sourceMap.get(value.title);
-
 
                 if (sourceGet !== undefined) {
 
@@ -267,7 +266,7 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         });
 
         if (query.length > 0) {
-            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`, query, function (error) {
+            pool.query(`INSERT INTO fields (file_Id, branch_title, title, value) VALUES ?`, [query], function (error) {
                 if (error) throw error;
 
             });

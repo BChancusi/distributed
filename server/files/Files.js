@@ -64,7 +64,7 @@ router.get('/branch', (req, res) => {
             return value.id;
         });
 
-        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = "master" ORDER BY value DESC', ids, function (error, results) {
+        pool.query('SELECT * FROM fields WHERE file_Id IN (?) AND branch_title = "master" ORDER BY value DESC', [ids], function (error, results) {
             if (error) throw error;
 
             res.send({data: {files: resultsFiles, fields: results}});

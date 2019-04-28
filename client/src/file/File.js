@@ -492,7 +492,8 @@ function File(props) {
                                    value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
                             <label>New Field Amount </label>
-                            <input min="-9999999999" max="9999999999" className="input-options" type="number" value={newFieldValue}
+                            <input min="-9999999999" max="9999999999" className="input-options" type="number"
+                                   step="0.01" value={newFieldValue}
                                    placeholder="E.g 1250.99" onChange={(event) => {
 
                                 if(event.target.value.length > event.target.max.length) {
