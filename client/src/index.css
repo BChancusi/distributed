@@ -198,7 +198,7 @@ footer {
 .content .button-admin-table {
     background-color: #5ebeda;
     color: #1e2952;
-    padding: 100px 10px;
+    /*padding: 100px 10px;*/
 }
 
 select {

@@ -51,9 +51,7 @@ router.route('/:reportId')
 
             res.sendStatus(200)
         });
-})
-.
-put((req, res) => {
+    }).put((req, res) => {
 
     pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
         if (error) throw error;
