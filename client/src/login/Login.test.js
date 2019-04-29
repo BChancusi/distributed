@@ -41,6 +41,21 @@ describe('username and password fields', () => {
         expect(passwordField.value).toBe('password');
     });
 
+    test('password and username empty', async () => {
+        const {getByTestId, getByText} = render(<Login/>);
+
+        fireEvent.change(getByTestId("username-text"), {target: {value: '       '}});
+        fireEvent.change(getByTestId("password-text"), {target: {value: '       '}});
+
+        fireEvent.click(getByText("Login"));
+
+        await waitForElement(() => getByText("Login"));
+
+        expect(getByTestId("username-text")).toHaveStyle(`border : 2px solid red`);
+        expect(getByTestId("password-text")).toHaveStyle(`border : 2px solid red`);
+
+    });
+
     test('username and password value can be emptied', () => {
         const {getByTestId} = render(<Login/>);
         const passwordField = getByTestId("password-text");
