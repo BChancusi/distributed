@@ -228,6 +228,35 @@ test('duplicate file error', async () => {
 
 });
 
+test('put file event click', async () => {
+
+    fetchMock
+        .get('/API/files/branch?report_id=115', {
+            data: {
+                files: [{
+                    branch_title: "master", id: 179, report_id: 115,
+                    timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"
+                }], fields: []
+            }
+        })
+        .put("/API/files/179", 200);
+
+    const {getByText, getByPlaceholderText} = render(<Files user={{permission: 0}} report={
+        {
+            id: 115,
+            timestamp: "2019-03-05T05:12:22.000Z",
+            title: "New report"
+        }
+    }/>);
+
+    await waitForElement(() => getByText("New File Title"));
+
+    fireEvent.click(getByText("Update Title"));
+
+    expect(fetchMock.done()).toBe(true);
+
+});
+
 test('header matches opened file', async () => {
 
     fetchMock.get('/API/files/branch?report_id=115', {
