@@ -28,7 +28,6 @@ test('header path correct', async () => {
             timestamp: "2019-03-09T00:26:46.000Z", title: "Contract one"}]
     }).get('/API/fields/file/179+master', {express: []});
 
-    //TODO correct fetch mock
 
     const {container, getByText} = render(<File user={{permission: 0}} file={
         {id: 179, report_id: 115, branch_title: "master", title: "Contract one", timestamp: "2019-03-09T00:26:46.000Z"}
@@ -41,5 +40,3 @@ test('header path correct', async () => {
     expect(getByText("File Path: New report\\Contract one\\master")).toBeInTheDocument();
 
 });
-
-//TODO test branch header changes

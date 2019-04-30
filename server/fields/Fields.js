@@ -129,6 +129,10 @@ router.route('/')
                     'YYYY-MM-DD HH:mm:ss'
                 );
 
+                if (value.value === "") {
+                    value.value = "0";
+                }
+
                 pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
                     if (error) throw error;
 
@@ -249,6 +253,10 @@ router.post('/mergeBranch/:mergeBranch', (req, res) => {
         query = query.filter(value => {
 
             let boolean = true;
+
+            if (value.value === "") {
+                value.value = "0"
+            }
             for (let i = 0; i < deleteTitles.length; i++) {
 
                 //value[3] is title index of value
@@ -297,9 +305,16 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 
             if (resultsGet !== undefined) {
                 if (req.body[i].value !== results[resultsGet].value) {
+
+                    if (req.body[i].value === "") {
+                        req.body[i].value = "0";
+                    }
                     resolvedUpdate.push(req.body[i]);
                 }
             } else {
+                if (req.body[i].value === "") {
+                    req.body[i].value = "0";
+                }
                 resolvedInsert.push(Object.values(req.body[i]))
             }
         }
@@ -356,6 +371,11 @@ router.put('/commitResolved', (req, res) => {
             new Date(),
             'YYYY-MM-DD HH:mm:ss'
         );
+
+        if (value.value === "") {
+            value.value = "0";
+        }
+
         pool.query(`UPDATE fields SET ?  WHERE id = ?`, [value, value.id], function (error) {
             if (error) throw error;
 
