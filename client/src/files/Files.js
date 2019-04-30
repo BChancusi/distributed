@@ -124,12 +124,22 @@ function Files(props) {
 
         cloneFiles[key].title = value;
 
+        if (value === "") {
+            alert("Please fill the title field");
+            return;
+        }
+
         const response = await fetch(`/API/files/${cloneFiles[key].id}`, {
             signal,
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"title": cloneFiles[key].title})
         });
+
+        if (response.status === 409) {
+            alert("File with that title already exists");
+            return;
+        }
 
         if (response.status !== 200) {
             return console.debug(response.statusText)

@@ -45,10 +45,23 @@ router.route('/:fileId')
     })
     .put((req, res) => {
 
-        pool.query(`UPDATE files SET ?  WHERE id = ?`, [req.body, req.params.fileId], function (error) {
+        if (req.body.title === "") {
+            return res.sendStatus(409);
+        }
+
+        pool.query(`SELECT * FROM files WHERE title = ?`, req.body.title, function (error, results) {
             if (error) throw error;
 
-            res.sendStatus(200)
+            if (results.length > 0) {
+                return res.sendStatus(409);
+            }
+
+            pool.query(`UPDATE files SET ?  WHERE id = ?`, [req.body, req.params.fileId], function (error) {
+                if (error) throw error;
+
+
+                res.sendStatus(200)
+            });
         });
     });
 

@@ -53,12 +53,25 @@ router.route('/:reportId')
         });
     }).put((req, res) => {
 
-    pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
+    if (req.body.title === "") {
+        return res.sendStatus(409);
+    }
+
+    pool.query(`SELECT * FROM reports WHERE title = ?`, req.body.title, function (error, results) {
         if (error) throw error;
 
+        if (results.length > 0) {
+            return res.sendStatus(409);
+        }
 
-        res.sendStatus(200)
+        pool.query(`UPDATE reports SET ?  WHERE id = ?`, [req.body, req.params.reportId], function (error) {
+            if (error) throw error;
+
+
+            res.sendStatus(200)
+        });
     });
+
 });
 
 module.exports = router;

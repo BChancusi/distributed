@@ -122,7 +122,13 @@ function Reports(props) {
 
         let cloneReports = [...reports];
 
+        if (value === "") {
+            alert("Please fill the title field");
+            return;
+        }
+
         cloneReports[key].title = value;
+
 
         const response = await fetch(`/API/reports/${cloneReports[key].id}`, {
             signal,
@@ -131,6 +137,10 @@ function Reports(props) {
             body: JSON.stringify({"title": cloneReports[key].title})
         });
 
+        if (response.status === 409) {
+            alert("Report with that title already exists");
+            return;
+        }
         if (response.status !== 200) {
            return  console.debug(response.statusText)
         }
