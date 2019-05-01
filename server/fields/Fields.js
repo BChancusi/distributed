@@ -18,10 +18,9 @@ router.route('/:fileBranch')
 router.route('/')
     .post((req, res) => {
 
-        if(Number.isNaN(req.body.value)){
+        if (Number.isNaN(req.body.value)) {
 
             return res.send({express: "invalid value"})
-
         }
 
         pool.query(`SELECT * FROM fields WHERE title = ? AND branch_title = ? AND file_id = ?`,
@@ -105,7 +104,7 @@ router.route('/')
             });
 
             if (conflictsNew.length > 0 && conflictsOld.length > 0) {
-               return res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
+                return res.send({conflictsNew: conflictsNew, conflictsOld: conflictsOld});
 
             }
 
@@ -353,14 +352,14 @@ router.post('/mergeResolved/:mergeBranch', (req, res) => {
 router.delete('/deleteBranch/query', (req, res) => {
 
     pool.query(`DELETE FROM files WHERE title = ? AND branch_title= ?`, [req.query.title, req.query.branch_title], function (error) {
-            if (error) throw error;
+        if (error) throw error;
 
         pool.query(`DELETE FROM fields WHERE branch_title= ? AND file_Id = ?`, [req.query.branch_title, req.query.file_id], function (error) {
             if (error) throw error;
 
             res.sendStatus(200)
         });
-        });
+    });
 });
 
 router.put('/commitResolved', (req, res) => {

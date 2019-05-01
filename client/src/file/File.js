@@ -3,7 +3,6 @@ import Conflicts from "./Conflicts";
 
 import Logout from '../Logout.js';
 
-
 function File(props) {
 
     const [fields, setFields] = useState([]);

@@ -385,5 +385,3 @@ test('trims empty string and resets new file field', async () => {
 
     expect(getByPlaceholderText("E.g - Contract one").value).toBe("");
 });
-
-//TODO Put file test
