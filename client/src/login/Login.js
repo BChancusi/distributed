@@ -2,8 +2,8 @@ import React, {useRef, useState, useEffect} from 'react';
 
 function Login(props) {
 
-    const [username, setUsername] = useState("guest");
-    const [password, setPassword] = useState("guest");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [errors, setErrors] = useState([]);
 
     const usernameInput = useRef(null);
@@ -30,6 +30,29 @@ function Login(props) {
         }
 
         return true;
+    }
+
+    async function handleGuestLogin(event) {
+        event.preventDefault();
+        console.log("aaa")
+        const response = await fetch("/API/users/login?username=guest&password=guest", {
+            signal,
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        });
+
+        if (response.status !== 200) {
+            setErrors(errors.concat(response.statusText))
+        }
+
+        const result = await response.json();
+
+        usernameInput.current.style.border = "";
+        passwordInput.current.style.border = "";
+        setUsername("");
+        setPassword("");
+        props.setLoggedInUser(result.express);
+        localStorage.setItem("user", JSON.stringify(result.express))
     }
     async function handleLogin (event) {
         event.preventDefault();
@@ -82,7 +105,6 @@ function Login(props) {
             <header>
                 <h1>Distributed Budgeting App</h1>
                 <h2>Please Login</h2>
-                <h3>Username and password default: guest</h3>
             </header>
             <div className="content" id="login">
                 <div className="content-wrap">
@@ -98,6 +120,7 @@ function Login(props) {
                         </label>
                         <button>Login</button>
                     </form>
+                    <button onClick={handleGuestLogin}>Login as guest</button>
                 </div>
             </div>
             {errors ? false :
