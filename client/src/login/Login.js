@@ -2,8 +2,8 @@ import React, {useRef, useState, useEffect} from 'react';
 
 function Login(props) {
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("guest");
+    const [password, setPassword] = useState("guest");
     const [errors, setErrors] = useState([]);
 
     const usernameInput = useRef(null);
@@ -82,6 +82,7 @@ function Login(props) {
             <header>
                 <h1>Distributed Budgeting App</h1>
                 <h2>Please Login</h2>
+                <h3>Username and password default: guest</h3>
             </header>
             <div className="content" id="login">
                 <div className="content-wrap">
