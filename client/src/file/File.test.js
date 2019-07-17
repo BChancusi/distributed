@@ -1,7 +1,7 @@
 import React from 'react';
 import File from './File';
-import {render, fireEvent, cleanup, wait, waitForElement} from 'react-testing-library'
-import 'jest-dom/extend-expect'
+import {render, fireEvent, cleanup, wait, waitForElement} from '@testing-library/react'
+import '@testing-library/jest-dom'
 
 const fetchMock = require('fetch-mock/es5/client');
 
