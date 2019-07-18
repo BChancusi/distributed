@@ -1,6 +1,12 @@
 # Distributed Budgeting System
 
-Web application designed to allow multiple users to input financial data concurrently leverging branches and committing. 
+Web application designed to allow multiple users to input financial data concurrently leveraging branches and 
+committing similar to Git. First major project created in React/Node.js, has a few things which can be improved
+including CSS hierarchy to reduce the need to repeat styles, use of React-router, testing API through unit/integration 
+testing and more. 
+
+University final year project with implementation taking 1-2 months, with project total time from research, design etc
+to completion being 9 months. 
 
 ## Getting Started
 
@@ -11,6 +17,8 @@ MySQL, Node.js, NPM.
 ```
 
 ### Installing
+
+Project requires manual creation of database tables and .env file to function.
 
 ####Create database tables
 
