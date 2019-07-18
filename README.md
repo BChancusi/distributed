@@ -20,7 +20,7 @@ MySQL, Node.js, NPM.
 
 Project requires manual creation of database tables and .env file to function.
 
-####Create database tables
+#### Create database tables
 
 ```
 create schema budgeting collate utf8mb4_0900_ai_ci;
@@ -92,7 +92,7 @@ alter table users
 ```
 
 
-####Create .env file
+#### Create .env file
 ```
 DB_HOST = yourDBHost
 DB_USER = yourDBUsername
