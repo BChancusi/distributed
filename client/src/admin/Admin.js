@@ -109,7 +109,7 @@ function Admin(props) {
     }
 
     return (
-        <>
+        <div className="flex-column">
             <header>
                 <h1>Admin</h1>
             </header>
@@ -144,8 +144,7 @@ function Admin(props) {
                 </form>
             </div>
 
-            <div className="content" id="users">
-                <div className="content-wrap">
+            <div className="flex-center" id="users">
                     {isLoading && users.length === 0? <h2>Loading...</h2> :
                         users.length > 0 ?
 
@@ -154,6 +153,7 @@ function Admin(props) {
                                 <tr>
                                     <th>Username</th>
                                     <th>Permissions</th>
+                                    <th>Delete</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -178,7 +178,6 @@ function Admin(props) {
                     }
                 </div>
             </div>
-        </>
     )
 }
 

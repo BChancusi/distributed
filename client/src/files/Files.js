@@ -78,7 +78,7 @@ function Files(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-           return  console.debug(result)
+            return console.debug(result)
         }
 
         if (result.express === "already exists") {
@@ -151,17 +151,16 @@ function Files(props) {
     let total = 0.00;
 
     return (
-        <>
+        <div className="flex-column">
             <header>
                 <h1>Distributed Budgeting App</h1>
-                <h3>File Path: {props.report.title}</h3>
+                <h2>File Path: {props.report.title}</h2>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <button onClick={() => props.setReportOpen("")}>Reports</button>
                 <Logout setLoggedInUser={props.setLoggedInUser}/>
             </nav>
-
             <div>
                 <form onSubmit={handleNewFile}>
                     <label>New File Title</label>
@@ -171,69 +170,67 @@ function Files(props) {
                     <button disabled={isLoading}>New File</button>
                 </form>
             </div>
-            <div className="content">
-                <div className="content-wrap">
-                    {isLoading && files.length === 0 ?  <h2>Loading...</h2> :
+            <div className="flex-center colour-main">
+                {isLoading && files.length === 0 ? <h2>Loading...</h2> :
 
-                        files.length > 0 ? (
-                            <div className="content" id="files">
-                                <ul>
+                    files.length > 0 ? (
+                        <div id="files">
+                            <ul>
 
-                                    {
-                                        files.map((value, index) => {
-                                            return <li key={value.id}>
-                                                <input type="text" defaultValue={value.title}
-                                                       id={`textInput${value.id}`} maxLength="50"/>
-                                                <button onClick={() => props.setFileOpen(value)}>Open File</button>
-                                                <button onClick={() => handlePutFile(document
-                                                    .getElementById(`textInput${value.id}`).value, index)}>Update Title
-                                                </button>
-                                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete
-                                                </button>
-                                            </li>
-                                        })
-                                    }
-                                </ul>
-
-                            </div>
-                        ) : <h2>No files created</h2>
-
-                    }
-                </div>
-
-                {isLoading  && fileFields.length === 0 ? null :
-                    fileFields.length > 0 &&
-                    <div id="fields">
-                        <div className="content-wrap">
-
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Amount</th>
-                                </tr>
-                                </thead>
-                                <tbody>
                                 {
-                                    fileFields.map(value => {
-                                        total += value.value;
-
-                                        return <tr key={value.id}>
-                                            <td>{value.title}</td>
-                                            <td>{value.value}</td>
-                                        </tr>
+                                    files.map((value, index) => {
+                                        return <li key={value.id}>
+                                            <input type="text" defaultValue={value.title}
+                                                   id={`textInput${value.id}`} maxLength="50"/>
+                                            <button onClick={() => props.setFileOpen(value)}>Open File</button>
+                                            <button onClick={() => handlePutFile(document
+                                                .getElementById(`textInput${value.id}`).value, index)}>Update Title
+                                            </button>
+                                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete
+                                            </button>
+                                        </li>
                                     })
                                 }
-                                </tbody>
-                            </table>
+                            </ul>
 
-                            <label className="total-available-label">Total Available =
-                                £{parseFloat(total).toFixed(2)}</label>
                         </div>
-                    </div>
+                    ) : <h2>No files created</h2>
+
                 }
             </div>
-        </>
+
+            {isLoading && fileFields.length === 0 ? null :
+                fileFields.length > 0 &&
+                <div id="fields">
+                    <div className="flex-center">
+
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                fileFields.map(value => {
+                                    total += value.value;
+
+                                    return <tr key={value.id}>
+                                        <td>{value.title}</td>
+                                        <td>{value.value}</td>
+                                    </tr>
+                                })
+                            }
+                            </tbody>
+                        </table>
+
+                        <label className="total-available-label">Total Available =
+                            £{parseFloat(total).toFixed(2)}</label>
+                    </div>
+                </div>
+            }
+        </div>
     )
 }
 

@@ -4,6 +4,22 @@
     intelij grey - #2b2b2b
  */
 
+.flex-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+}
+
+.colour-main {
+    background-color: #5ebeda;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -57,10 +73,6 @@ h2 {
 
 h3 {
     font-size: 30px;
-    /*display: inline;*/
-    padding: 20px;
-    width: 100%;
-    max-width: 99%;
     overflow: auto;
 }
 
@@ -70,7 +82,7 @@ TABLES
 
 
 table {
-    width: 100%;
+    width: 80%;
 }
 
 th {
@@ -158,16 +170,16 @@ input:focus {
     color: #1e2952;
 }
 
-.content {
-    background-color: #5ebeda;
-    color: #2b2b2b;
-    padding: 10px;
-}
+/*.content {*/
+/*    background-color: #5ebeda;*/
+/*    color: #2b2b2b;*/
+/*    padding: 10px;*/
+/*}*/
 
-.content-wrap {
-    display: flex;
-    justify-content: center;
-}
+/*.content-wrap {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
 
 footer {
     text-align: center;
@@ -224,6 +236,7 @@ select {
 ::-webkit-scrollbar-thumb:hover {
     background: #5ebeda;
 }
+
 @media only screen and (max-width: 641px) {
 
     button {

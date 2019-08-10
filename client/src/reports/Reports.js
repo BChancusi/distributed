@@ -156,16 +156,16 @@ function Reports(props) {
         return selectLevels;
     }
     return (
-        <>
+        <div className="flex-column">
             <header>
                 <h1>Distributed Budgeting App</h1>
-                <h3>Reports</h3>
+                <h2>Reports</h2>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
                 <Logout setLoggedInUser={props.setLoggedInUser}/>
             </nav>
-            <div>
+            <div className="flex-center">
                 <form onSubmit={handleNewReport}>
                     <label>New Report Title</label>
                     <input className="input-options" maxLength="50" type="text" value={newReport} ref={reportInput}
@@ -177,8 +177,7 @@ function Reports(props) {
                     <button disabled={isLoading}>New report</button>
                 </form>
             </div>
-            <div className="content" id="reports">
-                <div className="content-wrap">
+            <div className="flex-center colour-main" id="reports">
 
                     {isLoading && reports.length === 0 ? <h2>Loading...</h2> :
                         reports.length > 0 ? (
@@ -199,9 +198,8 @@ function Reports(props) {
                             </ul>
                         ) : <h2>No Reports Available</h2>
                     }
-                </div>
             </div>
-        </>
+        </div>
     )
 }
 

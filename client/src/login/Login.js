@@ -12,17 +12,17 @@ function Login(props) {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    useEffect(() =>{
+    useEffect(() => {
         return () => {
             controller.abort();
         }
     });
 
-    function validateLogin(){
+    function validateLogin() {
         const usernameTrimmed = username.trim();
         const passwordTrimmed = username.trim();
 
-        if (usernameTrimmed === "" || passwordTrimmed === "" ) {
+        if (usernameTrimmed === "" || passwordTrimmed === "") {
             setUsername(usernameTrimmed);
             setPassword(passwordTrimmed);
 
@@ -58,10 +58,11 @@ function Login(props) {
         loginUser(result);
 
     }
-    async function handleLogin (event) {
+
+    async function handleLogin(event) {
         event.preventDefault();
 
-        if(!validateLogin()){
+        if (!validateLogin()) {
             usernameInput.current.style.border = "2px solid red";
             passwordInput.current.style.border = "2px solid red";
             return;
@@ -85,7 +86,7 @@ function Login(props) {
             usernameInput.current.style.border = "2px solid red";
             passwordInput.current.style.border = "2px solid red";
 
-        }else{
+        } else {
             loginUser(result);
         }
     }
@@ -100,27 +101,26 @@ function Login(props) {
     }
 
     return (
-        <>
+        <div className="flex-column">
             <header>
                 <h1>Distributed Budgeting App</h1>
                 <h2>Please Login</h2>
             </header>
-            <div className="content">
-                <div className="content-wrap">
-                    <form onSubmit={handleLogin}>
-                        <label>Username
-                            <input maxLength="50" value={username} onChange={handleChange} type="text" name="username" ref={usernameInput}
-                                   autoComplete="username" data-testid="username-text"/>
-                        </label>
-                        <label>Password
-                            <input maxLength="50" value={password} onChange={handleChange} type="password" name="password"
-                                   ref={passwordInput}
-                                   autoComplete="current-password" data-testid="password-text"/>
-                        </label>
-                        <button>Login</button>
-                    </form>
-                    <button onClick={handleGuestLogin}>Login as guest</button>
-                </div>
+            <div className="flex-center colour-main">
+                <form onSubmit={handleLogin}>
+                    <label>Username
+                        <input maxLength="50" value={username} onChange={handleChange} type="text" name="username"
+                               ref={usernameInput}
+                               autoComplete="username" data-testid="username-text"/>
+                    </label>
+                    <label>Password
+                        <input maxLength="50" value={password} onChange={handleChange} type="password" name="password"
+                               ref={passwordInput}
+                               autoComplete="current-password" data-testid="password-text"/>
+                    </label>
+                    <button>Login</button>
+                </form>
+                <button onClick={handleGuestLogin}>Login as guest</button>
             </div>
             {errors ? false :
                 <div>
@@ -130,7 +130,7 @@ function Login(props) {
                     })}
                 </div>
             }
-        </>
+        </div>
     )
 }
 

@@ -47,7 +47,7 @@ function File(props) {
             }
 
             if (response.status !== 200) {
-               return console.debug(result)
+                return console.debug(result)
             }
 
             setFields(result.fields);
@@ -140,9 +140,9 @@ function File(props) {
 
             let cloneFields = [...fields];
 
-            if(event.target.value.length > event.target.max.length) {
+            if (event.target.value.length > event.target.max.length) {
                 cloneFields[key].value = event.target.value.slice(0, event.target.max.length)
-            }else{
+            } else {
                 cloneFields[key].value = event.target.value;
             }
             setFields(cloneFields);
@@ -162,7 +162,7 @@ function File(props) {
         const result = await response.json();
 
         if (response.status !== 200) {
-           return console.debug(result)
+            return console.debug(result)
         }
 
         if (result.express !== "no conflicts") {
@@ -421,11 +421,10 @@ function File(props) {
     let total = 0;
 
     return (
-        <>
-
+        <div className="flex-column">
             <header>
                 <h1>Distributed Budgeting App</h1>
-                <h3>File Path: {props.report.title + "\\" + props.file.title + "\\" + currentBranch}</h3>
+                <h2>File Path: {props.report.title + "\\" + props.file.title + "\\" + currentBranch}</h2>
             </header>
             <nav>
                 {props.user.permission === 5 && <button onClick={() => props.setAdminOpen(true)}>Admin</button>}
@@ -435,7 +434,6 @@ function File(props) {
 
             <div id="options">
                 <ul>
-
                     <li>
                         <label>Current version</label>
                         <select value={currentBranch} onChange={(event) => setCurrentBranch(event.target.value)}>
@@ -468,13 +466,13 @@ function File(props) {
                                 <button disabled={isLoading} onClick={handleMergeBranch}>Merge</button>
                             </>
                             : null}
-
                     </li>
 
                     <li>
                         <form onSubmit={handleNewBranch}>
                             <label>New version Title</label>
-                            <input className="input-options" maxLength="50"  type="text" value={newBranchTitle} ref={branchTitleInput}
+                            <input className="input-options" maxLength="50" type="text" value={newBranchTitle}
+                                   ref={branchTitleInput}
                                    onChange={(event) => setNewBranchTitle(event.target.value)}
                                    placeholder="E.g - version 2"/>
                             <button disabled={isLoading}>New Branch</button>
@@ -486,7 +484,7 @@ function File(props) {
                         <form onSubmit={handleNewField}>
 
                             <label>New Field Title</label>
-                            <input className="input-options" maxLength="50"  type="text" ref={fieldTitleInput}
+                            <input className="input-options" maxLength="50" type="text" ref={fieldTitleInput}
                                    placeholder="E.g computer equipment"
                                    value={newFieldTitle} onChange={(event) => setNewFieldTitle(event.target.value)}/>
 
@@ -495,9 +493,9 @@ function File(props) {
                                    step="0.01" value={newFieldValue}
                                    placeholder="E.g 1250.99" onChange={(event) => {
 
-                                if(event.target.value.length > event.target.max.length) {
+                                if (event.target.value.length > event.target.max.length) {
                                     setNewFieldValue(event.target.value.slice(0, event.target.max.length))
-                                }else{
+                                } else {
                                     setNewFieldValue(event.target.value);
                                 }
 
@@ -508,57 +506,52 @@ function File(props) {
 
                 </ul>
             </div>
-            <div className="content">
-                <div className="content-wrap">
-                    {isLoading ? <h2>Loading...</h2> :
-                        fields.length > 0 ? (
-                            <div id="fields">
-                                <ul>
-                                    {
-                                        fields.map((value, index) => {
+            <div className="flex-center colour-main">
+                {isLoading ? <h2>Loading...</h2> :
+                    fields.length > 0 ? (
+                        <div id="fields">
+                            <ul>
+                                {
+                                    fields.map((value, index) => {
 
-                                            if (!isNaN(parseFloat(value.value))) {
-                                                total += parseFloat(parseFloat(value.value).toFixed(2));
-                                            }
+                                        if (!isNaN(parseFloat(value.value))) {
+                                            total += parseFloat(parseFloat(value.value).toFixed(2));
+                                        }
 
-                                            return <li key={value.id}>
-                                                <input maxLength="50" type="text" value={value.title} name="title"
-                                                       onChange={(event) => handleFieldChange(event, index)}/>
-                                                <input min="-9999999999" max="9999999999" type="number" value={value.value} name="value"
-                                                       onChange={(event) => handleFieldChange(event, index)}/>
-                                                <button onClick={() => handleDeleteFile(value.id, index)}>Delete
-                                                </button>
-                                            </li>
-                                        })
-                                    }
-                                </ul>
-                                <label className="total-available-label"> Total =
-                                    £{parseFloat(total).toFixed(2)}</label>
-                                <button onClick={handlePutFields}>Save Changes</button>
-                            </div>
-                        ) : <h2>No fields created</h2>
+                                        return <li key={value.id}>
+                                            <input maxLength="50" type="text" value={value.title} name="title"
+                                                   onChange={(event) => handleFieldChange(event, index)}/>
+                                            <input min="-9999999999" max="9999999999" type="number" value={value.value}
+                                                   name="value"
+                                                   onChange={(event) => handleFieldChange(event, index)}/>
+                                            <button onClick={() => handleDeleteFile(value.id, index)}>Delete
+                                            </button>
+                                        </li>
+                                    })
+                                }
+                            </ul>
+                            <label className="total-available-label"> Total =
+                                £{parseFloat(total).toFixed(2)}</label>
+                            <button onClick={handlePutFields}>Save Changes</button>
+                        </div>
+                    ) : <h2>No fields created</h2>
 
-                    }
-                </div>
+                }
             </div>
 
             {mergeNew.length > 0 && mergeOld.length > 0 &&
             <div id="conflictsMerge">
-                <div className="content-wrap">
                     <Conflicts source={mergeNew} target={mergeOld} name="merge" event={handleCheckbox}/>
                     <button disabled={isLoading} onClick={handleResolveConflicts}>Confirm Merge Replacements</button>
-                </div>
             </div>
             }
             {commitNew.length > 0 && commitOld.length > 0 &&
             <div id="conflictsCommit">
-                <div className="content-wrap">
                     <Conflicts source={commitNew} target={commitOld} name="commit" event={handleCheckbox}/>
                     <button disabled={isLoading} onClick={handleResolveConflictsCommit}>Confirm Save Changes</button>
-                </div>
             </div>
             }
-        </>
+        </div>
     );
 }
 
