@@ -32,9 +32,18 @@ function Login(props) {
         return true;
     }
 
+    function loginUser(result) {
+        usernameInput.current.style.border = "";
+        passwordInput.current.style.border = "";
+        setUsername("");
+        setPassword("");
+        props.setLoggedInUser(result.express);
+        localStorage.setItem("user", JSON.stringify(result.express))
+    }
+
     async function handleGuestLogin(event) {
         event.preventDefault();
-        console.log("aaa")
+
         const response = await fetch("/API/users/login?username=guest&password=guest", {
             signal,
             method: 'POST',
@@ -46,13 +55,8 @@ function Login(props) {
         }
 
         const result = await response.json();
+        loginUser(result);
 
-        usernameInput.current.style.border = "";
-        passwordInput.current.style.border = "";
-        setUsername("");
-        setPassword("");
-        props.setLoggedInUser(result.express);
-        localStorage.setItem("user", JSON.stringify(result.express))
     }
     async function handleLogin (event) {
         event.preventDefault();
@@ -82,12 +86,7 @@ function Login(props) {
             passwordInput.current.style.border = "2px solid red";
 
         }else{
-            usernameInput.current.style.border = "";
-            passwordInput.current.style.border = "";
-            setUsername("");
-            setPassword("");
-            props.setLoggedInUser(result.express);
-            localStorage.setItem("user", JSON.stringify(result.express))
+            loginUser(result);
         }
     }
 
