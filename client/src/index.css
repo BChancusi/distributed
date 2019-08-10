@@ -41,11 +41,6 @@ nav button {
 
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
 ul {
     list-style-type: none;
 }
@@ -170,16 +165,6 @@ input:focus {
     color: #1e2952;
 }
 
-/*.content {*/
-/*    background-color: #5ebeda;*/
-/*    color: #2b2b2b;*/
-/*    padding: 10px;*/
-/*}*/
-
-/*.content-wrap {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*}*/
 
 footer {
     text-align: center;
