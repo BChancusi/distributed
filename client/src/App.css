@@ -120,11 +120,6 @@ button:disabled {
   color: #666666;
 }
 
-.content button {
-  background-color: #1e2952;
-  color: #5ebeda;
-}
-
 button:hover {
   color: white;
 }
@@ -142,11 +137,6 @@ input {
   margin: 5px;
   border: none;
   border-radius: 4px;
-  background-color: #1e2952;
-  color: #5ebeda;
-}
-
-.content input {
   background-color: #1e2952;
   color: #5ebeda;
 }
@@ -196,10 +186,9 @@ footer {
   color: white;
 }
 
-.content .button-admin-table {
+.button-admin-table {
   background-color: #5ebeda;
   color: #1e2952;
-  /*padding: 100px 10px;*/
 }
 
 select {
