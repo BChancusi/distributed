@@ -58,48 +58,39 @@ router.route('/')
     })
     .put((req, res) => {
 
-
         if (req.body.length === 0) {
             return res.send({express: "no conflicts"});
         }
 
         let query = [];
+        let sourceMap = new Map();
+        req.body.forEach((value, index) => {
 
-        req.body.forEach(value => {
-
+            sourceMap.set(value.title, index);
             query.push(value.id);
+
         });
 
         pool.query(`SELECT * FROM fields WHERE id IN (?)`, [query], function (error, results) {
             if (error) throw error;
 
-
             let conflictsNew = [];
             let conflictsOld = [];
-            let sourceMap = new Map();
-            let deleteIds = [];
-
-            req.body.forEach((value, index) => {
-
-                sourceMap.set(value.title, index)
-            });
+            let newValues = [];
 
             results.forEach(value => {
 
                 const sourceGet = sourceMap.get(value.title);
 
-                if (sourceGet !== undefined) {
-
-                    if (req.body[sourceGet].id === value.id
-                        && JSON.stringify(value.timestamp) !== req.body[sourceGet].timestamp
-                        && value.value !== parseFloat(req.body[sourceGet].value)) {
+                if (sourceGet !== undefined && req.body[sourceGet].id === value.id
+                    && JSON.stringify(value.timestamp) !== req.body[sourceGet].timestamp
+                    && value.value !== parseFloat(req.body[sourceGet].value)) {
 
                         conflictsNew.push(req.body[sourceGet]);
                         conflictsOld.push(value);
-                    } else if (req.body[sourceGet].value === value.value) {
 
-                        deleteIds.push(req.body[sourceGet].id)
-                    }
+                } else {
+                    newValues.push(value);
                 }
             });
 
@@ -108,20 +99,8 @@ router.route('/')
 
             }
 
-            req.body = req.body.filter(value => {
 
-                let boolean = true;
-                for (let i = 0; i < deleteIds.length; i++) {
-                    if (value.id === deleteIds[i]) {
-                        boolean = false;
-                        break;
-                    }
-                }
-
-                return boolean;
-            });
-
-            req.body.forEach(value => {
+            newValues.forEach(value => {
 
                 value.timestamp = format(
                     new Date(),
