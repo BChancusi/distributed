@@ -93,6 +93,8 @@ alter table users
 
 
 #### Create .env file
+
+Following .cnv.example format for development environment.
 ```
 DB_HOST = yourDBHost
 DB_USER = yourDBUsername
