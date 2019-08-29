@@ -18,7 +18,7 @@
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.4",
     "date-fns": "^1.30.1",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "mysql": "^2.17.1",
@@ -26,7 +26,7 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "concurrently": "^4.1.1"
+    "concurrently": "^4.1.2"
   },
   "engines": {
     "node": "10.x"
